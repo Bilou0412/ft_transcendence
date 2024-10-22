@@ -1,14 +1,14 @@
-Major module: Use a Framework as backend.
+1 Major module: Use a Framework as backend
 
-Major module: Live chat
+ 2 Minor module: Use a database for the backend.
+Minor module: Monitoring system.
 
-Major module: Introduce an AI Opponent
+3 Major module: Remote players
 
-Major module: Implementing a remote authentication
+ 4 Major module: Introduce an AI Opponent.
 
-Major module: Designing the Backend as Microservices
+5 Major module: Designing the Backend as Microservices
 
-Major module: Remote players
+6 Major module: Use of advanced 3D techniques
 
-Minor module: Server-Side Rendering (SSR) Integration.
-Minor module: Use a database for the backend\Major module: Remote players
+ 7 Major module: Implementing a remote authentication
