@@ -27,6 +27,7 @@ def token(request):
 
 @api_view(['POST'])
 def signup(request):
+    print(request.data)
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.save()
@@ -39,19 +40,15 @@ def signup(request):
 def refresh_token(request):
     # Récupère le token de rafraîchissement depuis les données
     refresh_token = request.data.get('refresh')
-
     if not refresh_token:
         return Response({"detail": "Refresh token missing."}, status=400)
-
     try:
         # Crée un nouvel objet RefreshToken pour valider le token
         refresh = RefreshToken(refresh_token)
-
         # Génère un nouveau token d'accès
         new_access_token = refresh.access_token
         return Response({
             "access": str(new_access_token),
         }, status=200)
-
     except TokenError:
         return Response({"detail": "Invalid or expired refresh token."}, status=400)
