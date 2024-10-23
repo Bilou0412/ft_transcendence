@@ -1,19 +1,26 @@
+//#region settings
+
 // Environment settings
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+// Load the background texture
+const backgroundTexture = new THREE.TextureLoader().load('texture/sky.jpg');
+
+// Set the background texture
+scene.background = backgroundTexture;
 
 // Game settings
 const lineLength = 5; // Length of the player lines
 const targetHeight = 0.6; // Height at which the cubes should be raised
 const liftSpeed = 0.1; // Speed at which the cubes should be raised/lowered
 const moveSpeed = 0.3; // Speed at which the players can move
-const initialBallSpeed = 0.4; // Initial speed of the ball
+const initialBallSpeed = 0.3; // Initial speed of the ball
 const ballSizeScale = 2; // Size of the ball
 const speedIncreaseFactor = 1.0; // Factor by which the ball speed increases on player's collision
-const superChargeCount = 5; // Number of hits required to supercharge the ball
+const superChargeCount = 1; // Number of hits required to supercharge the ball
 
 // Platform dimensions
 const platformWidth = 50;  // Platform width
@@ -29,7 +36,11 @@ let player2Score = 0;
 let player1HitCounter = 0;
 let player2HitCounter = 0;
 let ServSide = 2;
+let lastHit = 1;
 
+//#endregion
+
+//#region construction
 const createRoundedBox = (width, height, depth, radius, smoothness) => {
     const shape = new THREE.Shape();
     // epsilon to prevent rendering errors
@@ -80,6 +91,30 @@ for (let i = platformWidth - 2; i < platformWidth + 1; i++) {
     }
 }
 
+// Load the textures
+const textureLoader = new THREE.TextureLoader();
+const platformTexture = textureLoader.load('texture/50x30.png');
+const sideTexture = textureLoader.load('texture/side50.png');
+
+// Create materials
+const platformMaterial = new THREE.MeshPhongMaterial({ map: platformTexture });
+const sideMaterial = new THREE.MeshPhongMaterial({ map: sideTexture });
+
+// Create an array of materials for each face of the box
+const materials = [
+    sideMaterial, // Right side
+    sideMaterial, // Left side
+    platformMaterial, // Top side
+    sideMaterial, // Bottom side
+    sideMaterial, // Front side
+    sideMaterial  // Back side
+];
+
+// Create middle platform with different textures
+const platformGeometry = new THREE.BoxGeometry(platformWidth - 4, cubeSize, platformLength + 2);
+const platform = new THREE.Mesh(platformGeometry, materials);
+scene.add(platform);
+
 // Add lighting to see the rounded edges better
 const ambientLight = new THREE.AmbientLight(0x606060);
 scene.add(ambientLight);
@@ -105,7 +140,7 @@ const ballMaterial = new THREE.MeshPhongMaterial({
     shininess: 30
 });
 const ball = new THREE.Mesh(ballGeometry, ballMaterial);
-ball.position.set(0, 1, 0);
+ball.position.set(0, 1, 0);cubeSize/2 
 ball.castShadow = true;
 ball.receiveShadow = true;
 ball.userData.heldBy = null; // Add this line to track which player is holding the ball
@@ -115,6 +150,9 @@ scene.add(ball);
 let ballSpeed = initialBallSpeed;
 let ballVelocity = new THREE.Vector3(ballSpeed, 0, ballSpeed);
 
+//#endregion
+
+//#region user interactions
 // Object to track pressed keys
 const pressedKeys = {};
 
@@ -206,103 +244,118 @@ function grabBall(player)
 	updateHitCounter2Display();
 }
 
-function updateBallPosition() 
-{
-    if (ball.userData.heldBy !== null) 
-	{
+//#endregion
+
+function updateBallPosition() {
+    if (ball.userData.heldBy !== null) {
         // If the ball is held by a player, update its position to follow the paddle
         const playerPositions = ball.userData.heldBy === 1 ? player1Positions : player2Positions;
         const middlePos = playerPositions[Math.floor(lineLength / 2)];
-        
-        if (ball.userData.heldBy === 1) {
-            // Player 1 (left side)
-            ball.position.set(
-                middlePos.x - 23,
-                1,
-                middlePos.z - 14
-            );
-        } 
-		else 
-		{
-            // Player 2 (right side)
-            ball.position.set(
-                middlePos.x - 26,
-                1,
-                middlePos.z - 14
-            );
-        }
+        ball.position.set(
+            middlePos.x - platformWidth / 2 + (ball.userData.heldBy === 1 ? 2 : -1),
+            1,
+            middlePos.z - platformLength / 2
+        )
         return;
     }
 
-    // Calculate potential new position
-    const potentialPosition = ball.position.clone().add(ballVelocity);
+    // Calculate potential new position (only in XZ plane)
+    const potentialPosition = ball.position.clone().add(new THREE.Vector3(ballVelocity.x, 0, ballVelocity.z));
+
+    // Create a ray for collision detection (only in XZ plane)
+    const rayDirection = new THREE.Vector3(ballVelocity.x, -0.2, ballVelocity.z).normalize();
+    const ray = new THREE.Ray(ball.position, rayDirection);
+    // const rayLength = new THREE.Vector3(ballVelocity.x, -0.2, ballVelocity.z).length();
+    const rayLength = 0.2;
 
     // Check for collisions with raised cubes
     let collision = false;
+    let closestIntersection = null;
+    let closestCube = null;
+
     cubes.forEach(cube => {
-        if (cube.material.color.getHex() === 0xffffff || cube.material.color.getHex() === 0xff0000) { // Only check cubes that are raised 
-            // paddle's middle cube position on the grid 
-            let paddleMiddle;
-            if (potentialPosition.x < 0)
-                paddleMiddle = player1Positions[lineLength - 1].z - 2;
-            else
-                paddleMiddle = player2Positions[lineLength - 1].z - 2;
-            // paddle's middle cube position on the plane
-            const paddleMiddleOnplane = paddleMiddle - ((platformLength / 2) * cubeSize);
+        if (cube.material.color.getHex() === 0xffffff || cube.material.color.getHex() === 0xff0000) {
+            const cubeBoundingBox = new THREE.Box3().setFromObject(cube);
+            const intersection = ray.intersectBox(cubeBoundingBox, new THREE.Vector3());
 
-            const dx = Math.abs(potentialPosition.x - cube.position.x);
-            const dz = Math.abs(potentialPosition.z - cube.position.z);
 
-			
-            if (dx < 0.8 && dz < 0.8) // Collision detected
-            {
-                collision = true;
-                const player = potentialPosition.x < 0 ? 1 : 2;
-                const hitCounter = player === 1 ? player1HitCounter : player2HitCounter;
-
-                if (hitCounter >= superChargeCount) 
-                {
-                    // Player has 10 or more hits, grab the ball
-                    grabBall(player);
+            if (intersection && intersection.distanceTo(ball.position) <= rayLength) {
+                if (!closestIntersection || intersection.distanceTo(ball.position) < closestIntersection.distanceTo(ball.position)) {
+                    closestIntersection = intersection;
+                    closestCube = cube;
+                    collision = true;
                 }
-				else 
-				{
-                    // Normal collision behavior
-                    if (dx > dz) 
-					{
-                        const maxAngle = 0.3;
-                        const angle = Math.max(maxAngle * -1, Math.min(maxAngle, ((potentialPosition.z - paddleMiddleOnplane) / (lineLength / 2)) * maxAngle));
-                        ballVelocity.z = angle;
-                        ballVelocity.x *= -1;
-						// Increment hit counter
-						if (player === 1 && hitSide !== 1)
-						{
-							player1HitCounter++;
-							hitSide = 1;
-						}
-						else if (player === 2 && hitSide !== 2)
-						{
-							player2HitCounter++;
-							hitSide = 2;
-						}
-						updateHitCounter1Display();
-						updateHitCounter2Display();
-                    } 
-					else
-                        ballVelocity.z *= -1; 
-
-                    // Increase ball speed on collision with player
-                    ballSpeed = ballSpeed * speedIncreaseFactor;
-                    ballVelocity.normalize().multiplyScalar(ballSpeed);
-                }
-				updateHitCounter1Display();
-				updateHitCounter2Display();
             }
         }
     });
 
-    // Only update the ball position if no collision occurred and the ball is not held
-    if (!collision && ball.userData.heldBy === null) {
+    if (collision) {
+        // Handle collision using your original angle-based rebound method
+        const player = closestCube.position.x < 0 ? 1 : 2;
+        const hitCounter = player === 1 ? player1HitCounter : player2HitCounter;
+
+        if (hitCounter >= superChargeCount) 
+            grabBall(player);
+        else 
+        {
+            // Increment hit counter
+            if (player === 1 && lastHit != 1) {
+                player1HitCounter++;
+                lastHit = 1;
+            } 
+            else if (player === 2 && lastHit != 2)
+            {
+                player2HitCounter++;
+                lastHit = 2;    
+            }
+            updateHitCounter1Display();
+            updateHitCounter2Display();
+
+            let paddleMiddle;
+            if (player === 1)
+                paddleMiddle = player1Positions[Math.floor(lineLength / 2)].z;
+            else
+                paddleMiddle = player2Positions[Math.floor(lineLength / 2)].z;
+            const paddleMiddleOnplane = paddleMiddle - ((platformLength / 2) * cubeSize);
+            let side = 0;
+
+            // Check if the collision is on the front face or top/bottom edges
+            if (Math.abs(closestIntersection.z - paddleMiddleOnplane) < lineLength / 2 - 0.1) 
+            {
+                // Front face collision - use angle-based rebound
+                const maxAngle = 0.3;
+                const angle = Math.max(maxAngle * -1, Math.min(maxAngle, ((potentialPosition.z - paddleMiddleOnplane) / (lineLength / 2)) * maxAngle));
+
+                ballVelocity.z = angle;
+                ballVelocity.x *= -1;
+                side = 0;
+            } 
+            else 
+            {
+                // Top or bottom edge collision - reverse Z velocity
+                ballVelocity.z *= -1;
+                if (closestIntersection.z < paddleMiddleOnplane) 
+                {
+                    // ballVelocity.z = Math.abs(ballVelocity.z) * -1;
+                    side = 0.2;
+                }
+                else
+                    side = -0.2;
+            }
+
+            // Adjust ball position to prevent sticking to the position of the impact
+            let positionOnPaddle = new THREE.Vector3(closestCube.position.x + (ballVelocity.x > 0 ? 1.1: -1.1), 1, closestCube.position.z + side);
+            ball.position.copy(positionOnPaddle);
+            // ball.position.copy(closestIntersection);
+
+            // Increase ball speed on collision with player
+            ballSpeed = ballSpeed * speedIncreaseFactor;
+            ballVelocity.normalize().multiplyScalar(ballSpeed);
+        }
+    } 
+    else 
+    {
+        // Update ball position if no collision occurred
         ball.position.copy(potentialPosition);
     }
 
@@ -329,6 +382,8 @@ function updateBallPosition()
         resetBall();
     }
 }
+
+//#region utils functions
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -394,7 +449,7 @@ function onKeyDown(event) {
     // Release the ball when space is pressed
 	if (event.key === ' ' && ball.userData.heldBy !== null) {
         const direction = ball.userData.heldBy === 1 ? 1 : -1;
-        ballVelocity.set(direction * ballSpeed * 5, 0, 0);
+        ballVelocity.set(direction * ballSpeed * 8, 0, 0);
         const player = ball.userData.heldBy;
         ball.userData.heldBy = null;
         updatePaddleColor(player, 0xffffff); // Reset paddle color to white
@@ -421,4 +476,26 @@ window.addEventListener('keyup', onKeyUp, false);
 window.addEventListener('wheel', onMouseWheel, false);
 
 // Start the animation loop
-animate();
+// animate();
+
+function resetGame() {
+    player1Score = 0;
+    player2Score = 0;
+    updateScoreDisplay();
+    resetBall();
+}
+
+function startGame() {
+    resetGame();
+    animate();
+}
+
+document.getElementById('startButton').addEventListener('click', function() {
+    // Cacher l'écran titre
+    document.getElementById('titleScreen').style.display = 'none';
+
+    // Lancer le jeu
+    startGame();
+});
+
+//#endregion

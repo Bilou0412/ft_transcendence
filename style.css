@@ -1,0 +1,45 @@
+body, html {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+canvas {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#scoreDisplay {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    color: white;
+    z-index: 100;
+}
+
+#hitCounter1Display {
+    position: absolute;
+    bottom: 220px;
+    left: 20px;
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    color: white;
+    z-index: 100;
+}
+
+#hitCounter2Display {
+    position: absolute;
+    bottom: 220px;
+    right: 20px;
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    color: white;
+    z-index: 100;
+}
