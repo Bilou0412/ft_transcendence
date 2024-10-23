@@ -5,17 +5,24 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
-from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import TokenError
+
 
 @api_view(['POST'])
-def login(request):
+def token(request):
     user = get_object_or_404(User, username=request.data['username'])
     if not user.check_password(request.data['password']):
         return Response({"detail": "Invalid password"}, status=status.HTTP_400_BAD_REQUEST)
-    token, create = Token.objects.get_or_create(user=user)
-    serializer = UserSerializer(instance=user)
-    return Response({"token": token.key, "user": serializer.data}, status=status.HTTP_200_OK)
+    refresh = RefreshToken.for_user(user)
+    return Response({
+        "refresh": str(refresh),
+        "access": str(refresh.access_token),
+        "user": {
+            "username": user.username,
+            "email": user.email,
+        }
+    }, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -28,6 +35,23 @@ def signup(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
-def test_token(request):
-    return Response({})
+@api_view(['POST'])
+def refresh_token(request):
+    # Récupère le token de rafraîchissement depuis les données
+    refresh_token = request.data.get('refresh')
+
+    if not refresh_token:
+        return Response({"detail": "Refresh token missing."}, status=400)
+
+    try:
+        # Crée un nouvel objet RefreshToken pour valider le token
+        refresh = RefreshToken(refresh_token)
+
+        # Génère un nouveau token d'accès
+        new_access_token = refresh.access_token
+        return Response({
+            "access": str(new_access_token),
+        }, status=200)
+
+    except TokenError:
+        return Response({"detail": "Invalid or expired refresh token."}, status=400)
