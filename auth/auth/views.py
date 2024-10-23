@@ -11,7 +11,10 @@ from rest_framework_simplejwt.exceptions import TokenError
 
 @api_view(['POST'])
 def token(request):
-    user = get_object_or_404(User, username=request.data['username'])
+    try:
+        user = User.objects.get(username=request.data['username'])
+    except User.DoesNotExist:
+        user = get_object_or_404(User, email=request.data['username']) or User.objects.get(username=request.data['username'])
     if not user.check_password(request.data['password']):
         return Response({"detail": "Invalid password"}, status=status.HTTP_400_BAD_REQUEST)
     refresh = RefreshToken.for_user(user)
@@ -27,7 +30,6 @@ def token(request):
 
 @api_view(['POST'])
 def signup(request):
-    print(request.data)
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.save()
