@@ -1,4 +1,15 @@
 services:
+  db:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${DB_NAME}  # Utilise la variable d'environnement pour le nom de la DB
+      POSTGRES_USER: ${DB_USER}  # Utilise la variable d'environnement pour l'utilisateur
+      POSTGRES_PASSWORD: ${DB_PASSWORD}  # Utilise la variable d'environnement pour le mot de passe
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   web_dev:
     build:
       context: ./docker
@@ -12,7 +23,9 @@ services:
       - DEBUG=True
     env_file:
       - .env  # Charge les variables d'environnement du fichier .env
-    entrypoint: ["/app/docker/entrypoint_dev.sh"] 
+    entrypoint: ["/app/docker/entrypoint_dev.sh"]
+    depends_on:
+      - db  # Assure que db est démarré avant web_dev
 
   web_prod:
     build:
@@ -27,18 +40,9 @@ services:
       - PYTHONUNBUFFERED=1
     env_file:
       - .env  # Charge les variables d'environnement du fichier .env
-    entrypoint: ["/app/docker/entrypoint_prod.sh"] 
-
-  db:
-    image: postgres:13
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: ${DB_NAME}  # Utilise la variable d'environnement pour le nom de la DB
-      POSTGRES_USER: ${DB_USER}  # Utilise la variable d'environnement pour l'utilisateur
-      POSTGRES_PASSWORD: ${DB_PASSWORD}  # Utilise la variable d'environnement pour le mot de passe
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+    entrypoint: ["/app/docker/entrypoint_prod.sh"]
+    depends_on:
+      - db  # Assure que db est démarré avant web_prod
 
 volumes:
   postgres_data:
