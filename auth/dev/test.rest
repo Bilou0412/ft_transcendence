@@ -1,9 +1,9 @@
-POST http://127.0.0.1:8001/auth/token
+POST http://127.0.0.1:8000/auth/token
 Content-Type: application/json
 
 {
     "username": "bilel",
-    "password": "q"
+    "password": "Algerie"
 }
 ###
 
@@ -11,9 +11,9 @@ POST http://127.0.0.1:8000/auth/signup
 Content-Type: application/json
 
 {
-    "username": "sirine",
-    "password": "algerie",
-    "email": "sirinezl@yahoo.com"
+    "username": "bilel",
+    "password": "Algerie",
+    "email": "bilel.moudache@proton.me"
 }
 ###
 

@@ -1,29 +1,33 @@
 services:
   web_dev:
     build:
-      context: .
+      context: ./docker
     ports:
       - "8000:8000"
     volumes:
       - .:/app
+      - ./docker:/app/docker
     environment:
       - PYTHONUNBUFFERED=1
       - DEBUG=True
     env_file:
       - .env  # Charge les variables d'environnement du fichier .env
-    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    entrypoint: ["/app/docker/entrypoint_dev.sh"] 
 
   web_prod:
     build:
-      context: .
+      context: ./docker
     ports:
       - "8001:8000"
+    volumes:
+      - .:/app
+      - ./docker:/app/docker
     environment:
       - DEBUG=False
       - PYTHONUNBUFFERED=1
     env_file:
       - .env  # Charge les variables d'environnement du fichier .env
-    command: ["gunicorn", "--bind", "0.0.0.0:8000", "auth.wsgi:application"]
+    entrypoint: ["/app/docker/entrypoint_prod.sh"] 
 
   db:
     image: postgres:13
