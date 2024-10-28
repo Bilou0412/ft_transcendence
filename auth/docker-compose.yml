@@ -1,0 +1,40 @@
+services:
+  web_dev:
+    build:
+      context: .
+    ports:
+      - "8001:8000"
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DEBUG=True
+    env_file:
+      - .env  # Charge les variables d'environnement du fichier .env
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+  web_prod:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=False
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - .env  # Charge les variables d'environnement du fichier .env
+    command: ["gunicorn", "--bind", "0.0.0.0:8000", "auth.wsgi:application"]
+
+  db:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${DB_NAME}  # Utilise la variable d'environnement pour le nom de la DB
+      POSTGRES_USER: ${DB_USER}  # Utilise la variable d'environnement pour l'utilisateur
+      POSTGRES_PASSWORD: ${DB_PASSWORD}  # Utilise la variable d'environnement pour le mot de passe
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
