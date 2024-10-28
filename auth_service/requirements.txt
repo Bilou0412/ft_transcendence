@@ -1,5 +1,0 @@
-Django>=5.1.2
-djangorestframework
-psycopg2-binary
-djangorestframework-simplejwt
-Pillow  # Ajoute cette ligne
