@@ -43,3 +43,8 @@ canvas {
     color: white;
     z-index: 100;
 }
+
+@font-face {
+    font-family: 'Digital-7';
+    src: url('fonts/digital_7/digital-7.ttf') format('truetype');
+}

@@ -6,11 +6,11 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
-// Load the background texture
-const backgroundTexture = new THREE.TextureLoader().load('texture/sky.jpg');
+// // Load the background texture
+// const backgroundTexture = new THREE.TextureLoader().load('texture/sky.jpg');
 
-// Set the background texture
-scene.background = backgroundTexture;
+// // Set the background texture
+// scene.background = backgroundTexture;
 
 // Game settings
 const lineLength = 5; // Length of the player lines
@@ -20,7 +20,7 @@ const moveSpeed = 0.3; // Speed at which the players can move
 const initialBallSpeed = 0.3; // Initial speed of the ball
 const ballSizeScale = 2; // Size of the ball
 const speedIncreaseFactor = 1.0; // Factor by which the ball speed increases on player's collision
-const superChargeCount = 1; // Number of hits required to supercharge the ball
+const superChargeCount = 5; // Number of hits required to supercharge the ball
 
 // Platform dimensions
 const platformWidth = 50;  // Platform width
@@ -98,6 +98,7 @@ const sideTexture = textureLoader.load('texture/side50.png');
 
 // Create materials
 const platformMaterial = new THREE.MeshPhongMaterial({ map: platformTexture });
+// platformMaterial.map.minFilter = THREE.LinearFilter;
 const sideMaterial = new THREE.MeshPhongMaterial({ map: sideTexture });
 
 // Create an array of materials for each face of the box
@@ -409,21 +410,143 @@ async function resetBall() {
     ballVelocity = new THREE.Vector3(ballSpeed * (ServSide == 1 ? -1 : 1), 0, ballSpeed * (Math.random() > 0.5 ? 1 : -1));
 }
 
-function updateScoreDisplay() {
-    const scoreDisplay = document.getElementById('scoreDisplay');
-    scoreDisplay.textContent = `${player1Score} | ${player2Score}`;
-}
+//#region scoreboard
+// Load the scoreboard image texture
+const scoreboardTexture = new THREE.TextureLoader().load('texture/Scoreboard.png');
+const scoreboardMaterial = new THREE.MeshBasicMaterial({ map: scoreboardTexture });
+// scoreboardTexture.minFilter = THREE.LinearFilter;
+
+// Create the scoreboard plane
+const scoreboardWidth = 20; // Adjust the width as needed
+const scoreboardHeight = 10; // Adjust the height as needed
+const scoreboardGeometry = new THREE.PlaneGeometry(scoreboardWidth, scoreboardHeight);
+const scoreboardMesh = new THREE.Mesh(scoreboardGeometry, scoreboardMaterial);
+scoreboardMesh.position.set(0, 10, -platformLength / 2 - 2); // Adjust the position as needed
+scene.add(scoreboardMesh);
+
+//#region scoreboard
+
+const scoreDisplay = document.createElement('canvas');
+scoreDisplay.width = 1200;
+scoreDisplay.height = 600;
+const scoreDisplayCtx = scoreDisplay.getContext('2d');
+const updateScoreDisplay = () => {
+    scoreDisplayCtx.clearRect(0, 0, scoreDisplay.width, scoreDisplay.height);
+    scoreDisplayCtx.fillStyle = 'white';
+    scoreDisplayCtx.font = 'bold 100px "Digital-7"';
+
+    // Calculate text widths for each part of the scoreboard
+    const player1ScoreText = `${player1Score}`;
+    const player2ScoreText = `${player2Score}`;
+
+
+    // Draw the scores and separator at calculated positions
+    scoreDisplayCtx.fillText(player1ScoreText, 300, 300);
+    scoreDisplayCtx.fillText(player2ScoreText, 850, 300);
+
+    // Update the texture to reflect the new score
+    scoreDisplayTexture.needsUpdate = true;
+};
+
+
+const scoreDisplayTexture = new THREE.CanvasTexture(scoreDisplay);
+const scoreDisplayMaterial = new THREE.MeshBasicMaterial({ map: scoreDisplayTexture, transparent: true });
+const scoreDisplayPlane = new THREE.PlaneGeometry(2, 1);
+const scoreDisplayMesh = new THREE.Mesh(scoreDisplayPlane, scoreDisplayMaterial);
+scoreDisplayMesh.scale.set(10, 10, 10);
+scoreDisplayMesh.position.set(0, 10, -platformLength / 2 - 1);
+scene.add(scoreDisplayMesh);
+//#endregion
+
+
+//#region clock
+const Clock = document.createElement('canvas');
+Clock.width = 1200;
+Clock.height = 600;
+const ClockCtx = Clock.getContext('2d');
+const updateClock = () => {
+    ClockCtx.clearRect(0, 0, Clock.width, Clock.height);
+    ClockCtx.fillStyle = 'white';
+    ClockCtx.font = 'bold 100px "Digital-7"';
+
+    const elapsedTime = Math.floor((Date.now() - gameStartTime) / 1000); // Get elapsed time
+    const minutes = Math.floor(elapsedTime / 60);
+    const seconds = elapsedTime % 60;
+    
+    const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    
+
+
+    // Draw the scores and separator at calculated positions
+    ClockCtx.fillText(formattedTime, 500, 100);
+
+    // Update the texture to reflect the new score
+    ClockTexture.needsUpdate = true;
+    setTimeout(updateClock, 1000);
+};
+
+
+const ClockTexture = new THREE.CanvasTexture(Clock);
+const ClockMaterial = new THREE.MeshBasicMaterial({ map: ClockTexture, transparent: true });
+const ClockPlane = new THREE.PlaneGeometry(2, 1);
+const ClockMesh = new THREE.Mesh(ClockPlane, ClockMaterial);
+ClockMesh.scale.set(10, 10, 10);
+ClockMesh.position.set(0, 10, -platformLength / 2 - 1);
+scene.add(ClockMesh);
+
+//#endregion
+let charge1 = null;
+let charge2 = null;
 
 function updateHitCounter1Display() {
-	const hitCounter1Display = document.getElementById('hitCounter1Display');
-	hitCounter1Display.textContent = `${player1HitCounter} / ${superChargeCount}`;
+    // Remove the previous charge1 rectangle
+    if (charge1) {
+        scene.remove(charge1);
+        charge1 = null;
+    }
+
+    if (player1HitCounter > 0) {
+        const length_max = 5.5;
+        const width_max = 0.5;
+        const length = length_max * (player1HitCounter / superChargeCount);
+        const charge1Geometry = new THREE.PlaneGeometry(length, width_max); // Width and height of the charge1
+        const charge1Material = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide });
+        charge1 = new THREE.Mesh(charge1Geometry, charge1Material);
+
+        // Set the position of the charge1
+        const middle = -4.75;
+        const x = middle - (length_max / 2) + (length / 2);
+        charge1.position.set(x, 8.25, -platformLength / 2 - 1.9); // Adjust the position as needed
+
+        // Add the charge1 to the scene
+        scene.add(charge1);
+    }
 }
 
 function updateHitCounter2Display() {
-	const hitCounter2Display = document.getElementById('hitCounter2Display');
-	hitCounter2Display.textContent = `${player2HitCounter} / ${superChargeCount}`;
-}
+    // Remove the previous charge2 rectangle
+    if (charge2) {
+        scene.remove(charge2);
+        charge2 = null;
+    }
 
+    if (player2HitCounter > 0) {
+        const length_max = 5.5;
+        const width_max = 0.5;
+        const length = length_max * (player2HitCounter / superChargeCount);
+        const charge2Geometry = new THREE.PlaneGeometry(length, width_max); // Width and height of the charge2
+        const charge2Material = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide });
+        charge2 = new THREE.Mesh(charge2Geometry, charge2Material);
+
+        // Set the position of the charge2
+        const middle = 4.75;
+        const x = middle - (length_max / 2) + (length / 2);
+        charge2.position.set(x, 8.25, -platformLength / 2 - 1.9); // Adjust the position as needed
+
+        // Add the charge2 to the scene
+        scene.add(charge2);
+    }
+}
 // Animation loop
 function animate() {
     requestAnimationFrame(animate);
@@ -486,6 +609,8 @@ function resetGame() {
 }
 
 function startGame() {
+    gameStartTime = Date.now();
+    updateClock();
     resetGame();
     animate();
 }
