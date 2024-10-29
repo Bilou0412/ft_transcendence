@@ -1,0 +1,11 @@
+Model Information:
+* title:	Macintosh
+* source:	https://sketchfab.com/3d-models/macintosh-1e562527b68e4bd88ed3f679b86be208
+* author:	Kesenkai (https://sketchfab.com/kesenkai)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Macintosh" (https://sketchfab.com/3d-models/macintosh-1e562527b68e4bd88ed3f679b86be208) by Kesenkai (https://sketchfab.com/kesenkai) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -6,11 +6,11 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
-// // Load the background texture
-// const backgroundTexture = new THREE.TextureLoader().load('texture/sky.jpg');
+// Load the background texture
+const backgroundTexture = new THREE.TextureLoader().load('texture/sky.jpg');
 
-// // Set the background texture
-// scene.background = backgroundTexture;
+// Set the background texture
+scene.background = backgroundTexture;
 
 // Game settings
 const lineLength = 5; // Length of the player lines
@@ -126,7 +126,7 @@ scene.add(directionalLight);
 // Adjust the position of the camera for the new platform
 camera.position.y = Math.max(platformWidth, platformLength) * 0.8;
 camera.position.z = Math.max(platformWidth, platformLength) * 1;
-camera.lookAt(0, 0, 0);
+camera.lookAt(0, 0, 6);
 
 // Variables to track the current position of the cursors
 const centerZ = lineLength == platformLength ? 0 : Math.floor((platformLength - lineLength) / 2);
@@ -228,6 +228,9 @@ function updatePaddleColor(player, color)
     });
 }
 
+//#endregion
+
+//#region ball physics
 function grabBall(player) 
 {
     ball.userData.heldBy = player;
@@ -244,8 +247,6 @@ function grabBall(player)
 	updateHitCounter1Display();
 	updateHitCounter2Display();
 }
-
-//#endregion
 
 function updateBallPosition() {
     if (ball.userData.heldBy !== null) {
@@ -383,6 +384,7 @@ function updateBallPosition() {
         resetBall();
     }
 }
+//#endregion
 
 //#region utils functions
 
@@ -409,12 +411,12 @@ async function resetBall() {
     ballSpeed = initialBallSpeed;
     ballVelocity = new THREE.Vector3(ballSpeed * (ServSide == 1 ? -1 : 1), 0, ballSpeed * (Math.random() > 0.5 ? 1 : -1));
 }
+//#endregion
 
 //#region scoreboard
 // Load the scoreboard image texture
 const scoreboardTexture = new THREE.TextureLoader().load('texture/Scoreboard.png');
 const scoreboardMaterial = new THREE.MeshBasicMaterial({ map: scoreboardTexture });
-// scoreboardTexture.minFilter = THREE.LinearFilter;
 
 // Create the scoreboard plane
 const scoreboardWidth = 20; // Adjust the width as needed
@@ -423,8 +425,6 @@ const scoreboardGeometry = new THREE.PlaneGeometry(scoreboardWidth, scoreboardHe
 const scoreboardMesh = new THREE.Mesh(scoreboardGeometry, scoreboardMaterial);
 scoreboardMesh.position.set(0, 10, -platformLength / 2 - 2); // Adjust the position as needed
 scene.add(scoreboardMesh);
-
-//#region scoreboard
 
 const scoreDisplay = document.createElement('canvas');
 scoreDisplay.width = 1200;
@@ -454,12 +454,12 @@ const scoreDisplayMaterial = new THREE.MeshBasicMaterial({ map: scoreDisplayText
 const scoreDisplayPlane = new THREE.PlaneGeometry(2, 1);
 const scoreDisplayMesh = new THREE.Mesh(scoreDisplayPlane, scoreDisplayMaterial);
 scoreDisplayMesh.scale.set(10, 10, 10);
-scoreDisplayMesh.position.set(0, 10, -platformLength / 2 - 1);
+scoreDisplayMesh.position.set(0, 10, -platformLength / 2 - 1.9);
 scene.add(scoreDisplayMesh);
 //#endregion
 
-
 //#region clock
+
 const Clock = document.createElement('canvas');
 Clock.width = 1200;
 Clock.height = 600;
@@ -491,10 +491,12 @@ const ClockMaterial = new THREE.MeshBasicMaterial({ map: ClockTexture, transpare
 const ClockPlane = new THREE.PlaneGeometry(2, 1);
 const ClockMesh = new THREE.Mesh(ClockPlane, ClockMaterial);
 ClockMesh.scale.set(10, 10, 10);
-ClockMesh.position.set(0, 10, -platformLength / 2 - 1);
+ClockMesh.position.set(0, 10, -platformLength / 2 - 1.9);
 scene.add(ClockMesh);
 
 //#endregion
+
+//#region hit counter
 let charge1 = null;
 let charge2 = null;
 
@@ -547,6 +549,106 @@ function updateHitCounter2Display() {
         scene.add(charge2);
     }
 }
+//#endregion
+
+//#region monitor
+// Load the monitor model
+let loadedModel;
+const glftLoader = new THREE.GLTFLoader();
+glftLoader.load('./models/new_retro_computer/scene.gltf', (gltfScene) => {
+    gltfScene.scene.position.z = platformLength / 2 + 8;
+    gltfScene.scene.scale.set(2, 2, 2);
+
+    scene.add(gltfScene.scene);
+});
+
+const MonitorDisplay = document.createElement('canvas');
+MonitorDisplay.width = 500;
+MonitorDisplay.height = 300;
+const MonitorDisplayCtx = MonitorDisplay.getContext('2d');
+const updateMonitorDisplay = () => {
+    MonitorDisplayCtx.clearRect(0, 0, MonitorDisplay.width, MonitorDisplay.height);
+
+    MonitorDisplayCtx.fillStyle = 'green';
+    MonitorDisplayCtx.font = 'bold 100px "Digital-7"';
+
+    const characters = 'abcdefghijklmnopqrstuvwxyz';
+    let result = '';
+    for (let i = 0; i < 8; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    const formattedTime = result;
+    MonitorDisplayCtx.fillText(formattedTime, 60, 100);
+
+    // Update the texture to reflect the new score
+    MonitorDisplayTexture.needsUpdate = true;
+    setTimeout(updateMonitorDisplay, 100);
+};
+
+
+const MonitorDisplayTexture = new THREE.CanvasTexture(MonitorDisplay);
+const MonitorDisplayMaterial = new THREE.MeshBasicMaterial({ map: MonitorDisplayTexture, transparent: true });
+const MonitorDisplayPlane = new THREE.PlaneGeometry(2, 1);
+const MonitorDisplayMesh = new THREE.Mesh(MonitorDisplayPlane, MonitorDisplayMaterial);
+MonitorDisplayMesh.scale.set(2, 3, 3);
+MonitorDisplayMesh.position.set(-0.2, 2.5, platformLength / 2 + 6.1);
+scene.add(MonitorDisplayMesh);
+
+
+// #endregion
+
+//#region focus
+// Define target positions and orientations for each focus
+const gameView = {
+    position: { x: 0, y: platformWidth * 0.8, z: platformLength },
+    rotation: { x: -0.8, y: 0, z: 0 }
+};
+
+const monitorView = {
+    position: { x: 0, y: 3, z: 23.5 },
+    rotation: { x: -0.2, y: 0, z: 0 }
+};
+
+// Function to smoothly transition to the game view
+function focusGame() {
+    gsap.to(camera.position, {
+        duration: 2,  // Duration of the animation in seconds
+        x: gameView.position.x,
+        y: gameView.position.y,
+        z: gameView.position.z,
+        ease: "power2.inOut"
+    });
+
+    gsap.to(camera.rotation, {
+        duration: 2,
+        x: gameView.rotation.x,
+        y: gameView.rotation.y,
+        z: gameView.rotation.z,
+        ease: "power2.inOut"
+    });
+}
+
+// Function to smoothly transition to the monitor view
+function focusMonitor() {
+    gsap.to(camera.position, {
+        duration: 2,
+        x: monitorView.position.x,
+        y: monitorView.position.y,
+        z: monitorView.position.z,
+        ease: "power2.inOut"
+    });
+
+    gsap.to(camera.rotation, {
+        duration: 2,
+        x: monitorView.rotation.x,
+        y: monitorView.rotation.y,
+        z: monitorView.rotation.z,
+        ease: "power2.inOut"
+    });
+}
+//#endregion
+
+//#region game loop
 // Animation loop
 function animate() {
     requestAnimationFrame(animate);
@@ -577,6 +679,16 @@ function onKeyDown(event) {
         ball.userData.heldBy = null;
         updatePaddleColor(player, 0xffffff); // Reset paddle color to white
     }
+
+    if (event.key === 'Escape'){
+        if ( gameStatus === 'playing') {
+            focusMonitor();
+            gameStatus = 'paused';
+        } else {
+            focusGame();
+            gameStatus = 'playing';
+        }
+    }
 }
 
 function onKeyUp(event) {
@@ -591,7 +703,7 @@ function onMouseWheel(event) {
     camera.position.y *= zoomFactor;
     camera.position.z *= zoomFactor;
     
-    camera.lookAt(0, 0, 0);
+    camera.lookAt(0, 0, 6);
 }
 
 window.addEventListener('keydown', onKeyDown, false);
@@ -608,9 +720,13 @@ function resetGame() {
     resetBall();
 }
 
+let gameStatus = 'playing';
+
+let gameStartTime;
 function startGame() {
     gameStartTime = Date.now();
     updateClock();
+    updateMonitorDisplay();
     resetGame();
     animate();
 }

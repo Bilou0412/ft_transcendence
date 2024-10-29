@@ -1,0 +1,8 @@
+Model Information:
+* title:	PSX Monitor
+* source:	https://sketchfab.com/3d-models/psx-monitor-09c0a050919f42248e3848d5bd837fbe
+* author:	Charckes (https://sketchfab.com/charlesmoch)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works

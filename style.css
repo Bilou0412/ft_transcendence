@@ -13,38 +13,7 @@ canvas {
     height: 100%;
 }
 
-#scoreDisplay {
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: Arial, sans-serif;
-    font-size: 24px;
-    color: white;
-    z-index: 100;
-}
-
-#hitCounter1Display {
-    position: absolute;
-    bottom: 220px;
-    left: 20px;
-    font-family: Arial, sans-serif;
-    font-size: 24px;
-    color: white;
-    z-index: 100;
-}
-
-#hitCounter2Display {
-    position: absolute;
-    bottom: 220px;
-    right: 20px;
-    font-family: Arial, sans-serif;
-    font-size: 24px;
-    color: white;
-    z-index: 100;
-}
-
 @font-face {
     font-family: 'Digital-7';
-    src: url('fonts/digital_7/digital-7.ttf') format('truetype');
+    src: url('fonts/digital_7/digital-7 (mono).ttf') format('truetype');
 }
