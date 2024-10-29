@@ -321,10 +321,10 @@ def logout(request):
         return Response({"detail": "An error occurred during logout"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])  # Pas besoin d'authentification pour valider un token
 def validate_token(request):
     """
-    View to validate a JWT token.
+    View to validate a JWT token and return the associated username.
     """
     token = request.data.get('token')
 
@@ -332,7 +332,19 @@ def validate_token(request):
         return Response({"detail": "Token is required"}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        UntypedToken(token)  # Vérifie si le token est valide
-        return Response({"detail": "Token is valid"}, status=status.HTTP_200_OK)
+        # Vérifie si le token est valide et récupère les informations
+        untTypedToken = UntypedToken(token)
+        
+        # Ici, on peut récupérer les données de l'utilisateur à partir du token
+        user_id = untTypedToken['user_id']
+        user = User.objects.get(pk=user_id)
+
+        return Response({
+            "detail": "Token is valid",
+            "username": user.username,
+        }, status=status.HTTP_200_OK)
+    
     except TokenError:
         return Response({"detail": "Token is invalid"}, status=status.HTTP_401_UNAUTHORIZED)
+    except User.DoesNotExist:
+        return Response({"detail": "User associated with token does not exist"}, status=status.HTTP_404_NOT_FOUND)
