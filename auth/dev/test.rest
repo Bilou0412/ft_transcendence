@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
     "username": "reset.pass.ponggame@gmail.com",
-    "password": "palestin"
+    "password": "palestine"
 }
 
 ### Signup
@@ -47,4 +47,14 @@ Content-Type: application/json
 
 {
     "new_password": "palestin"
+}
+
+### Confirm Password Reset
+POST http://127.0.0.1:8000/api/auth/password/change/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMjEwODkwLCJpYXQiOjE3MzAyMDcyOTAsImp0aSI6ImMzMGY3NWQ5YzllZDRlNzZhYTE2NTQxMzg5MDMyYjI4IiwidXNlcl9pZCI6MTB9.OkkO8ui3vCaWsYs37nBB9yf1b9vnldwh6lzsT1ysNqo
+
+{
+    "old_password": "palestin",
+    "new_password": "palestine"
 }

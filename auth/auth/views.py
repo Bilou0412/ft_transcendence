@@ -1,6 +1,6 @@
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny ,IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
@@ -11,6 +11,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.urls import reverse
 from django.conf import settings
 from .serializers import UserSerializer
+from .serializers import ChangePasswordSerializer
 import logging
 
 logger = logging.getLogger(__name__)
@@ -237,34 +238,28 @@ def reset_password_confirm(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
-        
         if not user.is_active:
             return Response(
                 {"detail": "This account is inactive"}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
-
         if not default_token_generator.check_token(user, token):
             return Response(
                 {"detail": "Invalid or expired reset token"}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
-
         new_password = request.data.get('new_password')
         if not new_password:
             return Response(
                 {"detail": "New password is required"}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
-
         user.set_password(new_password)
         user.save()
-
         return Response(
             {"detail": "Password has been reset successfully"}, 
             status=status.HTTP_200_OK
         )
-
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         return Response(
             {"detail": "Invalid reset link"}, 
@@ -276,3 +271,29 @@ def reset_password_confirm(request, uidb64, token):
             {"detail": "An error occurred while resetting your password"},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def change_password(request):
+    """
+    View to change the password of the authenticated user.
+    """
+    serializer = ChangePasswordSerializer(data=request.data)
+    if serializer.is_valid():
+        user = request.user
+        old_password = serializer.validated_data['old_password']
+        new_password = serializer.validated_data['new_password']
+        # Vérification de l'ancien mot de passe
+        if not user.check_password(old_password):
+            return Response(
+                {"detail": "L'ancien mot de passe est incorrect."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        # Changement de mot de passe
+        user.set_password(new_password)
+        user.save()
+        return Response(
+            {"detail": "Le mot de passe a été changé avec succès."},
+            status=status.HTTP_200_OK
+        )
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
