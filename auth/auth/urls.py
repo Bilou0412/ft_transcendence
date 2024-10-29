@@ -1,16 +1,22 @@
-
 from django.contrib import admin
-from django.urls import re_path ,path
+from django.urls import path
 from . import views
 
 urlpatterns = [
-    re_path('auth/token', views.token),
-    re_path('auth/signup', views.signup),
-    re_path('auth/refresh', views.refresh_token),
-    re_path('auth/reset-password', views.reset_password_request_view, name='reset_password'),
-    
-    # Expression régulière ajustée pour capturer des tokens de longueur variable
-    re_path(r'^auth/password-confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>.+)/$', views.reset_password_confirm, name='password_reset_confirm'),
-    
+    # Admin URL
     path('admin/', admin.site.urls),
+
+    # API Authentication endpoints
+    path('api/auth/login/', views.token, name='login'),
+    path('api/auth/signup/', views.signup, name='signup'),
+    path('api/auth/token/refresh/', views.refresh_token, name='token_refresh'),
+    
+    # API Password reset endpoints
+    path('api/auth/password/reset/', 
+         views.reset_password_request, 
+         name='password_reset_request'),
+    
+    path('api/auth/password/reset/confirm/<str:uidb64>/<str:token>/',
+         views.reset_password_confirm,
+         name='password_reset_confirm'),
 ]

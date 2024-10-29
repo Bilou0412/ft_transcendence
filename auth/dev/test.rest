@@ -1,41 +1,43 @@
-POST http://127.0.0.1:8000/auth/token
+### Login
+POST http://127.0.0.1:8000/api/auth/login/
 Content-Type: application/json
 
 {
-    "username": "bilel",
-    "password": "Algerie"
+    "username": "reset.pass.ponggame@gmail.com",
+    "password": "palestin"
 }
-###
 
-POST http://127.0.0.1:8000/auth/signup
+### Signup
+POST http://127.0.0.1:8000/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "bilel",
-    "password": "Algerie",
-    "email": "bilel.moudache@proton.me"
+    "username": "jdennis",
+    "password": "bret",
+    "password2": "bret",
+    "email": "reset.pass.ponggame@gmail.com"
 }
-###
 
-POST http://127.0.0.1:8000/auth/refresh
+### Refresh Token
+POST http://127.0.0.1:8000/api/auth/token/refresh/
 Content-Type: application/json
 
 {
     "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTczMDI4MTQxMywiaWF0IjoxNzI5Njc2NjEzLCJqdGkiOiJlODIwNDg3NTgxMjU0Mzg2OGQzNmM0YTEwMzczMWIxNyIsInVzZXJfaWQiOjV9.jTOy4cxp-B1OQTxldEybhVKHSsIsGkwDd5LH155nyXQ"
 }
-###
 
-POST http://127.0.0.1:8000/auth/reset-password
+### Request Password Reset
+POST http://127.0.0.1:8000/api/auth/password/reset/
 Content-Type: application/json
 
 {
     "email": "reset.pass.ponggame@gmail.com"
 }
-###
 
-POST http://127.0.0.1:8000/auth/password-confirm/OQ/cfewqg-fc4458c41b443e6543fc459de1c496f0/
+### Confirm Password Reset
+POST http://127.0.0.1:8000/api/auth/password/reset/confirm/Mg/cfnhn8-6526e51095b178fa8d48f420e5b2e6bc/
 Content-Type: application/json
 
 {
-    "new_password": "palestine"
+    "new_password": "palestin"
 }
