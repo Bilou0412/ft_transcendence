@@ -3,8 +3,8 @@ POST http://127.0.0.1:8000/api/auth/login/
 Content-Type: application/json
 
 {
-    "username": "reset.pass.ponggame@gmail.com",
-    "password": "palestine"
+    "username": "bilel",
+    "password": "Algerie93"
 }
 
 ### Signup
@@ -17,13 +17,6 @@ Content-Type: application/json
     "password2": "Algerie93",
     "email": "reset.pass.ponggame@gmail.com"
 }
-
-### Verify Email
-
-GET http://127.0.0.1:8000/api/auth/email/verify/<uidb64>/<token>/
-Content-Type: application/json
-
-
 
 ### Refresh Token
 POST http://127.0.0.1:8000/api/auth/token/refresh/
@@ -52,9 +45,28 @@ Content-Type: application/json
 ### Confirm Password Reset
 POST http://127.0.0.1:8000/api/auth/password/change/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMjEwODkwLCJpYXQiOjE3MzAyMDcyOTAsImp0aSI6ImMzMGY3NWQ5YzllZDRlNzZhYTE2NTQxMzg5MDMyYjI4IiwidXNlcl9pZCI6MTB9.OkkO8ui3vCaWsYs37nBB9yf1b9vnldwh6lzsT1ysNqo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMjE5NDM4LCJpYXQiOjE3MzAyMTU4MzgsImp0aSI6IjkwYjYyOTFiYzY5YjRjODlhYzViNTlkNGJjYTFmNzgyIiwidXNlcl9pZCI6MX0.dfoBLpa6WHpZt4T9Qoi2NJuRbaPs6DyJo6wHJe3nHzc
 
 {
-    "old_password": "palestin",
+    "old_password": "Algerie93",
     "new_password": "palestine"
+}
+
+### Logout
+POST http://127.0.0.1:8000/api/auth/logout/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMjIzNDg1LCJpYXQiOjE3MzAyMTk4ODUsImp0aSI6ImYzZTM3MzZmOTRjYzQ2ZDM5NTVjMzY0NTVhMmFjNGMzIiwidXNlcl9pZCI6M30.Nz_7M2EYmAG5Ao3VPqxkh1fIBbOy61lSaCfUQ-o0M9c
+
+{
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTczMDMwNjI4NSwiaWF0IjoxNzMwMjE5ODg1LCJqdGkiOiI0NGRiMTFlNTA0YTc0MWFkYjAwYTNlNGQ1Yjg5MTUxNSIsInVzZXJfaWQiOjN9.4R6niNk1C12OtwFK_n1iN_CC8SevR6dvbFij3jPcO60"
+}
+
+### Token verify
+
+POST http://127.0.0.1:8000/api/auth/token/validate/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMjI1MDU3LCJpYXQiOjE3MzAyMjE0NTcsImp0aSI6IjhjODliYjExMGNkNDQ2ZDc5ZThhMzA2YmVlY2RiMzgyIiwidXNlcl9pZCI6M30.obZ6W0e66Sod_py8ZRQxzRgd5yvH6i44uhtTP-3jWVw
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMjI1MDU3LCJpYXQiOjE3MzAyMjE0NTcsImp0aSI6IjhjODliYjExMGNkNDQ2ZDc5ZThhMzA2YmVlY2RiMzgyIiwidXNlcl9pZCI6M30.obZ6W0e66Sod_py8ZRQxzRgd5yvH6i44uhtTP-3jWVw"
 }

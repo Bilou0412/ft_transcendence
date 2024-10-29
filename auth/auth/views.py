@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny ,IsAuthenticated
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken ,UntypedToken, TokenError
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
@@ -72,6 +72,7 @@ def token(request):
             {"detail": "An error occurred during authentication"}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+    
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def email_verification(request, uidb64, token):
@@ -297,3 +298,41 @@ def change_password(request):
             status=status.HTTP_200_OK
         )
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def logout(request):
+    """
+    View to log out the user by revoking the refresh token.
+    """
+    try:
+        # Récupérer le jeton de rafraîchissement de la requête
+        refresh_token = request.data.get('refresh')
+        if not refresh_token:
+            return Response({"detail": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Supprimer le jeton de rafraîchissement
+        token = RefreshToken(refresh_token)
+        token.blacklist()
+
+        return Response({"detail": "Déconnexion réussie"}, status=status.HTTP_205_RESET_CONTENT)
+    except Exception as e:
+        logger.error(f"Error in logout view: {str(e)}")
+        return Response({"detail": "An error occurred during logout"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def validate_token(request):
+    """
+    View to validate a JWT token.
+    """
+    token = request.data.get('token')
+
+    if not token:
+        return Response({"detail": "Token is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        UntypedToken(token)  # Vérifie si le token est valide
+        return Response({"detail": "Token is valid"}, status=status.HTTP_200_OK)
+    except TokenError:
+        return Response({"detail": "Token is invalid"}, status=status.HTTP_401_UNAUTHORIZED)
