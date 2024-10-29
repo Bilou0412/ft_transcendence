@@ -6,7 +6,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-from django.shortcuts import get_object_or_404
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.urls import reverse
@@ -72,6 +71,27 @@ def token(request):
             {"detail": "An error occurred during authentication"}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def email_verification(request, uidb64, token):
+    """
+    View to verify email address.
+    """
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+
+        if default_token_generator.check_token(user, token):
+            # Ici, tu pourrais mettre à jour l'utilisateur pour marquer son email comme vérifié
+            user.is_active = True  # ou une autre logique pour activer l'utilisateur
+            user.save()
+
+            return Response({"detail": "Email verified successfully."}, status=status.HTTP_200_OK)
+        else:
+            return Response({"detail": "Invalid verification link."}, status=status.HTTP_400_BAD_REQUEST)
+
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        return Response({"detail": "Invalid verification link."}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -86,6 +106,23 @@ def signup(request):
             user = serializer.save()
             refresh = RefreshToken.for_user(user)
             
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+            # Construire l'URL de vérification
+            verification_url = request.build_absolute_uri(
+                reverse('email_verification', kwargs={'uidb64': uid, 'token': token})
+            )
+
+            # Envoyer l'email de vérification
+            send_mail(
+                subject="Vérification de votre adresse e-mail",
+                message=f'Veuillez cliquer sur le lien suivant pour vérifier votre adresse e-mail : {verification_url}',
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[user.email],
+                fail_silently=False,
+            )
+
             return Response({
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
@@ -104,6 +141,8 @@ def signup(request):
             )
             
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 @api_view(['POST'])
 def refresh_token(request):

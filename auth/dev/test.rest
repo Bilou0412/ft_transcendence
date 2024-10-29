@@ -12,11 +12,18 @@ POST http://127.0.0.1:8000/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "jdennis",
-    "password": "bret",
-    "password2": "bret",
+    "username": "bilel",
+    "password": "Algerie93",
+    "password2": "Algerie93",
     "email": "reset.pass.ponggame@gmail.com"
 }
+
+### Verify Email
+
+GET http://127.0.0.1:8000/api/auth/email/verify/<uidb64>/<token>/
+Content-Type: application/json
+
+
 
 ### Refresh Token
 POST http://127.0.0.1:8000/api/auth/token/refresh/
