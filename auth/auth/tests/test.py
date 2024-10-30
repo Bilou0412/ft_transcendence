@@ -94,14 +94,14 @@ class AuthenticationTests(TestCase):
         url = reverse('login')
         data = {'username': 'testuser', 'password': 'wrongpass'}
         response = self.client.post(url, data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         print(colored("Login with invalid credentials handled correctly", "green"))
 
     def test_login_inactive_user(self):
         url = reverse('login')
         data = {'username': 'inactiveuser', 'password': 'inactivepass123'}
         response = self.client.post(url, data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         print(colored("Login for inactive user handled correctly", "green"))
 
     def test_signup_success(self):
