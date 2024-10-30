@@ -12,3 +12,6 @@ six==1.16.0
 sqlparse==0.5.1
 typing_extensions==4.12.2
 gunicorn
+termcolor
+django-axes[ipware]
+djangorestframework-simplejwt[blacklist]

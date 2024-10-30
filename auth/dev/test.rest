@@ -3,7 +3,7 @@ POST http://127.0.0.1:8000/api/auth/login/
 Content-Type: application/json
 
 {
-    "username": "bilel",
+    "username": "reset.pass.ponggame@gmail.com",
     "password": "Algerie93"
 }
 
@@ -23,7 +23,7 @@ POST http://127.0.0.1:8000/api/auth/token/refresh/
 Content-Type: application/json
 
 {
-    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTczMDI4MTQxMywiaWF0IjoxNzI5Njc2NjEzLCJqdGkiOiJlODIwNDg3NTgxMjU0Mzg2OGQzNmM0YTEwMzczMWIxNyIsInVzZXJfaWQiOjV9.jTOy4cxp-B1OQTxldEybhVKHSsIsGkwDd5LH155nyXQ"
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTczMDM3ODA1NywiaWF0IjoxNzMwMjkxNjU3LCJqdGkiOiIyOWU5YzViMjYwNjQ0MjkzYWMyMGJkZThkODUyMDBiOCIsInVzZXJfaWQiOjJ9.XdUcE-y08fHktMzAphzvGPx8hVMECeENKisaR2Ku9-A"
 }
 
 ### Request Password Reset
@@ -55,18 +55,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 ### Logout
 POST http://127.0.0.1:8000/api/auth/logout/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMjI2NTQxLCJpYXQiOjE3MzAyMjI5NDEsImp0aSI6ImU0M2E0OGNkYTdjODRlMDFiNzYzOGE4NWFiYTNlZmJjIiwidXNlcl9pZCI6M30.Hpq15vKuxFjUHGXAAtaLdjFNxKnBHyl7mXTi59jyzEY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMjk1MTYwLCJpYXQiOjE3MzAyOTE1NjAsImp0aSI6IjRkNWJhN2NlYTQxZDRiMzhiNzI5ZjQyM2NkYjY2ZjhjIiwidXNlcl9pZCI6Mn0.-1EBA11nqoOzgtH0kYbQj-XG8HusprnZPGdHYdaYPkI
 
 {
-    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMjI2NTQxLCJpYXQiOjE3MzAyMjI5NDEsImp0aSI6ImU0M2E0OGNkYTdjODRlMDFiNzYzOGE4NWFiYTNlZmJjIiwidXNlcl9pZCI6M30.Hpq15vKuxFjUHGXAAtaLdjFNxKnBHyl7mXTi59jyzEY"
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTczMDM3Nzk2MCwiaWF0IjoxNzMwMjkxNTYwLCJqdGkiOiI4NjUxMTZiOGNkOWQ0NDFjOTk2MGVjMzM5Nzk3ODQ2MiIsInVzZXJfaWQiOjJ9.W3mlpN2hspwNetdVEeoqq0ttZ_kFO65lV-IdcMS1uCQ"
 }
 
 ### Token verify
 
 POST http://127.0.0.1:8000/api/auth/token/validate/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMjI1MDU3LCJpYXQiOjE3MzAyMjE0NTcsImp0aSI6IjhjODliYjExMGNkNDQ2ZDc5ZThhMzA2YmVlY2RiMzgyIiwidXNlcl9pZCI6M30.obZ6W0e66Sod_py8ZRQxzRgd5yvH6i44uhtTP-3jWVw
-
-{
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMjI1MDU3LCJpYXQiOjE3MzAyMjE0NTcsImp0aSI6IjhjODliYjExMGNkNDQ2ZDc5ZThhMzA2YmVlY2RiMzgyIiwidXNlcl9pZCI6M30.obZ6W0e66Sod_py8ZRQxzRgd5yvH6i44uhtTP-3jWVw"
-}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMjk2MTU2LCJpYXQiOjE3MzAyOTI1NTYsImp0aSI6ImVkZWM0NTRhYmE4MDQzODBhMmE2NzZjYjdmZDNhMTllIiwidXNlcl9pZCI6Mn0.vNIXrBRpgMTRtba-It4-tz8CDWtPYWoT3MkYNkfLp4M

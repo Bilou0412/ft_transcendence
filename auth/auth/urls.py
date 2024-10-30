@@ -22,6 +22,4 @@ urlpatterns = [
 
     # API Logout endpoint
     path('api/auth/logout/', views.logout, name='logout'),
-
-    
 ]

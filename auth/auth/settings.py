@@ -46,6 +46,11 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+
+TEST_RUNNER = 'auth.tests.test_runner.ColorTestRunner'
+
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
