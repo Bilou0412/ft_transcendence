@@ -1,7 +1,8 @@
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APIClient
+from rest_framework.test import APIClient,APITestCase
+from django.db import connection
 from django.contrib.auth.models import User
 from django.core import mail
 from django.utils.encoding import force_bytes
@@ -57,6 +58,7 @@ class SecurityTests(TestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         print(colored("Impersonation protection test passed", "green"))
+
 
 class AuthenticationTests(TestCase):
     def setUp(self):
@@ -235,3 +237,32 @@ class AuthenticationTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data['detail'], "Refresh token is required.")
         print(colored("Logout without token handled correctly", "green"))
+
+class SQLInjectionTestCase(APITestCase):
+    def test_sql_injection(self):
+        # Payload tentant une injection SQL dans le champ username
+        malicious_username = "'; DROP TABLE auth_user; --"
+        payload = {
+            'username': malicious_username,
+            'password': 'password123',
+            'password2': 'password123',
+            'email': "test@example.com"
+        }
+
+        # Compter le nombre d'utilisateurs avant la tentative d'injection
+        initial_user_count = User.objects.count()
+
+        # Envoyer la requête POST
+        response = self.client.post(reverse('signup'), payload)
+
+        # Vérifier que la réponse est une erreur de validation
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)   
+
+        # Vérifier que le nombre d'utilisateurs n'a pas changé, donc l'injection a échoué
+        self.assertEqual(User.objects.count(), initial_user_count)
+
+        # Vérifier que la table des utilisateurs existe toujours
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT to_regclass('auth_user');")
+            result = cursor.fetchone()
+            self.assertIsNotNone(result[0])  # La table doit exister
