@@ -16,3 +16,4 @@ termcolor
 django-axes[ipware]
 djangorestframework-simplejwt[blacklist]
 drf-yasg
+requests

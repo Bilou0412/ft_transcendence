@@ -40,3 +40,19 @@ class UserSerializer(serializers.ModelSerializer):
 class ChangePasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True, validators=[validate_password])
     old_password = serializers.CharField(required=True)
+
+
+class UserSerializer42(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email']
+
+    def create(self, validated_data):
+        # Créez l'utilisateur sans mot de passe
+        user = User(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            is_active=True  # Activez l'utilisateur immédiatement
+        )
+        user.save()
+        return user

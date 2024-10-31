@@ -66,3 +66,5 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 POST http://127.0.0.1:8000/api/auth/token/validate/
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMjk2MTU2LCJpYXQiOjE3MzAyOTI1NTYsImp0aSI6ImVkZWM0NTRhYmE4MDQzODBhMmE2NzZjYjdmZDNhMTllIiwidXNlcl9pZCI6Mn0.vNIXrBRpgMTRtba-It4-tz8CDWtPYWoT3MkYNkfLp4M
+
+###
