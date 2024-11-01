@@ -6,8 +6,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
-from .serializers import UserProfileImageSerializer
-from .models import UserProfileImage
+from ..serializers import UserProfileImageSerializer
+from ..models import UserProfileImage
 
 @api_view(['POST'])
 @parser_classes([MultiPartParser, FormParser])
@@ -15,7 +15,6 @@ def ImageUpload(request):
     try:
         token = request.headers.get('Authorization', '')
         response = requests.post('http://alias:8000/api/auth/token/validate/', headers={'Authorization': token})
-        print(token)
         if response.status_code != 200:
             return Response({'error': 'invalid token', 'status': response.status_code}, status=status.HTTP_401_UNAUTHORIZED)
         username = request.data.get('username')

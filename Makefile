@@ -28,7 +28,7 @@ help:
 # Environnement de développement
 dev:
 	@echo "$(GREEN)Lancement de l'environnement de développement...$(NC)"
-	$(COMPOSE) -f $(COMPOSE_FILE) -f $(COMPOSE_DEV) up --build -d
+	$(COMPOSE) -f $(COMPOSE_FILE) -f $(COMPOSE_DEV) up --build
 	@echo "$(GREEN)Services de développement lancés sur:$(NC)"
 	@echo "  - Auth Service: http://localhost:8000"
 	@echo "  - Media Service: http://localhost:8001"
@@ -36,7 +36,7 @@ dev:
 # Environnement de production
 prod:
 	@echo "$(GREEN)Lancement de l'environnement de production...$(NC)"
-	$(COMPOSE) -f $(COMPOSE_FILE) -f $(COMPOSE_PROD) up --build -d
+	$(COMPOSE) -f $(COMPOSE_FILE) -f $(COMPOSE_PROD) up --build
 	@echo "$(GREEN)Services de production lancés sur:$(NC)"
 	@echo "  - Auth Service: http://localhost:8000"
 	@echo "  - Media Service: http://localhost:8001"

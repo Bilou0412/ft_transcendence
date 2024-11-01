@@ -23,7 +23,7 @@ POST http://127.0.0.1:8000/api/auth/token/refresh/
 Content-Type: application/json
 
 {
-    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTczMDM3ODA1NywiaWF0IjoxNzMwMjkxNjU3LCJqdGkiOiIyOWU5YzViMjYwNjQ0MjkzYWMyMGJkZThkODUyMDBiOCIsInVzZXJfaWQiOjJ9.XdUcE-y08fHktMzAphzvGPx8hVMECeENKisaR2Ku9-A"
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwNDk2MzI5LCJpYXQiOjE3MzA0OTI3MjksImp0aSI6ImNkMmFjNTc0OGFjNjRhNTM4MDkxNzdkZTQ4NTViMjY1IiwidXNlcl9pZCI6Mn0.khymj6GK9Svx1uHwBfvJL4bQtnf9f8r5sIzfzNkoUjs"
 }
 
 ### Request Password Reset
