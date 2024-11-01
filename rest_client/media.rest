@@ -1,0 +1,58 @@
+### Création/Mise à jour d'une image de profil
+
+# Scénario 1 : Upload avec un nouvel utilisateur
+POST http://127.0.0.1:8001/upload/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwNDg3OTg5LCJpYXQiOjE3MzA0ODQzODksImp0aSI6ImNjNDE1NTI2NTQ0NTQwMmJhMGIwMzAwNWUxOWZlOGIzIiwidXNlcl9pZCI6Mn0.6aVe2tpsFtrsW_-4FEgsjqEMgBP69gE9cyN7PfdFOys
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="username"
+
+bilel
+------WebKitFormBoundary
+Content-Disposition: form-data; name="image"; filename="photo_profil.jpg"
+Content-Type: image/jpeg
+
+< /mnt/nfs/homes/soutin/Pictures/spider_man_meme.jpg
+------WebKitFormBoundary--
+
+### Scénario 2 : Upload pour un utilisateur existant
+POST http://127.0.0.1:8001/upload/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwNDg2ODMzLCJpYXQiOjE3MzA0ODMyMzMsImp0aSI6IjQ2ODJhZTYzOTdiMjRiNzg5ZTM3MTg4ODU1ZGY2MWFkIiwidXNlcl9pZCI6Mn0.L-TE65eUdlIIhj_1E8Yl4swfrhqJiwExqfy11AjhSOE
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="username"
+
+bilel
+------WebKitFormBoundary
+Content-Disposition: form-data; name="image"; filename="nouvelle_photo.gif"
+Content-Type: image/png
+
+< /mnt/nfs/homes/soutin/Pictures/non-mario.gif
+------WebKitFormBoundary--
+
+### Scénario 3 : Upload sans image (devrait échouer si image obligatoire)
+POST http://localhost:8000/api/profile-image/upload/
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="username"
+
+utilisateur_sans_image
+------WebKitFormBoundary--
+
+### Scénario 4 : Upload avec une image trop volumineuse
+POST http://localhost:8000/api/profile-image/upload/
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="username"
+
+utilisateur_grosse_image
+------WebKitFormBoundary
+Content-Disposition: form-data; name="image"; filename="image_trop_grosse.jpg"
+Content-Type: image/jpeg
+
+< ./chemin/vers/image/volumineuse.jpg
+------WebKitFormBoundary--

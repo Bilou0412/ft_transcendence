@@ -1,6 +1,0 @@
-
-services:
-  mediaservice:
-    entrypoint: ["./docker/entrypoint_dev.sh"]
-    environment:
-      - DEBUG=True

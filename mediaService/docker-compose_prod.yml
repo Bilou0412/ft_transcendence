@@ -1,5 +1,0 @@
-services:
-  mediaservice:
-    entrypoint: ["./docker/entrypoint_prod.sh"]
-    environment:
-      - DEBUG=False
