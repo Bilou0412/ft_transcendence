@@ -30,5 +30,5 @@ button {
 
 @font-face {
     font-family: 'Digital-7';
-    src: url('../fonts/digital_7/digital-7 (mono).ttf') format('truetype');
+    src: url('fonts/digital_7/digital-7 (mono).ttf') format('truetype');
 }
