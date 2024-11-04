@@ -13,6 +13,21 @@ canvas {
     height: 100%;
 }
 
+button {
+    font-family: 'Digital-7', sans-serif;
+    font-size: 12pt;
+	text-align: center;
+	position: absolute;
+	min-width: 80px;
+	border-radius: 0;
+	z-index: 1;
+}
+
+.startButton {
+    top: 50%;
+    left: 40%;
+}
+
 @font-face {
     font-family: 'Digital-7';
     src: url('fonts/digital_7/digital-7 (mono).ttf') format('truetype');

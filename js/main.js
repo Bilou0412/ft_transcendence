@@ -8,6 +8,7 @@ import { updateScoreDisplay, updateClock, initScoreboard, initClock} from "./dis
 import { initMonitor, updateMonitorDisplay} from "./monitor.js";
 import { onKeyDown, onKeyUp, onMouseWheel } from "./keyEvents.js";
 import { Settings } from "./settings.js";
+import { initButton } from "./monitor_display.js";
 
 // ///////////////////////////////////environment settings///////////////////////////////
 export const settings = new Settings();
@@ -42,26 +43,29 @@ function resetGame() {
     resetBall();
 }
 
-function startGame() {
-    initMonitor();
-    // document.getElementById('startButton').addEventListener('click', function() {
-        initSides();
-        initMiddlePlatform();
-        initBall();
-        initScoreboard();
-        initClock();
-        updateClock();
-        updateMonitorDisplay();
-        resetGame();
-        animate();
+export function startGame() {
+    // initMonitor();
+    settings.gameStatus = 'playing';
+    initSides();
+    initMiddlePlatform();
+    initBall();
+    initScoreboard();
+    initClock();
+    updateClock();
+    // updateMonitorDisplay();
+    resetGame();
+    // animate();
     // });
 }
 
-document.getElementById('startButton').addEventListener('click', function() {
-    // Cacher l'écran titre
-    document.getElementById('titleScreen').style.display = 'none';
-    // Lancer le jeu
-    startGame();
-});
+// document.getElementById('startButton').addEventListener('click', function() {
+//     // Cacher l'écran titre
+//     document.getElementById('titleScreen').style.display = 'none';
+//     // Lancer le jeu
+//     startGame();
+// });
+initMonitor();
+animate();
+initButton();
 
 // startGame();

@@ -15,7 +15,7 @@ export async function onKeyDown(event) {
         settings.ballVelocity.set(direction * settings.ballSpeed * 8, 0, 0);
         const player = ball.userData.heldBy;
         ball.userData.heldBy = null;
-        updatePaddleColor(player, 0xffffff); // Reset paddle color to white
+        updatePaddleColor(player, 0x0aa23b); // Reset paddle color to white
     }
 
     if (event.key === 'Escape'){

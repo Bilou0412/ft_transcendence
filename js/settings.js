@@ -13,17 +13,17 @@ export class Settings {
         // this.scene.background = this.backgroundTexture;
 
         ///////////////////////////////////game settings//////////////////////////////////////
-        this.lineLength = 5;
-        this.targetHeight = 0.6;
-        this.liftSpeed = 0.1;
-        this.moveSpeed = 0.2;
-        this.initialBallSpeed = 0.1;
-        this.ballSizeScale = 2;
-        this.speedIncreaseFactor = 1.0;
-        this.superChargeCount = 5;
-        this.platformWidth = 50;
-        this.platformLength = 30;
-        this.cubeSize = 1;
+        this.lineLength = 5; // Paddle length
+        this.targetHeight = 0.6; // Lift height for the cubes
+        this.liftSpeed = 0.1; // Speed of the cubes lift
+        this.moveSpeed = 0.3; // Speed of the paddles
+        this.initialBallSpeed = 0.2; // Initial speed of the ball
+        this.ballSizeScale = 2; // Ball size
+        this.speedIncreaseFactor = 1.0; // Speed increase factor after each hit
+        this.superChargeCount = 5; // Number of hits to supercharge the ball
+        this.platformWidth = 50; // Width of the platform
+        this.platformLength = 30; // Length of the platform
+        this.cubeSize = 1; // Size of the cubes
         this.cubes = [];
 
         ///////////////////////////////////useful variables///////////////////////////////////
@@ -31,10 +31,10 @@ export class Settings {
         this.ballVelocity = new THREE.Vector3(this.ballSpeed, 0, this.ballSpeed);
         this.player1Score = 0;
         this.player2Score = 0;
-        this.player1HitCounter = 0;
-        this.player2HitCounter = 0;
-        this.ServSide = 2;
-        this.lastHit = 1;
+        this.player1HitCounter = 0; // Number of hits by player 1 for supercharge
+        this.player2HitCounter = 0; // Number of hits by player 2 for supercharge
+        this.ServSide = 2; // Wich player will serve
+        this.lastHit = 1; // Last player to hit the ball
         this.gameStatus = 'paused';
 		this.gameStartTime = Date.now();
 
