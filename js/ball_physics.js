@@ -38,6 +38,9 @@ export function updateBallPosition() {
         )
         return;
     }
+    if (settings.gameStatus === 'paused') {
+        return;
+    }
 
     // Calculate potential new position (only in XZ plane)
     const potentialPosition = ball.position.clone().add(new THREE.Vector3(settings.ballVelocity.x, 0, settings.ballVelocity.z));
@@ -107,7 +110,7 @@ export function updateBallPosition() {
             if (Math.abs(closestIntersection.z - paddleMiddleOnplane) < settings.lineLength / 2 - 0.1) 
             {
                 // Front face collision - use angle-based rebound
-                const maxAngle = 0.3;
+                const maxAngle = 0.2;
                 const angle = Math.max(maxAngle * -1, Math.min(maxAngle, ((potentialPosition.z - paddleMiddleOnplane) / (settings.lineLength / 2)) * maxAngle));
 
                 settings.ballVelocity.z = angle;

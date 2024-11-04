@@ -6,7 +6,7 @@ import { updateHitCounter1Display, updateHitCounter2Display } from "./display.js
 
 
 ////////////////////////////////////////reset/////////////////////////////////////////
-function sleep(ms) {
+export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -26,4 +26,8 @@ export async function resetBall() {
 
 	settings.updateBallSpeed(settings.initialBallSpeed); // Réinitialise la vitesse de la balle
 	settings.updateBallVelocity(new THREE.Vector3(settings.ballSpeed * (settings.ServSide == 1 ? -1 : 1), 0, settings.ballSpeed * (Math.random() > 0.5 ? 1 : -1)));
+}
+
+export function pauseGame() {
+
 }

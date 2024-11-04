@@ -45,6 +45,10 @@ export function updatePlayerPositions() {
         return positions;
     };
 
+    if (settings.gameStatus === 'paused') {
+        return;
+    }
+
     // Player 1 movement
     if (pressedKeys['w'] || pressedKeys['a']) {
 		settings.updatePlayer1Positions(movePlayer(settings.player1Positions, -1));

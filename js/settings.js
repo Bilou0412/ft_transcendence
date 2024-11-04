@@ -9,18 +9,18 @@ export class Settings {
         document.body.appendChild(this.renderer.domElement);
 
         // Load the background texture
-        this.backgroundTexture = new THREE.TextureLoader().load('texture/sky.jpg');
-        this.scene.background = this.backgroundTexture;
+        // this.backgroundTexture = new THREE.TextureLoader().load('texture/sky.jpg');
+        // this.scene.background = this.backgroundTexture;
 
         ///////////////////////////////////game settings//////////////////////////////////////
         this.lineLength = 5;
         this.targetHeight = 0.6;
         this.liftSpeed = 0.1;
-        this.moveSpeed = 0.3;
-        this.initialBallSpeed = 0.3;
+        this.moveSpeed = 0.2;
+        this.initialBallSpeed = 0.1;
         this.ballSizeScale = 2;
         this.speedIncreaseFactor = 1.0;
-        this.superChargeCount = 1;
+        this.superChargeCount = 5;
         this.platformWidth = 50;
         this.platformLength = 30;
         this.cubeSize = 1;
@@ -35,7 +35,7 @@ export class Settings {
         this.player2HitCounter = 0;
         this.ServSide = 2;
         this.lastHit = 1;
-        this.gameStatus = 'playing';
+        this.gameStatus = 'paused';
 		this.gameStartTime = Date.now();
 
         ///////////////////////////////////paddle settings////////////////////////////////////
@@ -44,8 +44,10 @@ export class Settings {
         this.player2Positions = Array(this.lineLength).fill().map((_, index) => ({ x: this.platformWidth - 1, z: centerZ + index }));
 
         ///////////////////////////////////visual settings////////////////////////////////////
-        this.camera.position.y = Math.max(this.platformWidth, this.platformLength) * 0.8;
-        this.camera.position.z = Math.max(this.platformWidth, this.platformLength) * 1;
+        // this.camera.position.y = Math.max(this.platformWidth, this.platformLength) * 0.8;
+        this.camera.position.y = 3;
+        // this.camera.position.z = Math.max(this.platformWidth, this.platformLength) * 1;
+        this.camera.position.z = 23.5;
         this.camera.lookAt(0, 0, 6);
 
         const ambientLight = new THREE.AmbientLight(0x606060);

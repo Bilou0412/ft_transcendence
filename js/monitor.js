@@ -53,8 +53,8 @@ export const updateMonitorDisplay = () => {
 export function focusGame() {
 	// Define target positions and orientations for each focus
 	const gameView = {
-		position: { x: 0, y: settings.platformWidth * 0.8, z: settings.platformLength },
-		rotation: { x: -0.8, y: 0, z: 0 }
+		position: { x: 0, y: settings.platformWidth * 0.6, z: settings.platformLength * 1},
+		rotation: { x: -0.9, y: 0, z: 0 }
 	};
 
     gsap.to(settings.camera.position, {

@@ -23,8 +23,9 @@ export function initScoreboard(){
 	scoreDisplay.width = 1200;
 	scoreDisplay.height = 600;
 	scoreDisplayCtx = scoreDisplay.getContext('2d');
+
 	scoreDisplayTexture = new THREE.CanvasTexture(scoreDisplay);
-	// updateScoreDisplay();
+
 	const scoreDisplayMaterial = new THREE.MeshBasicMaterial({ map: scoreDisplayTexture, transparent: true });
 	const scoreDisplayPlane = new THREE.PlaneGeometry(2, 1);
 	const scoreDisplayMesh = new THREE.Mesh(scoreDisplayPlane, scoreDisplayMaterial);
@@ -85,14 +86,12 @@ export const updateClock = () => {
 	
 	const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 	
-
-
 	// Draw the scores and separator at calculated positions
 	ClockCtx.fillText(formattedTime, 500, 100);
 
 	// Update the texture to reflect the new score
-	ClockTexture.needsUpdate = true;
-	setTimeout(updateClock, 1000);
+    ClockTexture.needsUpdate = true;
+    setTimeout(updateClock, 1000);
 };
 
 

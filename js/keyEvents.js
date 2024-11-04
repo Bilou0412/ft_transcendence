@@ -3,10 +3,10 @@ import { settings } from './main.js';
 import { ball } from './ball_init.js';
 import { focusGame, focusMonitor } from './monitor.js';
 import { updatePaddleColor, pressedKeys } from './movements.js';
-
+import { sleep } from './resetBall.js';
 
 /////////////////////////////////////Keyboard/////////////////////////////////////////
-export function onKeyDown(event) {
+export async function onKeyDown(event) {
     pressedKeys[event.key] = true;
 
     // Release the ball when space is pressed
@@ -24,6 +24,7 @@ export function onKeyDown(event) {
 			settings.updateGameStatus('paused');
         } else {
             focusGame();
+            await sleep(2000);
 			settings.updateGameStatus('playing');
         }
     }

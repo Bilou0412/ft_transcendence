@@ -43,16 +43,18 @@ function resetGame() {
 }
 
 function startGame() {
-    initSides();
-    initMiddlePlatform();
-    initBall();
-    initScoreboard();
-    initClock();
     initMonitor();
-    updateClock();
-    updateMonitorDisplay();
-    resetGame();
-    animate();
+    // document.getElementById('startButton').addEventListener('click', function() {
+        initSides();
+        initMiddlePlatform();
+        initBall();
+        initScoreboard();
+        initClock();
+        updateClock();
+        updateMonitorDisplay();
+        resetGame();
+        animate();
+    // });
 }
 
 document.getElementById('startButton').addEventListener('click', function() {
@@ -61,3 +63,5 @@ document.getElementById('startButton').addEventListener('click', function() {
     // Lancer le jeu
     startGame();
 });
+
+// startGame();
