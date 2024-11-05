@@ -19,8 +19,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 # from .views import ImageUpload,
-from .views.ImageUpload import ImageUpload
-from .views.ImageServe import ImageServe
+from .views import ImageUpload, ImageServe
+# from .views.ImageServe import ImageServe
 
 urlpatterns = [
     path('upload/', ImageUpload, name='image-upload'),

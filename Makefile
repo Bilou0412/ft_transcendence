@@ -67,6 +67,7 @@ fclean: clean
 	-docker rmi -f $$(docker images | grep "auth-service\|media-service\|postgres" | awk '{print $$3}') 2>/dev/null || true
 	@echo "$(YELLOW)Suppression des volumes...$(NC)"
 	-docker volume rm $$(docker volume ls -q) 2>/dev/null || true
+	-rm media-service/db.sqlite3
 	@echo "$(YELLOW)Suppression des réseaux...$(NC)"
 	-docker network rm $(docker network ls -q) 2>/dev/null || true
 	@echo "$(RED)Nettoyage complet terminé$(NC)"

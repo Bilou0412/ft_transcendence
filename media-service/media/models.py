@@ -3,39 +3,20 @@ from django.db import models
 from django.contrib.auth.models import User
 import uuid
 from django.utils.text import slugify
-from django.core.files.base import ContentFile
+# from django.core.files.base import ContentFile
 
 def unique_filename_username(instance, filename):
-    """
-    Generate a unique filename based on username and timestamp.
-    
-    Args:
-        instance: The model instance
-        filename: Original filename
-    
-    Returns:
-        A unique filename path
-    """
-    # Get file extension
-    ext = filename.split('.')[-1]
-    
-    # Create a slug of the username for readability
+    extension = filename.split('.')[-1]
     username_slug = slugify(instance.user.username)
-    
-    # Generate a unique filename using username, UUID, and extension
-    unique_filename = f"{username_slug}_{uuid.uuid4()}.{ext}"
-    
-    # Return the path where the file should be saved
+    unique_filename = f"{username_slug}_{uuid.uuid4()}.{extension}"
     return os.path.join('users_images', unique_filename)
 
 
 class UserProfileImage(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile_image')
-    # username = models.CharField(max_length=200)
     image = models.ImageField(upload_to=unique_filename_username, null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        # Check if the instance already has an image before saving a new one
         if self.pk:
             old_image = UserProfileImage.objects.get(pk=self.pk).image
             if old_image and old_image != self.image:
