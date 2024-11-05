@@ -1,4 +1,5 @@
 from rest_framework.decorators import api_view
+from ..decorators import authorize_user
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import FileResponse
@@ -9,15 +10,10 @@ from ..models import UserProfileImage
 from django.core.exceptions import ObjectDoesNotExist
 
 @api_view(['GET'])
+@authorize_user
 def ImageServe(request, username):
     try:
-        token = request.headers.get('Authorization', '')
-        if not token:
-            return Response({'error': 'No token'}, status=status.HTTP_401_UNAUTHORIZED)
-        response = requests.post('http://alias:8000/api/auth/token/validate/', headers={'Authorization': token})
-        if response.status_code != 200:
-            return Response({'error': 'Invalid token', 'status': response.status_code}, status=status.HTTP_401_UNAUTHORIZED)
-
+        # username = getattr(request, 'username')
         try:
             user = User.objects.get(username=username)
         except ObjectDoesNotExist:

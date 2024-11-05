@@ -1,5 +1,6 @@
 import requests
 from rest_framework.decorators import api_view, parser_classes
+from ..decorators import authorize_user
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import status
@@ -9,18 +10,11 @@ from ..models import UserProfileImage
 
 @api_view(['POST'])
 @parser_classes([MultiPartParser, FormParser])
+@authorize_user
 def ImageUpload(request):
-    try:
-
-        token = request.headers.get('Authorization', '')
-        response = requests.post('http://alias:8000/api/auth/token/validate/', headers={'Authorization': token})
-        if response.status_code != 200:
-            return Response(
-                {'error': 'invalid token', 'status': response.status_code},
-                status=status.HTTP_401_UNAUTHORIZED
-            )
-        
-        user, created = User.objects.get_or_create(username=response.json()['username'], defaults={'is_active': True})
+    try:      
+        username = getattr(request, 'username')
+        user, created = User.objects.get_or_create(username=username, defaults={'is_active': True})
         serializer = UserProfileImageSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(
