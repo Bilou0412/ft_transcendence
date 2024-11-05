@@ -1,8 +1,8 @@
 ### Création/Mise à jour d'une image de profil
 
 # Scénario 1 : Upload avec un nouvel utilisateur
-POST http://127.0.0.1:8001/upload/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwODE1NTQ5LCJpYXQiOjE3MzA4MTE5NDksImp0aSI6ImVlYjE3ODk5ZTUxMTRjY2ZiNDg2YjRiYTFiYTE1MzI0IiwidXNlcl9pZCI6Mn0.yjoN4ktAotBS0s-UmJW-Lz6vq2QWdlZ7-tLlHXfbkxA
+POST http://127.0.0.1:8001/api/media/upload/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwODI2NDU2LCJpYXQiOjE3MzA4MjI4NTYsImp0aSI6IjM3MGRhOTU4ZDA2ZTQzMmI4MDMxM2U1Y2NlNzBkY2Q5IiwidXNlcl9pZCI6Mn0.f08DOkl5xeauNjmlTDdL0EI0HDREUN91lstgq09xKYw
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
 
 ------WebKitFormBoundary
@@ -20,6 +20,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 GET http://127.0.0.1:8001/api/media/profile-images/jd/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwODIwNjg2LCJpYXQiOjE3MzA4MTcwODYsImp0aSI6IjQwOGM4MjY2ZmNhMzQ1MjBhZTIzNDlkNzVhNThjM2Y4IiwidXNlcl9pZCI6M30.BWkGH1KaqwOSWA93SkuEef7AFhLeiVDYJomavMPDZgg
+###
+
+# Delete image
+DELETE  http://127.0.0.1:8001/api/media/delete
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwODI2NDU2LCJpYXQiOjE3MzA4MjI4NTYsImp0aSI6IjM3MGRhOTU4ZDA2ZTQzMmI4MDMxM2U1Y2NlNzBkY2Q5IiwidXNlcl9pZCI6Mn0.f08DOkl5xeauNjmlTDdL0EI0HDREUN91lstgq09xKYw
+###
+
 
 ### Scénario 2 : Upload pour un utilisateur existant
 POST http://127.0.0.1:8001/upload/

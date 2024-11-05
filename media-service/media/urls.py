@@ -18,13 +18,12 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
-# from .views import ImageUpload,
-from .views import ImageUpload, ImageServe
-# from .views.ImageServe import ImageServe
+from .views import ImageUpload, ImageServe, ImageDelete
 
 urlpatterns = [
-    path('upload/', ImageUpload, name='image-upload'),
+    path('api/media/upload/', ImageUpload, name='upload-image'),
     path('api/media/profile-images/<str:username>/', ImageServe, name='profile-image'),
+    path('api/media/delete', ImageDelete, name='delete-image'),
     path('admin/', admin.site.urls),
 ]
 

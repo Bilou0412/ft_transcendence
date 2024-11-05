@@ -1,10 +1,8 @@
-# views.py
 import requests
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import status
-from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from ..serializers import UserProfileImageSerializer
 from ..models import UserProfileImage
