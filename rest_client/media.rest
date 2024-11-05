@@ -2,7 +2,7 @@
 
 # Scénario 1 : Upload avec un nouvel utilisateur
 POST http://127.0.0.1:8001/api/media/upload/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwODMxMDEyLCJpYXQiOjE3MzA4Mjc0MTIsImp0aSI6ImE5ODZmMTkyMDJmMDQyNDliNWViMjVlMjcxYTAxNGQxIiwidXNlcl9pZCI6Mn0.QpV0E34hOiR0SEZpHDnOgKIByzx_Q39RWVxlEKc3HXc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwODM0MTQwLCJpYXQiOjE3MzA4MzA1NDAsImp0aSI6IjMxNDIwODA5ZGM0NTQ3ZGI4NzViYjEwOTgyYTAxMjNmIiwidXNlcl9pZCI6Mn0.lASarlzTnQS9Y16357_QUJrmgk7VqAwag8DxsEwQ1n8
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
 
 ------WebKitFormBoundary
@@ -14,8 +14,8 @@ Content-Type: image/jpeg
 ###
 
 # Get image
-GET http://127.0.0.1:8001/api/media/profile-images/bileel/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwODI5NzY2LCJpYXQiOjE3MzA4MjYxNjYsImp0aSI6Ijc0ZmQzOWRhNWE3MzQ2NzNiNjkzMjBhNmJiMmRhYThkIiwidXNlcl9pZCI6Mn0.4C5RH5hQdCgfHQCcMCp5E28UPkj2c7Fs243uxwanMh8
+GET http://127.0.0.1:8001/api/media/profile-images/jd/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwODM0MTQwLCJpYXQiOjE3MzA4MzA1NDAsImp0aSI6IjMxNDIwODA5ZGM0NTQ3ZGI4NzViYjEwOTgyYTAxMjNmIiwidXNlcl9pZCI6Mn0.lASarlzTnQS9Y16357_QUJrmgk7VqAwag8DxsEwQ1n8
 ###
 
 GET http://127.0.0.1:8001/api/media/profile-images/jd/
@@ -24,7 +24,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 # Delete image
 DELETE  http://127.0.0.1:8001/api/media/delete
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwODMxMDEyLCJpYXQiOjE3MzA4Mjc0MTIsImp0aSI6ImE5ODZmMTkyMDJmMDQyNDliNWViMjVlMjcxYTAxNGQxIiwidXNlcl9pZCI6Mn0.QpV0E34hOiR0SEZpHDnOgKIByzx_Q39RWVxlEKc3HXc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwODM0MTQwLCJpYXQiOjE3MzA4MzA1NDAsImp0aSI6IjMxNDIwODA5ZGM0NTQ3ZGI4NzViYjEwOTgyYTAxMjNmIiwidXNlcl9pZCI6Mn0.lASarlzTnQS9Y16357_QUJrmgk7VqAwag8DxsEwQ1n8
 ###
 
 
