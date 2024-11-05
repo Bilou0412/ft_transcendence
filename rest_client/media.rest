@@ -2,13 +2,9 @@
 
 # Scénario 1 : Upload avec un nouvel utilisateur
 POST http://127.0.0.1:8001/upload/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwNDk2NDYxLCJpYXQiOjE3MzA0OTI4NjEsImp0aSI6IjQwMjA3NjJkNTA5NDQ2NzlhYTg3Mjc0NDE0NDUwMDYyIiwidXNlcl9pZCI6Mn0.wG40fDuurPoy4M5glVWRtFcEErmsOHeGVhTbTi4PQV8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwODE1NTQ5LCJpYXQiOjE3MzA4MTE5NDksImp0aSI6ImVlYjE3ODk5ZTUxMTRjY2ZiNDg2YjRiYTFiYTE1MzI0IiwidXNlcl9pZCI6Mn0.yjoN4ktAotBS0s-UmJW-Lz6vq2QWdlZ7-tLlHXfbkxA
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
 
-------WebKitFormBoundary
-Content-Disposition: form-data; name="username"
-
-bileel
 ------WebKitFormBoundary
 Content-Disposition: form-data; name="image"; filename="photo_profil.jpg"
 Content-Type: image/jpeg
@@ -16,18 +12,20 @@ Content-Type: image/jpeg
 < /mnt/nfs/homes/soutin/Pictures/spider_man_meme.jpg
 ------WebKitFormBoundary--
 ###
+
+# Get image
 GET http://127.0.0.1:8001/api/media/profile-images/bileel/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwNDk2NDYxLCJpYXQiOjE3MzA0OTI4NjEsImp0aSI6IjQwMjA3NjJkNTA5NDQ2NzlhYTg3Mjc0NDE0NDUwMDYyIiwidXNlcl9pZCI6Mn0.wG40fDuurPoy4M5glVWRtFcEErmsOHeGVhTbTi4PQV8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwODE1NTQ5LCJpYXQiOjE3MzA4MTE5NDksImp0aSI6ImVlYjE3ODk5ZTUxMTRjY2ZiNDg2YjRiYTFiYTE1MzI0IiwidXNlcl9pZCI6Mn0.yjoN4ktAotBS0s-UmJW-Lz6vq2QWdlZ7-tLlHXfbkxA
+###
+
+GET http://127.0.0.1:8001/api/media/profile-images/jd/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwODIwNjg2LCJpYXQiOjE3MzA4MTcwODYsImp0aSI6IjQwOGM4MjY2ZmNhMzQ1MjBhZTIzNDlkNzVhNThjM2Y4IiwidXNlcl9pZCI6M30.BWkGH1KaqwOSWA93SkuEef7AFhLeiVDYJomavMPDZgg
 
 ### Scénario 2 : Upload pour un utilisateur existant
 POST http://127.0.0.1:8001/upload/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwNDg2ODMzLCJpYXQiOjE3MzA0ODMyMzMsImp0aSI6IjQ2ODJhZTYzOTdiMjRiNzg5ZTM3MTg4ODU1ZGY2MWFkIiwidXNlcl9pZCI6Mn0.L-TE65eUdlIIhj_1E8Yl4swfrhqJiwExqfy11AjhSOE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwODE1NTQ5LCJpYXQiOjE3MzA4MTE5NDksImp0aSI6ImVlYjE3ODk5ZTUxMTRjY2ZiNDg2YjRiYTFiYTE1MzI0IiwidXNlcl9pZCI6Mn0.yjoN4ktAotBS0s-UmJW-Lz6vq2QWdlZ7-tLlHXfbkxA
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
 
-------WebKitFormBoundary
-Content-Disposition: form-data; name="username"
-
-bilel
 ------WebKitFormBoundary
 Content-Disposition: form-data; name="image"; filename="nouvelle_photo.gif"
 Content-Type: image/png

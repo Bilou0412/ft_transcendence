@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 import requests
 import os
 from ..models import UserProfileImage
+from django.core.exceptions import ObjectDoesNotExist
 
 @api_view(['GET'])
 def ImageServe(request, username):
@@ -16,30 +17,33 @@ def ImageServe(request, username):
     try:
         # Validate token with auth service
         token = request.headers.get('Authorization', '')
-        if token:
-            response = requests.post(
-                'http://alias:8000/api/auth/token/validate/',
-                headers={'Authorization': token}
-            )
-            if response.status_code != 200:
-                return Response(
-                    {'error': 'Invalid token', 'status': response.status_code},
-                    status=status.HTTP_401_UNAUTHORIZED
-                )
-
+        if not token:
+            return Response({'error': 'No token'}, status=status.HTTP_401_UNAUTHORIZED)
+        response = requests.post('http://alias:8000/api/auth/token/validate/', headers={'Authorization': token})
+        if response.status_code != 200:
+            return Response({'error': 'Invalid token', 'status': response.status_code}, status=status.HTTP_401_UNAUTHORIZED)
+        # username = response.json()['username']
         # Get the user and their profile image
-        user = get_object_or_404(User, username=username)
-        profile_image = UserProfileImage.objects.filter(user=user).first()
-
-        if not profile_image or not profile_image.image:
-            # If no image exists, serve default image
-            default_path = os.path.join('media', 'default-profile.png')
+        try:
+            user = User.objects.get(username=username)
+        except ObjectDoesNotExist:
+            default_path = os.path.join('images', 'default.png')
             if os.path.exists(default_path):
                 return FileResponse(open(default_path, 'rb'))
             return Response(
                 {'error': 'No profile image found'},
                 status=status.HTTP_404_NOT_FOUND
             )
+            
+        # user = get_object_or_404(User, username=username)
+        profile_image = UserProfileImage.objects.get(user=user)
+
+        # if not profile_image or not profile_image.image:
+        #     # If no image exists, serve default image
+        #     default_path = os.path.join('media', 'default-profile.png')
+        #     if os.path.exists(default_path):
+        #         return FileResponse(open(default_path, 'rb'))
+            
 
         # Get the actual image file
         image_path = profile_image.image.path

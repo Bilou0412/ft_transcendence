@@ -17,7 +17,7 @@ def ImageUpload(request):
         response = requests.post('http://alias:8000/api/auth/token/validate/', headers={'Authorization': token})
         if response.status_code != 200:
             return Response({'error': 'invalid token', 'status': response.status_code}, status=status.HTTP_401_UNAUTHORIZED)
-        username = request.data.get('username')
+        username = response.json()['username']
         if not username:
             return Response({'error': 'Username is required'}, status=status.HTTP_400_BAD_REQUEST)
         user, created = User.objects.get_or_create(username=username, defaults={'is_active': True})

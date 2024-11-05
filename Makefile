@@ -59,6 +59,7 @@ clean:
 
 # Suppression complète (conteneurs, volumes, réseaux, images)
 fclean: clean
+	-rm -r media-service/images/users_images
 	@echo "$(RED)⚠️  Attention : Suppression complète de tous les éléments Docker...$(NC)"
 	@echo "$(YELLOW)Suppression des conteneurs...$(NC)"
 	-docker rm -f $$(docker ps -aq) 2>/dev/null || true
