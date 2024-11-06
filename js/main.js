@@ -8,7 +8,7 @@ import { updateScoreDisplay, updateClock, initScoreboard, initClock} from "./dis
 import { initMonitor, updateMonitorDisplay} from "./monitor.js";
 import { onKeyDown, onKeyUp, onMouseWheel } from "./keyEvents.js";
 import { Settings } from "./settings.js";
-import { initButton } from "./monitor_display.js";
+import { titleDisplay } from "./monitor_display.js";
 
 // ///////////////////////////////////environment settings///////////////////////////////
 export const settings = new Settings();
@@ -44,7 +44,6 @@ function resetGame() {
 }
 
 export function startGame() {
-    // initMonitor();
     settings.gameStatus = 'playing';
     initSides();
     initMiddlePlatform();
@@ -52,10 +51,7 @@ export function startGame() {
     initScoreboard();
     initClock();
     updateClock();
-    // updateMonitorDisplay();
     resetGame();
-    // animate();
-    // });
 }
 
 // document.getElementById('startButton').addEventListener('click', function() {
@@ -65,7 +61,7 @@ export function startGame() {
 //     startGame();
 // });
 initMonitor();
+titleDisplay();
 animate();
-initButton();
 
 // startGame();

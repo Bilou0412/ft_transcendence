@@ -15,14 +15,16 @@ export async function onKeyDown(event) {
         settings.ballVelocity.set(direction * settings.ballSpeed * 8, 0, 0);
         const player = ball.userData.heldBy;
         ball.userData.heldBy = null;
-        updatePaddleColor(player, 0x0aa23b); // Reset paddle color to white
+        updatePaddleColor(player, 0xaaaaaa); // Reset paddle color to white
     }
 
     if (event.key === 'Escape'){
         if ( settings.gameStatus === 'playing') {
             focusMonitor();
 			settings.updateGameStatus('paused');
-        } else {
+        } 
+        else if ( settings.gameStatus === 'paused')
+        {
             focusGame();
             await sleep(2000);
 			settings.updateGameStatus('playing');

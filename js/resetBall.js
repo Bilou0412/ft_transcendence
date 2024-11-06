@@ -19,8 +19,8 @@ export async function resetBall() {
 	settings.updatePlayer2HitCounter(0); // Réinitialise le compteur de hits du joueur 2
     updateHitCounter1Display();
     updateHitCounter2Display();
-    updatePaddleColor(1, 0x0aa23b); // Réinitialise la couleur du paddle du joueur 1
-    updatePaddleColor(2, 0x0aa23b); // Réinitialise la couleur du paddle du joueur 2
+    updatePaddleColor(1, 0xaaaaaa); // Réinitialise la couleur du paddle du joueur 1
+    updatePaddleColor(2, 0xaaaaaa); // Réinitialise la couleur du paddle du joueur 2
 
     await sleep(1000);
 

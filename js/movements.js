@@ -13,7 +13,7 @@ export function updateCubeSelection() {
     });
 
     const updatePlayerCubes = (positions, player) => {
-        const color = ball.userData.heldBy === player ? 0xff0000 : 0x0aa23b;
+        const color = ball.userData.heldBy === player ? 0x0aa23b : 0xaaaaaa;
         positions.forEach((pos) => {
             const cube = settings.cubes.find(cube =>
                 cube.userData.gridPosition.x === Math.floor(pos.x) &&

@@ -17,7 +17,7 @@ export class Settings {
         this.targetHeight = 0.6; // Lift height for the cubes
         this.liftSpeed = 0.1; // Speed of the cubes lift
         this.moveSpeed = 0.3; // Speed of the paddles
-        this.initialBallSpeed = 0.2; // Initial speed of the ball
+        this.initialBallSpeed = 0.3; // Initial speed of the ball
         this.ballSizeScale = 2; // Ball size
         this.speedIncreaseFactor = 1.0; // Speed increase factor after each hit
         this.superChargeCount = 5; // Number of hits to supercharge the ball
@@ -35,7 +35,7 @@ export class Settings {
         this.player2HitCounter = 0; // Number of hits by player 2 for supercharge
         this.ServSide = 2; // Wich player will serve
         this.lastHit = 1; // Last player to hit the ball
-        this.gameStatus = 'paused';
+        this.gameStatus = 'title';
 		this.gameStartTime = Date.now();
 
         ///////////////////////////////////paddle settings////////////////////////////////////
