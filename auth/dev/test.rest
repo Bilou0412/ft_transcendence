@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
     "username": "bilel",
-    "password": "Algerie93"
+    "password": "Algerie93@"
 }
 
 ### Signup
@@ -12,10 +12,10 @@ POST http://127.0.0.1:8000/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "yout",
-    "password": "' OR '1'='1",
-    "password2": "' OR '1'='1",
-    "email": "bilel.moudache0412@gmail.com"
+    "username": "bilel",
+    "password": "Algerie93",
+    "password2": "Algerie93",
+    "email": "reset.pass.ponggame@gmail.com"
 }
 
 ### Refresh Token
@@ -45,11 +45,11 @@ Content-Type: application/json
 ### Confirm Password Reset
 POST http://127.0.0.1:8000/api/auth/password/change/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMjE5NDM4LCJpYXQiOjE3MzAyMTU4MzgsImp0aSI6IjkwYjYyOTFiYzY5YjRjODlhYzViNTlkNGJjYTFmNzgyIiwidXNlcl9pZCI6MX0.dfoBLpa6WHpZt4T9Qoi2NJuRbaPs6DyJo6wHJe3nHzc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwOTkwNzA2LCJpYXQiOjE3MzA5ODcxMDYsImp0aSI6ImQ0ODZkZWZiN2EzMjRiNGViMmEyODcyMzc0YWQ4YjA2IiwidXNlcl9pZCI6M30.hkjJtvmDgwlBUQEp2t85eo3w4KhwVLzDxJdkpnBN_Qk
 
 {
-    "old_password": "Algerie93",
-    "new_password": "palestine"
+    "old_password": "Algerie93@",
+    "new_password": "Palestine93@"
 }
 
 ### Logout

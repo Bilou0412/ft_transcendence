@@ -1,9 +1,26 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+import re
+
+def validate_password_strength(value):
+    """Checks if the password meets strength requirements."""
+    if len(value) < 8:
+        raise ValidationError("Password must be at least 8 characters long.")
+    if not re.search(r"[A-Z]", value):
+        raise ValidationError("Password must contain at least one uppercase letter.")
+    if not re.search(r"\d", value):
+        raise ValidationError("Password must contain at least one digit.")
+    if not re.search(r"[@$!%*?&]", value):
+        raise ValidationError("Password must contain at least one special character (@, $, !, %, *, ?, &).")
+
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, validators=[validate_password])
+    password = serializers.CharField(
+        write_only=True, 
+        validators=[validate_password, validate_password_strength]
+    )
     password2 = serializers.CharField(write_only=True)
 
     class Meta:
@@ -37,10 +54,13 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+
 class ChangePasswordSerializer(serializers.Serializer):
-    new_password = serializers.CharField(required=True, validators=[validate_password])
+    new_password = serializers.CharField(required=True, validators=[validate_password, validate_password_strength])
     old_password = serializers.CharField(required=True)
 
+class ForgotPasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField(required=True, validators=[validate_password, validate_password_strength])
 
 class UserSerializer42(serializers.ModelSerializer):
     class Meta:

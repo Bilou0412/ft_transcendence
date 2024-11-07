@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny 
 from rest_framework.response import Response
+from ..serializers import ForgotPasswordSerializer
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import  force_str
@@ -88,38 +89,42 @@ def reset_password_confirm(request, uidb64, token):
     """
     View to confirm and process password reset.
     """
-    try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-        if not user.is_active:
+    serializer = ForgotPasswordSerializer(data=request.data)
+    if serializer.is_valid():
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+            if not user.is_active:
+                return Response(
+                    {"detail": "This account is inactive"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            if not default_token_generator.check_token(user, token):
+                return Response(
+                    {"detail": "Invalid or expired reset token"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            new_password = request.data.get('new_password')
+            if not new_password:
+                return Response(
+                    {"detail": "New password is required"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            user.set_password(new_password)
+            user.save()
             return Response(
-                {"detail": "This account is inactive"}, 
+                {"detail": "Password has been reset successfully"}, 
+                status=status.HTTP_200_OK
+            )  # <--- Parenthèse fermante ajoutée ici
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            return Response(
+                {"detail": "Invalid reset link"}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
-        if not default_token_generator.check_token(user, token):
+        except Exception as e:
             return Response(
-                {"detail": "Invalid or expired reset token"}, 
-                status=status.HTTP_400_BAD_REQUEST
+                {"detail": "An error occurred while resetting your password"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-        new_password = request.data.get('new_password')
-        if not new_password:
-            return Response(
-                {"detail": "New password is required"}, 
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        user.set_password(new_password)
-        user.save()
-        return Response(
-            {"detail": "Password has been reset successfully"}, 
-            status=status.HTTP_200_OK
-        )
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-        return Response(
-            {"detail": "Invalid reset link"}, 
-            status=status.HTTP_400_BAD_REQUEST
-        )
-    except Exception as e:
-        return Response(
-            {"detail": "An error occurred while resetting your password"},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR
-        )
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

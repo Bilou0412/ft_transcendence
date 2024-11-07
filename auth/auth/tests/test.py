@@ -17,7 +17,7 @@ class SecurityTests(TestCase):
         self.user = User.objects.create_user(
             username='testuser',
             email='testuser@example.com',
-            password='testpass123',
+            password='Testpass123@@',
             is_active=True
         )
 
@@ -45,7 +45,7 @@ class SecurityTests(TestCase):
     def test_dos_protection(self):
         # Vérifiez que l'application peut gérer un grand nombre de requêtes simultanées
         url = reverse('login')
-        data = {'username': 'testuser', 'password': 'testpass123'}
+        data = {'username': 'testuser', 'password': 'Testpass123@@'}
         for _ in range(100):  # Simuler un grand nombre de requêtes
             response = self.client.post(url, data)
             self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -66,7 +66,7 @@ class AuthenticationTests(TestCase):
         self.user = User.objects.create_user(
             username='testuser',
             email='testuser@example.com',
-            password='testpass123',
+            password='Testpass123@@',
             is_active=True
         )
         self.inactive_user = User.objects.create_user(
@@ -78,7 +78,7 @@ class AuthenticationTests(TestCase):
 
     def test_login_success(self):
         url = reverse('login')
-        data = {'username': 'testuser', 'password': 'testpass123'}
+        data = {'username': 'testuser', 'password': 'Testpass123@@'}
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('refresh', response.data)
@@ -87,7 +87,7 @@ class AuthenticationTests(TestCase):
 
     def test_login_with_email(self):
         url = reverse('login')
-        data = {'username': 'testuser@example.com', 'password': 'testpass123'}
+        data = {'username': 'testuser@example.com', 'password': 'Testpass123@@'}
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         print(colored("Login with email successful", "green"))
@@ -111,8 +111,8 @@ class AuthenticationTests(TestCase):
         data = {
             'username': 'newuser',
             'email': 'newuser@example.com',
-            'password': 'newpass123',
-            'password2': 'newpass123'
+            'password': 'Mewpass123@@',
+            'password2': 'Mewpass123@@'
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -133,7 +133,7 @@ class AuthenticationTests(TestCase):
 
     def test_refresh_token(self):
         login_url = reverse('login')
-        login_data = {'username': 'testuser', 'password': 'testpass123'}
+        login_data = {'username': 'testuser', 'password': 'Testpass123@@'}
         login_response = self.client.post(login_url, login_data)
         refresh_token = login_response.data['refresh']
 
@@ -158,21 +158,21 @@ class AuthenticationTests(TestCase):
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = default_token_generator.make_token(user)
         url = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
-        data = {'new_password': 'newpassword123'}
+        data = {'new_password': 'Newpassword123@@'}
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user.refresh_from_db()
-        self.assertTrue(user.check_password('newpassword123'))
+        self.assertTrue(user.check_password('Newpassword123@@'))
         print(colored("Password reset confirmed", "green"))
 
     def test_change_password(self):
         self.client.force_authenticate(user=self.user)
         url = reverse('change_password')
-        data = {'old_password': 'testpass123', 'new_password': 'changedpass123'}
+        data = {'old_password': 'Testpass123@@', 'new_password': 'Changedpass123@@'}
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.user.refresh_from_db()
-        self.assertTrue(self.user.check_password('changedpass123'))
+        self.assertTrue(self.user.check_password('Changedpass123@@'))
         print(colored("Password changed successfully", "green"))
 
     def test_logout_successful(self):
@@ -180,7 +180,7 @@ class AuthenticationTests(TestCase):
         Test si la déconnexion réussit lorsque le refresh token est valide.
         """
         login_url = reverse('login')
-        login_data = {'username': 'testuser', 'password': 'testpass123'}
+        login_data = {'username': 'testuser', 'password': 'Testpass123@@'}
         login_response = self.client.post(login_url, login_data)
         refresh_token = login_response.data['refresh']
         access_token = login_response.data['access']
@@ -201,7 +201,7 @@ class AuthenticationTests(TestCase):
         Test si la déconnexion échoue lorsque le refresh token est déjà blacklisté ou invalide.
         """
         login_url = reverse('login')
-        login_data = {'username': 'testuser', 'password': 'testpass123'}
+        login_data = {'username': 'testuser', 'password': 'Testpass123@@'}
         login_response = self.client.post(login_url, login_data)
         refresh_token = login_response.data['refresh']
         access_token = login_response.data['access']
@@ -225,7 +225,7 @@ class AuthenticationTests(TestCase):
         Test si la déconnexion échoue lorsque le token n'est pas fourni.
         """
         login_url = reverse('login')
-        login_data = {'username': 'testuser', 'password': 'testpass123'}
+        login_data = {'username': 'testuser', 'password': 'Testpass123@@'}
         login_response = self.client.post(login_url, login_data)
         access_token = login_response.data['access']
 
@@ -244,8 +244,8 @@ class SQLInjectionTestCase(APITestCase):
         malicious_username = "'; DROP TABLE auth_user; --"
         payload = {
             'username': malicious_username,
-            'password': 'password123',
-            'password2': 'password123',
+            'password': 'Password123@@',
+            'password2': 'Password123@@',
             'email': "test@example.com"
         }
 
