@@ -50,7 +50,7 @@ export class Settings {
         this.camera.position.z = 23.5;
         this.camera.lookAt(0, 0, 6);
 
-        const ambientLight = new THREE.AmbientLight(0x606060);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1);
         this.scene.add(ambientLight);
         const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
         directionalLight.position.set(1, 1, 1);
