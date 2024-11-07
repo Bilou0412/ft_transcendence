@@ -12,23 +12,10 @@ export function initMonitor(){
         // Set position and scale of the model
         gltfScene.scene.position.z = settings.platformLength / 2 + 8;
         gltfScene.scene.scale.set(2, 2, 2);
-    
-        // Set the model to a custom layer
-        gltfScene.scene.layers.set(1);
-        // Add the model to the main scene
+
         settings.scene.add(gltfScene.scene);
 
-        // Create a new light that will only affect the monitor
-        const specificLight = new THREE.PointLight(0xffffff, 1, 10);
-        specificLight.position.set(0, 5, 22); // Adjust position as needed
-        specificLight.layers.set(1); // Set light to the same layer as the model
-
-        // Add the light to the main scene
-        settings.scene.add(specificLight);
     });
-
-    // Enable all layers on the camera to ensure visibility of all objects and lights
-    settings.camera.layers.enableAll();
 	
 	MonitorDisplay = document.createElement('canvas');
 	MonitorDisplay.width = 500;

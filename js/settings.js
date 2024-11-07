@@ -4,13 +4,24 @@ export class Settings {
         /////////////////////////////////3D environment settings//////////////////////////////
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.renderer = new THREE.WebGLRenderer();
+        this.rendererSettings = {
+            antialias: true,
+            alpha: true,
+            powerPreference: "high-performance"
+        };
+        this.renderer = new THREE.WebGLRenderer(this.rendererSettings);
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
 
+        // Add environment map
+        const environment = new THREE.RoomEnvironment();
+        const pmremGenerator = new THREE.PMREMGenerator(this.renderer);
+        const envMapTexture = pmremGenerator.fromScene(environment);
+        this.scene.environment = envMapTexture.texture;
+        pmremGenerator.dispose();
         // Load the background texture
         // this.backgroundTexture = new THREE.TextureLoader().load('texture/sky.jpg');
-        // this.scene.background = this.backgroundTexture;
+        this.scene.background = new THREE.Color(0x191919);
 
         ///////////////////////////////////game settings//////////////////////////////////////
         this.lineLength = 5; // Paddle length
@@ -50,7 +61,7 @@ export class Settings {
         this.camera.position.z = 23.5;
         this.camera.lookAt(0, 0, 6);
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         this.scene.add(ambientLight);
         const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
         directionalLight.position.set(1, 1, 1);
