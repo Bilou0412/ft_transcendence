@@ -3,7 +3,6 @@ from django.db import models
 from django.contrib.auth.models import User
 import uuid
 from django.utils.text import slugify
-# from django.core.files.base import ContentFile
 
 def unique_filename_username(instance, filename):
     extension = filename.split('.')[-1]
@@ -14,7 +13,7 @@ def unique_filename_username(instance, filename):
 
 class UserProfileImage(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile_image')
-    image = models.ImageField(upload_to=unique_filename_username, null=True, blank=True)
+    image = models.ImageField(upload_to=unique_filename_username, null=True)
 
     def save(self, *args, **kwargs):
         if self.pk:
@@ -26,5 +25,5 @@ class UserProfileImage(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Image de profil de {self.username}"  
+        return f"Profil image of {self.username}"  
     

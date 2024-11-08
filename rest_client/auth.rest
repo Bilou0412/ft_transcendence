@@ -12,10 +12,10 @@ POST http://127.0.0.1:8000/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "jd",
+    "username": "bibi",
     "password": "Algerie93",
     "password2": "Algerie93",
-    "email": "bilel.moudache0412@gmail.com"
+    "email": "reset.pass.ponggame@gmail.co"
 }
 
 ### Refresh Token
@@ -65,6 +65,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 POST http://127.0.0.1:8000/api/auth/token/validate/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwNDg3MDU0LCJpYXQiOjE3MzA0ODM0NTQsImp0aSI6ImYwNmU4YTY1NWZiMzRhM2RiNDNlYzg2NTZiZTFjYmM1IiwidXNlcl9pZCI6Mn0.4MAR0jSykY25QfuSBQBcP6PSrKf9HSk2BEzYhXLQ5aw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxMDc3NTc4LCJpYXQiOjE3MzEwNzM5NzgsImp0aSI6ImEwOTQyYmQ4ODhkYjQ1ZDdiZTUzNGRkZTE0MDZlMDQ0IiwidXNlcl9pZCI6Mn0.NiHcSy-rP-Waan7ZFW23J3oYqr8b9R8N6FMPLJgT--0
 
 ###

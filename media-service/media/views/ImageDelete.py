@@ -11,14 +11,14 @@ from django.core.exceptions import ObjectDoesNotExist
 @api_view(['DELETE'])
 @authorize_user
 def	ImageDelete(request):
-    username = getattr(request, 'username')
+    id = getattr(request, 'id')
     try:
-        user = User.objects.get(username=username)
+        user = User.objects.get(id=id)
         profileImage = UserProfileImage.objects.get(user=user)
         
         if not os.path.exists(profileImage.image.path):
             return Response(
-                {'error': 'imag not found'},
+                {'error': 'Image file not found'},
                 status=status.HTTP_404_NOT_FOUND
             )
         os.remove(profileImage.image.path)
@@ -27,12 +27,17 @@ def	ImageDelete(request):
 
     except ObjectDoesNotExist:
         return Response(
-            {'error': 'User does not exists'},
+            {'error': 'User does not have an image'},
             status=status.HTTP_404_NOT_FOUND
         )
 
     except UserProfileImage.DoesNotExist:
         return Response(
-            {'error': 'image not found'},
+            {'error': 'Image file not found'},
             status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response(
+            {'error': 'An error occurred', 'details': str(e)},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )

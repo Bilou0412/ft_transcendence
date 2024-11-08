@@ -1,11 +1,10 @@
+import os
 from rest_framework.decorators import api_view
 from ..decorators import authorize_user
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import FileResponse
 from django.contrib.auth.models import User
-import requests
-import os
 from ..models import UserProfileImage
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -13,7 +12,6 @@ from django.core.exceptions import ObjectDoesNotExist
 @authorize_user
 def ImageServe(request, username):
     try:
-        # username = getattr(request, 'username')
         try:
             user = User.objects.get(username=username)
         except ObjectDoesNotExist:
@@ -21,7 +19,7 @@ def ImageServe(request, username):
             if os.path.exists(default_path):
                 return FileResponse(open(default_path, 'rb'))
             return Response(
-                {'error': 'No profile image found'},
+                {'error': 'Image file not found'},
                 status=status.HTTP_404_NOT_FOUND
             )
         profile_image = UserProfileImage.objects.get(user=user)
