@@ -3,7 +3,7 @@ POST http://127.0.0.1:8000/api/auth/login/
 Content-Type: application/json
 
 {
-    "username": "bilel",
+    "username": "reset.pass.ponggame@gmail.com",
     "password": "Algerie93@"
 }
 
@@ -13,8 +13,8 @@ Content-Type: application/json
 
 {
     "username": "bilel",
-    "password": "Algerie93",
-    "password2": "Algerie93",
+    "password": "Algerie93@",
+    "password2": "Algerie93@",
     "email": "reset.pass.ponggame@gmail.com"
 }
 
@@ -68,3 +68,12 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMzc5Njg3LCJpYXQiOjE3MzAzNzYwODcsImp0aSI6ImRlZmIxMTk0YzI0OTRlZmFhNWI3NmJkMjBiYzY5YWE5IiwidXNlcl9pZCI6Mn0.9Q1cl2NxP2ioWaieUtg-Tg_IeHSHbHtO850CJATV6zU
 
 ###
+
+PUT http://127.0.0.1:8000/api/auth/update_user/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxMDczMjI4LCJpYXQiOjE3MzEwNjk2MjgsImp0aSI6IjkxNWEyNTc4ODkxMzRmZmRhYzJkMWQ2NWMyMjk2MTcyIiwidXNlcl9pZCI6M30.5HrDmC29Lgx5sJpoC3RCH1NXRABqhQlhcmzfPBukLQo
+
+{
+    "username": "bilelfff",
+    "email": "bilel.moudache0412@gmail.com"
+}

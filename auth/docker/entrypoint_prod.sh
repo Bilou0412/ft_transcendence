@@ -31,4 +31,4 @@ END
 
 # Démarre le serveur de production avec Gunicorn
 echo "Démarrage du serveur de production..."
-exec gunicorn --bind 0.0.0.0:8000 auth.wsgi:application
+exec gunicorn --bind 0.0.0.0:8000 authentication.wsgi:application

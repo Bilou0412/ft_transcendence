@@ -19,4 +19,4 @@ fi
 echo "Exécution des tests dans le conteneur auth-web_dev..."
 
 # Exécute les tests dans le conteneur avec plus de verbosité
-docker exec -it "$CONTAINER_ID" python manage.py test auth.tests -v 2
+docker exec -it "$CONTAINER_ID" python manage.py test authentication.tests -v 2

@@ -5,6 +5,7 @@ from .views.token_management import refresh_token, validate_token
 from .views.email_verification import email_verification,reset_password_confirm
 from .views.password_management import reset_password_request, change_password
 from .views.auth42 import UserCreateFrom42View
+from .views.update_info import verify_new_email,update_user
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -12,7 +13,7 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="auth API",
+      title="authentication API",
       default_version='v1',
    ),
    public=True,
@@ -22,6 +23,7 @@ schema_view = get_schema_view(
 urlpatterns = [
    # Admin URL
    path('admin/', admin.site.urls),
+   
    # API Authentication endpoints
    path('api/auth/login/', token, name='login'),
    path('api/auth/signup/', signup, name='signup'),
@@ -41,10 +43,13 @@ urlpatterns = [
    
    # API Logout endpoint
    path('api/auth/logout/', logout, name='logout'),
+   
+   # API Update Info
+   path('api/auth/update_user/', update_user, name='update_user'),
+   path('api/auth/verify_new_email/<str:uidb64>/<str:token>/', verify_new_email, name='update_email_verification'),
+   
+   #API Documentation 
    path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-
- 
-
 ]

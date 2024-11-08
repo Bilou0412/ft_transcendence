@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
+from .models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 import re
@@ -22,10 +22,10 @@ class UserSerializer(serializers.ModelSerializer):
         validators=[validate_password, validate_password_strength]
     )
     password2 = serializers.CharField(write_only=True)
-
+    
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'password2', 'email']
+        fields = ['id', 'username', 'password', 'password2', 'email', 'new_email', 'Student', 'NoStudent']
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
@@ -48,6 +48,7 @@ class UserSerializer(serializers.ModelSerializer):
         user = User(
             username=validated_data['username'],
             email=validated_data['email'],
+            NoStudent=True,
             is_active=False
         )
         user.set_password(validated_data['password'])
@@ -62,17 +63,17 @@ class ChangePasswordSerializer(serializers.Serializer):
 class ForgotPasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True, validators=[validate_password, validate_password_strength])
 
-class UserSerializer42(serializers.ModelSerializer):
+
+class UpdateInfo(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email']
+        fields = ['username', 'email']
 
-    def create(self, validated_data):
-        # Créez l'utilisateur sans mot de passe
-        user = User(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            is_active=True  # Activez l'utilisateur immédiatement
-        )
-        user.save()
-        return user
+    def update(self, instance, validated_data):
+        # Update the user fields
+        instance.username = validated_data.get('username', instance.username)
+        instance.email = validated_data.get('email', instance.email)
+        
+        # Save the updated user instance
+        instance.save()
+        return instance
