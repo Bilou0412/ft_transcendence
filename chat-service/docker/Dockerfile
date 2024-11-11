@@ -1,7 +1,8 @@
 FROM python:3.10.14-slim
-RUN apt-get update && apt-get -y upgrade
+RUN apt-get update && apt-get -y upgrade && apt-get install -y postgresql-client && apt-get clean
 WORKDIR /app
 COPY docker/requirements.txt .
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 EXPOSE 8002
