@@ -18,3 +18,7 @@ export function initBall(){
 	ball.userData.heldBy = null; // Add this line to track which player is holding the ball
 	settings.scene.add(ball);
 }
+
+export function clearBall(){
+	settings.scene.remove(ball);
+}

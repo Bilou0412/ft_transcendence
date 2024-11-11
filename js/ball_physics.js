@@ -129,7 +129,7 @@ export function updateBallPosition()
     let closestCube = null;
 
     settings.cubes.forEach(cube => {
-        if (cube.material.color.getHex() === 0xaaaaaa || cube.material.color.getHex() === 0x0aa23b) {
+        if (cube.material.color.getHex() === 0xffffff || cube.material.color.getHex() === 0x0aa23b) {
             const cubeBoundingBox = new THREE.Box3().setFromObject(cube);
             const intersection = ray.intersectBox(cubeBoundingBox, new THREE.Vector3());
 

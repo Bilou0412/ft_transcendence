@@ -57,6 +57,14 @@ export function initSides(){
 	}
 }
 
+export function clearSides(){
+	settings.cubes.forEach(cube => {
+		settings.scene.remove(cube);
+	});
+	settings.cubes = [];
+}
+
+let platform = null;
 export function initMiddlePlatform(){
 	// Load the textures
 	const textureLoader = new THREE.TextureLoader();
@@ -80,6 +88,11 @@ export function initMiddlePlatform(){
 
 	// Create middle platform with different textures
 	const platformGeometry = new THREE.BoxGeometry(settings.platformWidth - 4, settings.cubeSize, settings.platformLength + 2);
-	const platform = new THREE.Mesh(platformGeometry, materials);
+	platform = new THREE.Mesh(platformGeometry, materials);
 	settings.scene.add(platform);
+}
+
+
+export function clearMiddle(){
+	settings.scene.remove(platform);
 }

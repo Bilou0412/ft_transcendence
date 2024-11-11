@@ -6,6 +6,8 @@ import { settings} from './main.js';
 let scoreDisplayCtx = null;
 let scoreDisplay = null;
 let scoreDisplayTexture = null;
+let scoreboardMesh = null;
+let scoreDisplayMesh = null;
 export function initScoreboard(){
 	// Load the scoreboard image texture
 	const scoreboardTexture = new THREE.TextureLoader().load('texture/Scoreboard.png');
@@ -15,7 +17,7 @@ export function initScoreboard(){
 	const scoreboardWidth = 20; // Adjust the width as needed
 	const scoreboardHeight = 10; // Adjust the height as needed
 	const scoreboardGeometry = new THREE.PlaneGeometry(scoreboardWidth, scoreboardHeight);
-	const scoreboardMesh = new THREE.Mesh(scoreboardGeometry, scoreboardMaterial);
+	scoreboardMesh = new THREE.Mesh(scoreboardGeometry, scoreboardMaterial);
 	scoreboardMesh.position.set(0, 10, -settings.platformLength / 2 - 2); // Adjust the position as needed
 	settings.scene.add(scoreboardMesh);
 
@@ -28,7 +30,7 @@ export function initScoreboard(){
 
 	const scoreDisplayMaterial = new THREE.MeshBasicMaterial({ map: scoreDisplayTexture, transparent: true });
 	const scoreDisplayPlane = new THREE.PlaneGeometry(2, 1);
-	const scoreDisplayMesh = new THREE.Mesh(scoreDisplayPlane, scoreDisplayMaterial);
+	scoreDisplayMesh = new THREE.Mesh(scoreDisplayPlane, scoreDisplayMaterial);
 	scoreDisplayMesh.scale.set(10, 10, 10);
 	scoreDisplayMesh.position.set(0, 10, -settings.platformLength / 2 - 1.9);
 	settings.scene.add(scoreDisplayMesh);
@@ -57,6 +59,7 @@ export const updateScoreDisplay = () => {
 let ClockCtx = null;
 let Clock = null;
 let ClockTexture = null;
+let ClockMesh = null;
 export function initClock(){
 
 	Clock = document.createElement('canvas');
@@ -69,7 +72,7 @@ export function initClock(){
 	ClockTexture = new THREE.CanvasTexture(Clock);
 	const ClockMaterial = new THREE.MeshBasicMaterial({ map: ClockTexture, transparent: true });
 	const ClockPlane = new THREE.PlaneGeometry(2, 1);
-	const ClockMesh = new THREE.Mesh(ClockPlane, ClockMaterial);
+	ClockMesh = new THREE.Mesh(ClockPlane, ClockMaterial);
 	ClockMesh.scale.set(10, 10, 10);
 	ClockMesh.position.set(0, 10, -settings.platformLength / 2 - 1.9);
 	settings.scene.add(ClockMesh);
@@ -146,4 +149,11 @@ export function updateHitCounter2Display() {
         // Add the charge2 to the scene
         settings.scene.add(charge2);
     }
+}
+
+//////////////////////////////////////Clear whole Scoreboard//////////////////////////////////////
+export function clearScoreboard(){
+    settings.scene.remove(scoreDisplayMesh);
+    settings.scene.remove(scoreboardMesh);
+    settings.scene.remove(ClockMesh);
 }

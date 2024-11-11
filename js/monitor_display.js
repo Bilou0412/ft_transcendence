@@ -1,6 +1,10 @@
 import { settings, startGame } from "./main.js";
 import { sleep } from "./resetBall.js";
 import { focusGame } from "./monitor.js";
+import { clearBall } from "./ball_init.js";
+import { clearSides, clearMiddle } from "./roundedBox.js";
+import { clearScoreboard } from "./display.js";
+import { gameMode } from "./gameModes.js";
 
 /////////////////////////////////////Start Button///////////////////////////////////////
 let buttonBackgroundMesh = null;
@@ -17,14 +21,14 @@ export function initStartButton() {
 
     ///////////////////////////////////Button Content//////////////////////////////////////
     const buttonCanvas = document.createElement('canvas');
-    buttonCanvas.width = 300;
-    buttonCanvas.height = 200;
+    buttonCanvas.width = 600;
+    buttonCanvas.height = 300;
     const buttonCtx = buttonCanvas.getContext('2d');
 
     ///////////////////////////////////Content design//////////////////////////////////////
     buttonCtx.fillStyle = '#0aa23b'; // Text color
     // buttonCtx.font = '50px "Digital-7"'; // Text font
-    buttonCtx.font = '50px Courier New';
+    buttonCtx.font = '100px Courier New';
     buttonCtx.textAlign = 'center';
     buttonCtx.textBaseline = 'middle';
     buttonCtx.fillText('Start Game', buttonCanvas.width / 2, buttonCanvas.height / 2);
@@ -34,7 +38,7 @@ export function initStartButton() {
     const buttonPlane = new THREE.PlaneGeometry(1, 0.5); // Size of the button plane
     buttonMesh = new THREE.Mesh(buttonPlane, buttonMaterial);
     // Position the button in the scene
-    buttonMesh.position.set(-0.25, 2.55, settings.platformLength / 2 + 6.11); // Adjust based on your scene's setup
+    buttonMesh.position.set(-0.25, 2.53, settings.platformLength / 2 + 6.11); // Adjust based on your scene's setup
     settings.scene.add(buttonMesh);
 
 
@@ -91,7 +95,7 @@ export function initGearButton() {
 
 			// Check for intersections with the button
 			const intersects = raycaster.intersectObject(gearMesh);
-			if (intersects.length > 0 && settings.gameStatus === 'paused') {
+			if (intersects.length > 0) {
 				settingDisplay();
 			}
 		}
@@ -121,9 +125,121 @@ export function settingDisplay() {
     const settingPlane = new THREE.PlaneGeometry(1, 0.5); // Size of the setting plane
     const settingMesh = new THREE.Mesh(settingPlane, settingMaterial);
     // Position the setting in the scene
-    settingMesh.position.set(-0.25, 2.55, settings.platformLength / 2 + 6.11); // Adjust based on your scene's setup
+    settingMesh.position.set(-0.25, 3.5, settings.platformLength / 2 + 6.11); // Adjust based on your scene's setup
     settings.scene.add(settingMesh);
+
+    gameModesDisplay();
 }
+
+
+export function createButton(y, text, action, mesh) {
+    ///////////////////////////////////Button Content//////////////////////////////////////
+    const buttonCanvas = document.createElement('canvas');
+    buttonCanvas.width = 300;
+    buttonCanvas.height = 200;
+    const buttonCtx = buttonCanvas.getContext('2d');
+
+    ///////////////////////////////////Content design//////////////////////////////////////
+    buttonCtx.fillStyle = '#0aa23b'; // Text color
+    // buttonCtx.font = '50px "Digital-7"'; // Text font
+    if (settings.gameMode === text) {
+        buttonCtx.font = 'bold 50px Courier New';
+    } else {
+        buttonCtx.font = '50px Courier New';
+    }
+    buttonCtx.textAlign = 'center';
+    buttonCtx.textBaseline = 'middle';
+    buttonCtx.fillText(text, buttonCanvas.width / 2, buttonCanvas.height / 2);
+
+    const buttonTexture = new THREE.CanvasTexture(buttonCanvas);
+    const buttonMaterial = new THREE.MeshBasicMaterial({ map: buttonTexture, transparent: true });
+    const buttonPlane = new THREE.PlaneGeometry(1, 0.5); // Size of the button plane
+    mesh = new THREE.Mesh(buttonPlane, buttonMaterial);
+    // Position the button in the scene
+    mesh.position.set(-0.25, y, 30 / 2 + 6.11); // Adjust based on your scene's setup
+    settings.scene.add(mesh);
+
+    ///////////////////////////////////Mouse click detection//////////////////////////////////////
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    async function onButtonClick(event) {
+            // Convert mouse position to normalized device coordinates
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            // Update raycaster with camera and mouse position
+            raycaster.setFromCamera(mouse, settings.camera);
+
+            // Check for intersections with the button
+            const intersects = raycaster.intersectObject(mesh);
+            if (intersects.length > 0 && settings.gameStatus === 'paused') {
+                action();
+            }
+        }
+
+    // Event listener for mouse click
+    window.addEventListener('click', onButtonClick, false);
+}
+
+let modeMesh1 = null;
+let modeMesh2 = null;
+let modeMesh3 = null;
+export function gameModesDisplay() {
+    createButton(2.8, '10x30', () => gameMode(10, 30, 3), modeMesh1);
+    createButton(2.5, '30x50', () => gameMode(30, 50, 5), modeMesh2);
+    createButton(2.2, '50x70', () => gameMode(50, 70, 10), modeMesh3);
+}
+
+export function clearModes() {
+    if (modeMesh1) {
+        settings.scene.remove(modeMesh1);
+    }
+    if (modeMesh2) {
+        settings.scene.remove(modeMesh2);
+    }
+    if (modeMesh3) {
+        settings.scene.remove(modeMesh3);
+    }
+}
+
+
+/////////////////////////////////////Auth///////////////////////////////////////
+/////////////////////////////////////profile Button///////////////////////////////////////
+let profileMesh = null;
+export function initProfileButton() {
+	/////////////////////////////////Button design//////////////////////////////////////
+	const profileTexture = new THREE.TextureLoader().load('texture/profile.jpg');
+	const profileMaterial = new THREE.MeshBasicMaterial({ map: profileTexture });
+	const profilePlane = new THREE.PlaneGeometry(2, 1);
+	profileMesh = new THREE.Mesh(profilePlane, profileMaterial);
+	profileMesh.scale.set(0.2, 0.3, 0.2);
+	profileMesh.position.set(-1.5, 3.5, settings.platformLength / 2 + 6.1);
+	settings.scene.add(profileMesh);
+
+    ///////////////////////////////////Mouse click detection//////////////////////////////////////
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+	async function onButtonClick(event) {
+			// Convert mouse position to normalized device coordinates
+			mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+			mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+			// Update raycaster with camera and mouse position
+			raycaster.setFromCamera(mouse, settings.camera);
+
+			// Check for intersections with the button
+			const intersects = raycaster.intersectObject(profileMesh);
+			if (intersects.length > 0) {
+				profileDisplay();
+			}
+		}
+
+    // Event listener for mouse click
+    window.addEventListener('click', onButtonClick, false);
+}
+
 
 /////////////////////////////////////Display Functions///////////////////////////////////////
 export function clearDisplay() {
@@ -141,8 +257,10 @@ export function clearDisplay() {
 export function titleDisplay() {
     initStartButton();
     initGearButton();
+    initProfileButton();
 }
 
 export function pauseDisplay() {
     initGearButton();
+    initProfileButton();
 }

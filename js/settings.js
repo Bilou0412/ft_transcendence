@@ -47,6 +47,7 @@ export class Settings {
         this.ServSide = 2; // Wich player will serve
         this.lastHit = 1; // Last player to hit the ball
         this.gameStatus = 'title';
+        this.gameMode = '30x50';
 		this.gameStartTime = Date.now();
 
         ///////////////////////////////////paddle settings////////////////////////////////////
@@ -78,6 +79,7 @@ export class Settings {
     updateServSide(newValue) { this.ServSide = newValue; }
     updateLastHit(newValue) { this.lastHit = newValue; }
     updateGameStatus(newValue) { this.gameStatus = newValue; }
+    updateGameMode(newValue) { this.gameMode = newValue; }
     updatePlayer1Positions(newValue) { this.player1Positions = newValue; }
     updatePlayer2Positions(newValue) { this.player2Positions = newValue; }
 }
