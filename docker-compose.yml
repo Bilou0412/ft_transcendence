@@ -21,25 +21,24 @@ services:
     networks:
       - my_network
 
-  # auth-service:
-  #   build:
-  #     context: ./auth-service
-  #     dockerfile: docker/Dockerfile
-  #   ports:
-  #     - "8000:8000"
-  #   volumes:
-  #     - ./auth-service:/app
-  #     # - ./docker:/app/docker
-  #   environment:
-  #     - PYTHONUNBUFFERED=1
-  #   env_file:
-  #     - auth-service/.env
-  #   networks:
-  #     my_network:
-  #       aliases:
-  #         - alias
-  #   depends_on:
-  #     - db
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./auth-service:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - auth-service/.env
+    networks:
+      my_network:
+        aliases:
+          - alias
+    depends_on:
+      - db
 
   # media-service:
   #   build:

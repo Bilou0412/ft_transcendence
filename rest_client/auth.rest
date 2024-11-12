@@ -1,0 +1,79 @@
+### Login
+POST http://127.0.0.1:8000/api/auth/login/
+Content-Type: application/json
+
+{
+    "username": "bilel.moudache0412@gmail.com",
+    "password": "Algerie93@"
+}
+
+### Signup
+POST http://127.0.0.1:8000/api/auth/signup/
+Content-Type: application/json
+
+{
+    "username": "bi",
+    "password": "Algerie93@",
+    "password2": "Algerie93@",
+    "email": "bilel.moudache0412@gmail.com"
+}
+
+### Refresh Token
+POST http://127.0.0.1:8000/api/auth/token/refresh/
+Content-Type: application/json
+
+{
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTczMTUzMDQ5NiwiaWF0IjoxNzMxNDQ0MDk2LCJqdGkiOiIxZTg5MGJmMjUwNmE0MDBlYTFlYjkzYzljN2VkOGU3ZSIsInVzZXJfaWQiOjN9.KUv1cZpJ6ayzJvuFMpOgSfDbgHOuluVI85DkT1SvtoM"
+}
+
+### Request Password Reset
+POST http://127.0.0.1:8000/api/auth/password/reset/
+Content-Type: application/json
+
+{
+    "email": "reset.pass.ponggame@gmail.com"
+}
+
+### Confirm Password Reset
+POST http://127.0.0.1:8000/api/auth/password/reset/confirm/Mg/cfnhn8-6526e51095b178fa8d48f420e5b2e6bc/
+Content-Type: application/json
+
+{
+    "new_password": "palestin"
+}
+
+### Confirm Password Reset
+POST http://127.0.0.1:8000/api/auth/password/change/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwOTkwNzA2LCJpYXQiOjE3MzA5ODcxMDYsImp0aSI6ImQ0ODZkZWZiN2EzMjRiNGViMmEyODcyMzc0YWQ4YjA2IiwidXNlcl9pZCI6M30.hkjJtvmDgwlBUQEp2t85eo3w4KhwVLzDxJdkpnBN_Qk
+
+{
+    "old_password": "Algerie93@",
+    "new_password": "Palestine93@"
+}
+
+### Logout
+POST http://127.0.0.1:8000/api/auth/logout/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMjk1MTYwLCJpYXQiOjE3MzAyOTE1NjAsImp0aSI6IjRkNWJhN2NlYTQxZDRiMzhiNzI5ZjQyM2NkYjY2ZjhjIiwidXNlcl9pZCI6Mn0.-1EBA11nqoOzgtH0kYbQj-XG8HusprnZPGdHYdaYPkI
+
+{
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTczMDM3Nzk2MCwiaWF0IjoxNzMwMjkxNTYwLCJqdGkiOiI4NjUxMTZiOGNkOWQ0NDFjOTk2MGVjMzM5Nzk3ODQ2MiIsInVzZXJfaWQiOjJ9.W3mlpN2hspwNetdVEeoqq0ttZ_kFO65lV-IdcMS1uCQ"
+}
+
+### Token verify
+
+POST http://127.0.0.1:8000/api/auth/token/validate/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMzc5Njg3LCJpYXQiOjE3MzAzNzYwODcsImp0aSI6ImRlZmIxMTk0YzI0OTRlZmFhNWI3NmJkMjBiYzY5YWE5IiwidXNlcl9pZCI6Mn0.9Q1cl2NxP2ioWaieUtg-Tg_IeHSHbHtO850CJATV6zU
+
+###
+
+PUT http://127.0.0.1:8000/api/auth/update_user/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxMDczMjI4LCJpYXQiOjE3MzEwNjk2MjgsImp0aSI6IjkxNWEyNTc4ODkxMzRmZmRhYzJkMWQ2NWMyMjk2MTcyIiwidXNlcl9pZCI6M30.5HrDmC29Lgx5sJpoC3RCH1NXRABqhQlhcmzfPBukLQo
+
+{
+    "username": "bilelfff",
+    "email": "bilel.moudache0412@gmail.com"
+}

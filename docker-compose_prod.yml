@@ -1,8 +1,8 @@
 services:
-  # auth-service:
-  #   environment:
-  #     - DEBUG=False
-  #   entrypoint: ["./docker/entrypoint_prod.sh"]
+  auth-service:
+    environment:
+      - DEBUG=False
+    entrypoint: ["./docker/entrypoint_prod.sh"]
 
   # media-service:
   #   environment:
