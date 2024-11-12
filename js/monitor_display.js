@@ -55,7 +55,7 @@ export function initStartButton() {
         raycaster.setFromCamera(mouse, settings.camera);
 
         // Check for intersections with the button
-        const intersects = raycaster.intersectObject(buttonMesh);
+        const intersects = raycaster.intersectObject(buttonBackgroundMesh);
         if (intersects.length > 0 && settings.gameStatus === 'title') {
             startGame();
             focusGame();
@@ -131,8 +131,15 @@ export function settingDisplay() {
     gameModesDisplay();
 }
 
+/////////////////////////////////////Game Modes///////////////////////////////////////
+let raycaster;
+let mouse;
 
-export function createButton(y, text, action, mesh) {
+let modeMesh1 = null;
+let modeMesh2 = null;
+let modeMesh3 = null;
+
+export function createButton(y, text, action) {
     ///////////////////////////////////Button Content//////////////////////////////////////
     const buttonCanvas = document.createElement('canvas');
     buttonCanvas.width = 300;
@@ -141,9 +148,8 @@ export function createButton(y, text, action, mesh) {
 
     ///////////////////////////////////Content design//////////////////////////////////////
     buttonCtx.fillStyle = '#0aa23b'; // Text color
-    // buttonCtx.font = '50px "Digital-7"'; // Text font
     if (settings.gameMode === text) {
-        buttonCtx.font = 'bold 50px Courier New';
+        buttonCtx.font = 'bold 80px Courier New';
     } else {
         buttonCtx.font = '50px Courier New';
     }
@@ -154,52 +160,61 @@ export function createButton(y, text, action, mesh) {
     const buttonTexture = new THREE.CanvasTexture(buttonCanvas);
     const buttonMaterial = new THREE.MeshBasicMaterial({ map: buttonTexture, transparent: true });
     const buttonPlane = new THREE.PlaneGeometry(1, 0.5); // Size of the button plane
-    mesh = new THREE.Mesh(buttonPlane, buttonMaterial);
-    // Position the button in the scene
+
+    // Create the mesh and add it to the scene
+    const mesh = new THREE.Mesh(buttonPlane, buttonMaterial);
     mesh.position.set(-0.25, y, 30 / 2 + 6.11); // Adjust based on your scene's setup
     settings.scene.add(mesh);
 
-    ///////////////////////////////////Mouse click detection//////////////////////////////////////
-    const raycaster = new THREE.Raycaster();
-    const mouse = new THREE.Vector2();
-
-    async function onButtonClick(event) {
-            // Convert mouse position to normalized device coordinates
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-            // Update raycaster with camera and mouse position
-            raycaster.setFromCamera(mouse, settings.camera);
-
-            // Check for intersections with the button
-            const intersects = raycaster.intersectObject(mesh);
-            if (intersects.length > 0 && settings.gameStatus === 'paused') {
-                action();
-            }
+    // Add click event listener
+    mesh.addEventListener('click', () => {
+        if (settings.gameStatus === 'paused') {
+            action();
         }
+    });
 
-    // Event listener for mouse click
-    window.addEventListener('click', onButtonClick, false);
+    return mesh;
 }
 
-let modeMesh1 = null;
-let modeMesh2 = null;
-let modeMesh3 = null;
+function onButtonClick(event) {
+    // Convert mouse position to normalized device coordinates
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    // Update raycaster with camera and mouse position
+    raycaster.setFromCamera(mouse, settings.camera);
+
+    // Check for intersections with any object in the scene
+    const intersects = raycaster.intersectObjects(settings.scene.children);
+    if (intersects.length > 0) {
+        intersects[0].object.dispatchEvent({ type: 'click' });
+    }
+}
+
 export function gameModesDisplay() {
-    createButton(2.8, '10x30', () => gameMode(10, 30, 3), modeMesh1);
-    createButton(2.5, '30x50', () => gameMode(30, 50, 5), modeMesh2);
-    createButton(2.2, '50x70', () => gameMode(50, 70, 10), modeMesh3);
+    raycaster = new THREE.Raycaster();
+    mouse = new THREE.Vector2();
+
+    window.addEventListener('click', onButtonClick, false);
+    clearModes();
+
+    modeMesh1 = createButton(2.8, '10x30', () => gameMode(10, 30, 3));
+    modeMesh2 = createButton(2.5, '30x50', () => gameMode(30, 50, 5));
+    modeMesh3 = createButton(2.2, '50x70', () => gameMode(50, 70, 10));
 }
 
 export function clearModes() {
     if (modeMesh1) {
         settings.scene.remove(modeMesh1);
+        modeMesh1 = null;
     }
     if (modeMesh2) {
         settings.scene.remove(modeMesh2);
+        modeMesh2 = null;
     }
     if (modeMesh3) {
         settings.scene.remove(modeMesh3);
+        modeMesh3 = null;
     }
 }
 

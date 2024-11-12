@@ -5,7 +5,7 @@ import { initMiddlePlatform, initSides } from "./roundedBox.js";
 import { updateCubeSelection, updatePlayerPositions } from "./movements.js";
 import { updateBallPosition } from "./ball_physics.js";
 import { updateScoreDisplay, updateClock, initScoreboard, initClock} from "./display.js";
-import { initMonitor, updateMonitorDisplay} from "./monitor.js";
+import { initMonitor} from "./monitor.js";
 import { onKeyDown, onKeyUp, onMouseWheel } from "./keyEvents.js";
 import { Settings } from "./settings.js";
 import { titleDisplay } from "./monitor_display.js";

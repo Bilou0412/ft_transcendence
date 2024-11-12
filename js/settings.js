@@ -14,14 +14,23 @@ export class Settings {
         document.body.appendChild(this.renderer.domElement);
 
         // Add environment map
-        const environment = new THREE.RoomEnvironment();
-        const pmremGenerator = new THREE.PMREMGenerator(this.renderer);
-        const envMapTexture = pmremGenerator.fromScene(environment);
-        this.scene.environment = envMapTexture.texture;
-        pmremGenerator.dispose();
+        // const environment = new THREE.RoomEnvironment();
+        // const pmremGenerator = new THREE.PMREMGenerator(this.renderer);
+        // const envMapTexture = pmremGenerator.fromScene(environment);
+        // this.scene.environment = envMapTexture.texture;
+        // pmremGenerator.dispose();
         // Load the background texture
         // this.backgroundTexture = new THREE.TextureLoader().load('texture/sky.jpg');
-        this.scene.background = new THREE.Color(0x191919);
+        // this.scene.background = new THREE.Color(0x191919);
+        const rgbeLoader = new THREE.RGBELoader();
+        rgbeLoader.load('../texture/royal_esplanade_4k.hdr', ( texture ) => {
+
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+
+            this.scene.background = texture;
+            this.scene.environment = texture;
+
+        } );
 
         ///////////////////////////////////game settings//////////////////////////////////////
         this.lineLength = 5; // Paddle length
@@ -64,9 +73,11 @@ export class Settings {
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         this.scene.add(ambientLight);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-        directionalLight.position.set(1, 1, 1);
-        this.scene.add(directionalLight);
+        this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        // directionalLight.position.set(1, 1, 1);
+        this.directionalLight.position.set(5, 3, 23.5);
+        // directionalLight.target.position.set(0, 0, 0);
+        this.scene.add(this.directionalLight);
     }
 
     ///////////////////////////////////update functions////////////////////////////////////
@@ -82,4 +93,14 @@ export class Settings {
     updateGameMode(newValue) { this.gameMode = newValue; }
     updatePlayer1Positions(newValue) { this.player1Positions = newValue; }
     updatePlayer2Positions(newValue) { this.player2Positions = newValue; }
+    updateDirectionalLight(position) { this.directionalLight.position.set(position.x, position.y, position.z); }
+    updateDirectionalLightSmoothly(position) {
+        gsap.to(this.directionalLight.position, {
+            duration: 2,
+            x: position.x,
+            y: position.y,
+            z: position.z,
+            ease: "power2.inOut"
+        });
+    }
 }

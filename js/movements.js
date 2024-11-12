@@ -8,12 +8,12 @@ export const pressedKeys = {};
 /////////////////////////////////////////cubes////////////////////////////////////////
 export function updateCubeSelection() {
     settings.cubes.forEach(cube => {
-        cube.material.color.setHex(0x595959);
+        cube.material.color.setHex(0x222222);
         cube.userData.targetY = 0;
     });
 
     const updatePlayerCubes = (positions, player) => {
-        const color = ball.userData.heldBy === player ? 0x0aa23b : 0xffffff;
+        const color = ball.userData.heldBy === player ? 0x0aa23b : 0x797979;
         positions.forEach((pos) => {
             const cube = settings.cubes.find(cube =>
                 cube.userData.gridPosition.x === Math.floor(pos.x) &&

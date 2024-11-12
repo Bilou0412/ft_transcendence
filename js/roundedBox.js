@@ -34,7 +34,7 @@ export function initSides(){
 	for (let i = -1; i < 2; i++) {
 		for (let j = -1; j < settings.platformLength + 1; j++) {
 			const geometry = createRoundedBox(settings.cubeSize, settings.cubeSize, settings.cubeSize, 0.18, 4);
-			const material = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
+			const material = new THREE.MeshPhongMaterial({ color: 0x222222 });
 			const cube = new THREE.Mesh(geometry, material);
 			cube.position.set(i - settings.platformWidth / 2 + 0.5, 0, j - settings.platformLength / 2 + 0.5);
 			cube.userData.gridPosition = { x: i, z: j };
@@ -47,7 +47,7 @@ export function initSides(){
 	for (let i = settings.platformWidth - 2; i < settings.platformWidth + 1; i++) {
 		for (let j = -1; j < settings.platformLength + 1; j++) {
 			const geometry = createRoundedBox(settings.cubeSize, settings.cubeSize, settings.cubeSize, 0.18, 4);
-			const material = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
+			const material = new THREE.MeshPhongMaterial({ color: 0x222222 });
 			const cube = new THREE.Mesh(geometry, material);
 			cube.position.set(i - settings.platformWidth / 2 + 0.5, 0, j - settings.platformLength / 2 + 0.5);
 			cube.userData.gridPosition = { x: i, z: j };

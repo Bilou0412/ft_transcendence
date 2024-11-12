@@ -31,25 +31,6 @@ export function initMonitor(){
 	settings.scene.add(MonitorDisplayMesh);
 }
 
-export const updateMonitorDisplay = () => {
-    MonitorDisplayCtx.clearRect(0, 0, MonitorDisplay.width, MonitorDisplay.height);
-
-    MonitorDisplayCtx.fillStyle = 'green';
-    MonitorDisplayCtx.font = 'bold 100px "Digital-7"';
-
-    const characters = 'abcdefghijklmnopqrstuvwxyz';
-    let result = '';
-    for (let i = 0; i < 8; i++) {
-        result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    const formattedTime = result;
-    MonitorDisplayCtx.fillText(formattedTime, 60, 100);
-
-    // Update the texture to reflect the new score
-    MonitorDisplayTexture.needsUpdate = true;
-    setTimeout(updateMonitorDisplay, 100);
-};
-
 
 /////////////////////////////////////View Focus///////////////////////////////////////
 export function focusGame() {
@@ -74,6 +55,8 @@ export function focusGame() {
         z: gameView.rotation.z,
         ease: "power2.inOut"
     });
+    // Move the light with the camera
+    settings.updateDirectionalLightSmoothly(gameView.position);
 }
 
 export function focusMonitor() {
@@ -97,4 +80,6 @@ export function focusMonitor() {
         z: monitorView.rotation.z,
         ease: "power2.inOut"
     });
+    // Move the light with the camera
+    settings.updateDirectionalLightSmoothly(monitorView.position);
 }
