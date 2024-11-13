@@ -4,6 +4,7 @@ import { ball } from './ball_init.js';
 import { focusGame, focusMonitor } from './monitor.js';
 import { updatePaddleColor, pressedKeys } from './movements.js';
 import { sleep } from './resetBall.js';
+import { clearModes, settingDisplay } from './monitor_display.js';
 
 /////////////////////////////////////Keyboard/////////////////////////////////////////
 export async function onKeyDown(event) {
@@ -21,6 +22,10 @@ export async function onKeyDown(event) {
     if (event.key === 'Escape'){
         if ( settings.gameStatus === 'playing') {
             focusMonitor();
+            if (settings.displayStatus === 'settings'){
+                clearModes();
+                settingDisplay();
+            }
 			settings.updateGameStatus('paused');
         } 
         else if ( settings.gameStatus === 'paused')

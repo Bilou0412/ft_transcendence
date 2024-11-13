@@ -97,6 +97,7 @@ export function initGearButton() {
 			const intersects = raycaster.intersectObject(gearMesh);
 			if (intersects.length > 0) {
 				settingDisplay();
+                settings.updateDisplayStatus('settings');
 			}
 		}
 
@@ -125,7 +126,8 @@ export function settingDisplay() {
     const settingPlane = new THREE.PlaneGeometry(1, 0.5); // Size of the setting plane
     const settingMesh = new THREE.Mesh(settingPlane, settingMaterial);
     // Position the setting in the scene
-    settingMesh.position.set(-0.25, 3.5, settings.platformLength / 2 + 6.11); // Adjust based on your scene's setup
+    // settingMesh.position.set(-0.25, 3.5, settings.platformLength / 2 + 6.11); // Adjust based on your scene's setup
+    settingMesh.position.set(-0.25, 3.5, 30 / 2 + 6.11); // Adjust based on your scene's setup
     settings.scene.add(settingMesh);
 
     gameModesDisplay();

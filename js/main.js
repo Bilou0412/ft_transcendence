@@ -52,6 +52,7 @@ export function startGame() {
     initClock();
     updateClock();
     resetGame();
+
 }
 
 // document.getElementById('startButton').addEventListener('click', function() {
@@ -63,5 +64,4 @@ export function startGame() {
 initMonitor();
 titleDisplay();
 animate();
-
 // startGame();

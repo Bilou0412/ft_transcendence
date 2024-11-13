@@ -11,7 +11,7 @@ export function sleep(ms) {
 }
 
 export async function resetBall() {
-    ball.position.set(0, 1, 0);
+    ball.position.set(0, 1, 0.5);
 	settings.updateBallSpeed(0); // Réinitialise la vitesse de la balle
     settings.ballVelocity.set(0, 0, 0); // Pas de mouvement initial
     ball.userData.heldBy = null;
@@ -26,6 +26,8 @@ export async function resetBall() {
 
 	settings.updateBallSpeed(settings.initialBallSpeed); // Réinitialise la vitesse de la balle
 	settings.updateBallVelocity(new THREE.Vector3(settings.ballSpeed * (settings.ServSide == 1 ? -1 : 1), 0, settings.ballSpeed * (Math.random() > 0.5 ? 1 : -1)));
+	// settings.updateBallVelocity(new THREE.Vector3(settings.ballSpeed * (settings.ServSide == 1 ? -1 : 1), 0, 0));
+
 }
 
 export function pauseGame() {
