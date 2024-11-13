@@ -1,0 +1,87 @@
+### Login
+POST http://127.0.0.1:8000/api/auth/login/
+Content-Type: application/json
+
+{
+    "email": "reset.pass.ponggame@gmail.com",
+    "password": "Motdepasse12@@"
+}
+
+### Signup
+POST http://127.0.0.1:8000/api/auth/signup/
+Content-Type: application/json
+
+{
+    "username": "bmoudach",
+    "password": "Motdepasse12@@",
+    "password2": "Motdepasse12@@",
+    "email": "reset.pass.ponggame@gmail.com"
+}
+
+### Refresh Token
+POST http://127.0.0.1:8000/api/auth/token/refresh/
+Content-Type: application/json
+
+{
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTczMTQzNDIzOSwiaWF0IjoxNzMxMzQ3ODM5LCJqdGkiOiJmNDkzM2IwN2JmZTI0OTk2OTA4YjYyNWZhODA2MDEyZiIsInVzZXJfaWQiOjJ9.GqyLPvhYAN4mVJ9Jh7T9ZJrd7SEMNjgyDLifH_WUmes"
+}
+
+### Request Password Reset
+POST http://127.0.0.1:8000/api/auth/password/reset/
+Content-Type: application/json
+
+{
+    "email": "reset.pass.ponggame@gmail.com"
+}
+
+### Confirm Password Reset
+POST http://127.0.0.1:8000/api/auth/password/reset/confirm/Mg/cfnhn8-6526e51095b178fa8d48f420e5b2e6bc/
+Content-Type: application/json
+
+{
+    "new_password": "palestin"
+}
+
+### Confirm Password Reset
+
+POST http://127.0.0.1:8000/api/auth/password/update/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNDM1NTYwLCJpYXQiOjE3MzE0MzE5NjAsImp0aSI6ImUzMTkzNjY4MmViZTQzMGI4OWQzZDg1OGI1NTA4ZjUxIiwidXNlcl9pZCI6Mn0.L4uzPIEMGVoc3VpUm71EmBRmhybjVdAQrHg5A71nSrc
+
+{
+    "old_password": "Palestine93@",
+    "new_password": "Azerty93@"
+}
+### Logout
+POST http://127.0.0.1:8000/api/auth/logout/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMjk1MTYwLCJpYXQiOjE3MzAyOTE1NjAsImp0aSI6IjRkNWJhN2NlYTQxZDRiMzhiNzI5ZjQyM2NkYjY2ZjhjIiwidXNlcl9pZCI6Mn0.-1EBA11nqoOzgtH0kYbQj-XG8HusprnZPGdHYdaYPkI
+
+{
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTczMDM3Nzk2MCwiaWF0IjoxNzMwMjkxNTYwLCJqdGkiOiI4NjUxMTZiOGNkOWQ0NDFjOTk2MGVjMzM5Nzk3ODQ2MiIsInVzZXJfaWQiOjJ9.W3mlpN2hspwNetdVEeoqq0ttZ_kFO65lV-IdcMS1uCQ"
+}
+
+### Token verify
+
+POST http://127.0.0.1:8000/api/auth/token/validate/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNDM1NTYwLCJpYXQiOjE3MzE0MzE5NjAsImp0aSI6ImUzMTkzNjY4MmViZTQzMGI4OWQzZDg1OGI1NTA4ZjUxIiwidXNlcl9pZCI6Mn0.L4uzPIEMGVoc3VpUm71EmBRmhybjVdAQrHg5A71nSrc
+###
+
+PUT http://127.0.0.1:8000/api/auth/update/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNDM3MzgyLCJpYXQiOjE3MzE0MzM3ODIsImp0aSI6IjFhODg5YWE5MTljYjRiMWQ5ZWIwNjI3ZWE4N2IyMDQxIiwidXNlcl9pZCI6M30.XSU7Hg2pFvun3CxOQWtISBT965dgY-E8gRJCIFtIGiM
+
+{
+    "username": "bmoudach",
+    "email": "reset.pass.ponggame@gmail.com"
+}
+
+### Users info
+POST http://127.0.0.1:8000/api/auth/users/info/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNTA3ODU1LCJpYXQiOjE3MzE1MDQyNTUsImp0aSI6IjAzOTZiNzQ5ZGExMDRhOGI4ZTA4MDZkZjBlOThmNThkIiwidXNlcl9pZCI6Mn0.RW4Jqxnn8p-I3vcCBiGQZdC3sIP83dSciCpmAb4FNDo
+
+{
+    "user_ids": [1, 2, 3]
+}

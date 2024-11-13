@@ -10,6 +10,7 @@ from .views.EmailPassReset import PassResetConfirm
 from .views.PassUpdate import PassUpdate
 from .views.EmailUpdateInfo import EmailUpdateInfo
 from .views.UpdateUserInfo import UpdateUserInfo
+from .views.UsersInfo import UsersInfo
 from django.contrib import admin
 from django.urls import path
 
@@ -37,4 +38,7 @@ urlpatterns = [
     path('api/auth/email/verification/<uidb64>/<token>/', EmailActivate, name='emailactivate'),
     path('api/auth/email/update/<uidb64>/<token>/', EmailUpdateInfo, name='emailupdateinfo'),
     path('api/auth/password/reset/confirm/<uidb64>/<token>/', PassResetConfirm, name='passresetconfirm'),
+
+    # API Users Info endpoint
+    path('api/auth/users/info/', UsersInfo, name='usersinfo'),
 ]

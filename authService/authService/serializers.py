@@ -184,3 +184,8 @@ class UpdateUserInfoSerializer(serializers.ModelSerializer):
             user.save()
         
         return user
+
+class UserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User  # Utilise le modèle d'utilisateur personnalisé si tu en as un
+        fields = ['id','username', 'email']  # Ajoute ici les champs que tu veux renvoyer
