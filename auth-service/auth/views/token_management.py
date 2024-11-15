@@ -80,5 +80,5 @@ def refresh_token(request):
 def validate_token(request):
     user = request.user 
     if user:
-        return Response({'message': 'token valide.', 'id': user.id}, status=status.HTTP_200_OK)
+        return Response({'message': 'token valide.', 'id': user.id, 'username': user.username}, status=status.HTTP_200_OK)
     return Response({'message': 'token invalide.'}, status=status.HTTP_400_BAD_REQUEST)

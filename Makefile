@@ -3,6 +3,7 @@ COMPOSE = docker-compose
 COMPOSE_FILE = docker-compose.yml
 COMPOSE_DEV = docker-compose_dev.yml
 COMPOSE_PROD = docker-compose_prod.yml
+BUILD_MARKER = .dev_built
 
 # Couleurs pour une meilleure lisibilité
 GREEN = \033[0;32m
@@ -28,7 +29,12 @@ help:
 # Environnement de développement
 dev:
 	@echo "$(GREEN)Lancement de l'environnement de développement...$(NC)"
+ifeq ($(wildcard $(BUILD_MARKER)),)
 	$(COMPOSE) -f $(COMPOSE_FILE) -f $(COMPOSE_DEV) up --build
+	@touch $(BUILD_MARKER)
+else
+	$(COMPOSE) -f $(COMPOSE_FILE) -f $(COMPOSE_DEV) up
+endif
 	@echo "$(GREEN)Services de développement lancés sur:$(NC)"
 	@echo "  - Auth Service: http://localhost:8000"
 	@echo "  - Media Service: http://localhost:8001"
@@ -55,6 +61,7 @@ clean:
 	@echo "$(GREEN)Nettoyage complet du projet...$(NC)"
 	$(COMPOSE) -f $(COMPOSE_FILE) -f $(COMPOSE_DEV) down -v --remove-orphans
 	$(COMPOSE) -f $(COMPOSE_FILE) -f $(COMPOSE_PROD) down -v --remove-orphans
+	@rm -f $(BUILD_MARKER)
 	@echo "$(GREEN)Nettoyage terminé$(NC)"
 
 # Suppression complète (conteneurs, volumes, réseaux, images)

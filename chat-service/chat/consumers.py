@@ -12,12 +12,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.chat_type = self.scope['url_route']['kwargs']['chat_type']
         self.chat_id = self.scope['url_route']['kwargs']['chat_id']
         self.chat_group_name = f'{self.chat_type}_{self.chat_id}'
-        self.user = self.scope["user"].username
+
         await self.channel_layer.group_add(
             self.chat_group_name,
             self.channel_name
         )
-        connected_users[self.user_id] = UserInfo(id=self.user_id, username=self.user)
+        connected_users[self.user_id] = UserInfo(id=self.user_id, username=self.username)
         await self.accept()
 
     @auth_token
@@ -38,7 +38,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             {
                 'type': 'chat_message',
                 'message': message,
-                'sender': self.user
+                'sender': self.username
             }
         )
 
@@ -49,5 +49,5 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': 'chat_message',
             'message': message,
-            'sender': sender
+            'sender': self.username
         }))
