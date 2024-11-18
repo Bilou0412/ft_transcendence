@@ -56,7 +56,7 @@ export function initStartButton() {
 
         // Check for intersections with the button
         const intersects = raycaster.intersectObject(buttonBackgroundMesh);
-        if (intersects.length > 0 && settings.gameStatus === 'title') {
+        if (intersects.length > 0 && settings.gameStatus === 'title' && settings.displayStatus == 'start') {
             startGame();
             focusGame();
             await sleep(2000);
@@ -105,8 +105,10 @@ export function initGearButton() {
     window.addEventListener('click', onButtonClick, false);
 }
 
+let settingMesh = null;
 export function settingDisplay() {
     clearDisplay();
+    initGearButton();
     ///////////////////////////////////Button Content//////////////////////////////////////
     const settingCanvas = document.createElement('canvas');
     settingCanvas.width = 500;
@@ -124,7 +126,7 @@ export function settingDisplay() {
     const settingTexture = new THREE.CanvasTexture(settingCanvas);
     const settingMaterial = new THREE.MeshBasicMaterial({ map: settingTexture, transparent: true });
     const settingPlane = new THREE.PlaneGeometry(1, 0.5); // Size of the setting plane
-    const settingMesh = new THREE.Mesh(settingPlane, settingMaterial);
+    settingMesh = new THREE.Mesh(settingPlane, settingMaterial);
     // Position the setting in the scene
     // settingMesh.position.set(-0.25, 3.5, settings.platformLength / 2 + 6.11); // Adjust based on your scene's setup
     settingMesh.position.set(-0.25, 3.5, 30 / 2 + 6.11); // Adjust based on your scene's setup
@@ -223,16 +225,16 @@ export function clearModes() {
 
 /////////////////////////////////////Auth///////////////////////////////////////
 /////////////////////////////////////profile Button///////////////////////////////////////
-let profileMesh = null;
+let profileIconMesh = null;
 export function initProfileButton() {
 	/////////////////////////////////Button design//////////////////////////////////////
 	const profileTexture = new THREE.TextureLoader().load('texture/profile.jpg');
 	const profileMaterial = new THREE.MeshBasicMaterial({ map: profileTexture });
 	const profilePlane = new THREE.PlaneGeometry(2, 1);
-	profileMesh = new THREE.Mesh(profilePlane, profileMaterial);
-	profileMesh.scale.set(0.2, 0.3, 0.2);
-	profileMesh.position.set(-1.5, 3.5, settings.platformLength / 2 + 6.1);
-	settings.scene.add(profileMesh);
+	profileIconMesh = new THREE.Mesh(profilePlane, profileMaterial);
+	profileIconMesh.scale.set(0.2, 0.3, 0.2);
+	profileIconMesh.position.set(-1.5, 3.5, settings.platformLength / 2 + 6.1);
+	settings.scene.add(profileIconMesh);
 
     ///////////////////////////////////Mouse click detection//////////////////////////////////////
     const raycaster = new THREE.Raycaster();
@@ -247,9 +249,11 @@ export function initProfileButton() {
 			raycaster.setFromCamera(mouse, settings.camera);
 
 			// Check for intersections with the button
-			const intersects = raycaster.intersectObject(profileMesh);
+			const intersects = raycaster.intersectObject(profileIconMesh);
 			if (intersects.length > 0) {
 				profileDisplay();
+                settings.updateDisplayStatus('auth');
+                console.log(settings.game)
 			}
 		}
 
@@ -257,6 +261,205 @@ export function initProfileButton() {
     window.addEventListener('click', onButtonClick, false);
 }
 
+let profileMesh = null;
+export function profileDisplay(){
+    clearDisplay();
+    initGearButton();
+    ///////////////////////////////////Button Content//////////////////////////////////////
+    const profileCanvas = document.createElement('canvas');
+    profileCanvas.width = 500;
+    profileCanvas.height = 300;
+    const profileCtx = profileCanvas.getContext('2d');
+
+    ///////////////////////////////////Content design//////////////////////////////////////
+    profileCtx.fillStyle = '#0aa23b'; // Text color
+    // profileCtx.font = '50px "Digital-7"'; // Text font
+    profileCtx.font = '100px Courier New';
+    profileCtx.textAlign = 'center';
+    profileCtx.textBaseline = 'middle';
+    profileCtx.fillText('Profile', profileCanvas.width / 2, profileCanvas.height / 2);
+
+    const profileTexture = new THREE.CanvasTexture(profileCanvas);
+    const profileMaterial = new THREE.MeshBasicMaterial({ map: profileTexture, transparent: true });
+    const profilePlane = new THREE.PlaneGeometry(1, 0.5); // Size of the profile plane
+    profileMesh = new THREE.Mesh(profilePlane, profileMaterial);
+    // Position the profile in the scene
+    // profileMesh.position.set(-0.25, 3.5, profiles.platformLength / 2 + 6.11); // Adjust based on your scene's setup
+    profileMesh.position.set(-0.25, 3.5, 30 / 2 + 6.11); // Adjust based on your scene's setup
+    settings.scene.add(profileMesh);
+
+    authDisplay();
+}
+
+let usernameMesh = null;
+let passwordMesh = null;
+let loginButtonMesh = null;
+let activeField = null;  // Track which field is currently selected
+let usernameText = '';
+let passwordText = '';
+
+export function authDisplay() {
+    clearAuthMeshes();
+    
+    // Create username field
+    usernameMesh = createAuthField(2.8, 'Username', usernameText);
+    
+    // Create password field
+    passwordMesh = createAuthField(2.5, 'Password', passwordText);
+    
+    // Create login button
+    loginButtonMesh = createAuthButton(2.2, 'Login', handleLogin);
+
+    // Add click detection for fields
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    window.addEventListener('click', (event) => {
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, settings.camera);
+
+        // Check intersections with all interactive elements
+        const intersects = raycaster.intersectObjects([usernameMesh, passwordMesh, loginButtonMesh]);
+        if (intersects.length > 0) {
+            if (intersects[0].object === loginButtonMesh) {
+                handleLogin();
+            } else {
+                activeField = intersects[0].object === usernameMesh ? 'username' : 'password';
+                updateFieldVisuals();
+            }
+        } else {
+            activeField = null;
+            updateFieldVisuals();
+        }
+    });
+
+    // Add keyboard listener
+    window.addEventListener('keydown', handleKeyPress);
+}
+
+function handleKeyPress(event) {
+    if (!activeField) return;
+
+    if (event.key === 'Backspace') {
+        if (activeField === 'username') {
+            usernameText = usernameText.slice(0, -1);
+            updateField(usernameMesh, 'Username', usernameText);
+        } else {
+            passwordText = passwordText.slice(0, -1);
+            updateField(passwordMesh, 'Password', passwordText);
+        }
+    } else if (event.key.length === 1) { // Single character keys
+        if (activeField === 'username') {
+            usernameText += event.key;
+            updateField(usernameMesh, 'Username', usernameText);
+        } else {
+            passwordText += event.key;
+            updateField(passwordMesh, 'Password', passwordText, true);
+        }
+    }
+}
+
+function createAuthButton(y, text, action) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 300;
+    canvas.height = 100;
+    const ctx = canvas.getContext('2d');
+
+    // Draw button text
+    ctx.fillStyle = '#0aa23b';
+    ctx.font = '40px Courier New';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
+    const plane = new THREE.PlaneGeometry(1, 0.3);
+    
+    const mesh = new THREE.Mesh(plane, material);
+    mesh.position.set(-0.25, y, 30 / 2 + 6.11);
+    settings.scene.add(mesh);
+
+    // Add click event listener
+    mesh.addEventListener('click', action);
+
+    return mesh;
+}
+
+function handleLogin() {
+    // Add your login logic here
+    console.log('Login attempted');
+}
+
+
+function createAuthField(y, placeholder, text = '') {
+    const canvas = document.createElement('canvas');
+    canvas.width = 600;
+    canvas.height = 100;
+    const ctx = canvas.getContext('2d');
+    
+    // Draw text
+    ctx.fillStyle = '#0aa23b';
+    ctx.font = '40px Courier New';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    
+    const displayText = placeholder + ': ' + (placeholder === 'Password' ? '*'.repeat(text.length) : text);
+    ctx.fillText(displayText, 20, canvas.height / 2);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
+    const plane = new THREE.PlaneGeometry(2, 0.5);
+    
+    const mesh = new THREE.Mesh(plane, material);
+    mesh.position.set(-0.25, y, 30 / 2 + 6.11);
+    settings.scene.add(mesh);
+
+    return mesh;
+}
+
+function updateField(mesh, placeholder, text, isPassword = false) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 600;
+    canvas.height = 100;
+    const ctx = canvas.getContext('2d');
+
+    // Draw text
+    ctx.fillStyle = '#0aa23b';
+    ctx.font = '40px Courier New';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    
+    const displayText = placeholder + ': ' + (isPassword ? '*'.repeat(text.length) : text) + 
+        (mesh === (activeField === 'username' ? usernameMesh : passwordMesh) ? '|' : '');
+    ctx.fillText(displayText, 20, canvas.height / 2);
+
+    // Update the texture
+    mesh.material.map = new THREE.CanvasTexture(canvas);
+    mesh.material.map.needsUpdate = true;
+}
+
+function updateFieldVisuals() {
+    updateField(usernameMesh, 'Username', usernameText);
+    updateField(passwordMesh, 'Password', passwordText, true);
+}
+
+function clearAuthMeshes() {
+    if (usernameMesh) {
+        settings.scene.remove(usernameMesh);
+        usernameMesh = null;
+    }
+    if (passwordMesh) {
+        settings.scene.remove(passwordMesh);
+        passwordMesh = null;
+    }
+    if (loginButtonMesh) {
+        settings.scene.remove(loginButtonMesh);
+        loginButtonMesh = null;
+    }
+}
 
 /////////////////////////////////////Display Functions///////////////////////////////////////
 export function clearDisplay() {
@@ -268,6 +471,13 @@ export function clearDisplay() {
     }
     if (gearMesh) {
         settings.scene.remove(gearMesh);
+    }
+    if (settingMesh) {
+        settings.scene.remove(settingMesh);
+        clearModes();
+    }
+    if (profileMesh) {
+        settings.scene.remove(profileMesh);
     }
 }
 
