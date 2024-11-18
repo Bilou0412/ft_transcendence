@@ -4,7 +4,8 @@ Content-Type: application/json
 
 {
     "email": "reset.pass.ponggame@gmail.com",
-    "password": "Motdepasse12@@"
+    "password": "Motdepasse12@@",
+    "otp": ""
 }
 
 ### Signup
@@ -12,7 +13,7 @@ POST http://127.0.0.1:8000/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "bmoudach",
+    "username": "jdenis",
     "password": "Motdepasse12@@",
     "password2": "Motdepasse12@@",
     "email": "reset.pass.ponggame@gmail.com"
@@ -67,17 +68,7 @@ POST http://127.0.0.1:8000/api/auth/token/validate/
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNDM1NTYwLCJpYXQiOjE3MzE0MzE5NjAsImp0aSI6ImUzMTkzNjY4MmViZTQzMGI4OWQzZDg1OGI1NTA4ZjUxIiwidXNlcl9pZCI6Mn0.L4uzPIEMGVoc3VpUm71EmBRmhybjVdAQrHg5A71nSrc
 ###
-
-PUT http://127.0.0.1:8000/api/auth/update/
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNDM3MzgyLCJpYXQiOjE3MzE0MzM3ODIsImp0aSI6IjFhODg5YWE5MTljYjRiMWQ5ZWIwNjI3ZWE4N2IyMDQxIiwidXNlcl9pZCI6M30.XSU7Hg2pFvun3CxOQWtISBT965dgY-E8gRJCIFtIGiM
-
-{
-    "username": "bmoudach",
-    "email": "reset.pass.ponggame@gmail.com"
-}
-
-### Users info
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNTA3ODU1LCJpYXQiOjE3MzE1MDQyNTUsImp0aSI6IjAzOTZiNzQ5ZGExMDRhOGI4ZTA4MDZkZjBlOThmNThkIiwidXNlcl9pZCI6Mn0.RW4Jqxnn8p-I3vcCBiGQZdC3sIP83dSciCpmAb4FNDo
 POST http://127.0.0.1:8000/api/auth/users/info/
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNTA3ODU1LCJpYXQiOjE3MzE1MDQyNTUsImp0aSI6IjAzOTZiNzQ5ZGExMDRhOGI4ZTA4MDZkZjBlOThmNThkIiwidXNlcl9pZCI6Mn0.RW4Jqxnn8p-I3vcCBiGQZdC3sIP83dSciCpmAb4FNDo
@@ -85,3 +76,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 {
     "user_ids": [1, 2, 3]
 }
+
+### 2FA
+
+GET http://127.0.0.1:8000/api/auth/2fa/enable/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxOTUzNTY3LCJpYXQiOjE3MzE5NDk5NjcsImp0aSI6IjU1ODBmZmM2OWI5NjQwNDY5NGRkZjhmZDM1OTFlYjY5IiwidXNlcl9pZCI6Mn0.O_sJEk5LbjnK8wNLNzHWazseDOFzE5_gLn1LZsxX9LQ
+
+###
+
+DELETE http://127.0.0.1:8000/api/auth/2fa/disable/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxOTUzNTExLCJpYXQiOjE3MzE5NDk5MTEsImp0aSI6IjA3MDlkYWM5YWQ3MDQ3YTRiNTBjN2VjZWU0NjNkNmE1IiwidXNlcl9pZCI6Mn0._e4EcQx9YEeedXz6jmwDRwWYSeGc3ksA2HPfhsU4DRI
+
+###
+POST http://127.0.0.1:8000/api/auth/2fa/verify/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNTA3ODU1LCJpYXQiOjE3MzE1MDQyNTUsImp0aSI6IjAzOTZiNzQ5ZGExMDRhOGI4ZTA4MDZkZjBlOThmNThkIiwidXNlcl9pZCI6Mn0.RW4Jqxnn8p-I3vcCBiGQZdC3sIP83dSciCpmAb4FNDo

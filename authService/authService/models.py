@@ -15,7 +15,8 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)  # Email unique pour chaque utilisateur
     new_email = models.EmailField(null=True, blank=True)  # Email pour vérification
     Student = models.BooleanField(default=False)
-
+    otp_secret = models.CharField(max_length=32, blank=True, null=True)
+    
     # Email est l'identifiant unique
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']  # Username est requis, mais non unique
