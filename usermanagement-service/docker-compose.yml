@@ -3,12 +3,10 @@ services:
     image: postgres:13
     ports:
       - "5432:5432"
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
+      - .:/app
       - postgres_data:/var/lib/postgresql/data
+    entrypoint: ["/app/docker/entrypoint_db.sh"]
 
   usermanagement:
     build:
