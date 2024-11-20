@@ -1,0 +1,32 @@
+services:
+  db-usermanagement:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  usermanagement:
+    build:
+      context: ./docker
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - ./docker:/app/docker
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DEBUG=True
+    env_file:
+      - .env
+    entrypoint: ["/app/docker/entrypoint_dev.sh"]
+    depends_on:
+      - db-usermanagement
+
+
+volumes:
+  postgres_data:
