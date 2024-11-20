@@ -1,0 +1,62 @@
+services:
+  auth:
+    build:
+      context: ./auth-service/docker
+    container_name: auth
+    depends_on:
+    - db-auth
+    entrypoint:
+    - /app/docker/entrypoint_dev.sh
+    env_file:
+    - ./auth-service/.env
+    environment:
+    - PYTHONUNBUFFERED=1
+    - DEBUG=True
+    ports:
+    - 8002:8000
+    volumes:
+    - ./auth-service:/app
+    - ./auth-service/docker:/app/docker
+  db-auth:
+    container_name: db-auth
+    entrypoint:
+    - /app/docker/entrypoint_db.sh
+    image: postgres:13
+    ports:
+    - 5434:5432
+    volumes:
+    - postgres_data_auth-service:/var/lib/postgresql/data
+    - ./auth-service/.env:/app/.env
+    - ./auth-service/docker/entrypoint_db.sh:/app/docker/entrypoint_db.sh
+  db-usermanagement:
+    container_name: db-usermanagement
+    entrypoint:
+    - /app/docker/entrypoint_db.sh
+    image: postgres:13
+    ports:
+    - 5435:5432
+    volumes:
+    - postgres_data_usermanagement-service:/var/lib/postgresql/data
+    - ./usermanagement-service/.env:/app/.env
+    - ./usermanagement-service/docker/entrypoint_db.sh:/app/docker/entrypoint_db.sh
+  usermanagement:
+    build:
+      context: ./usermanagement-service/docker
+    container_name: usermanagement
+    depends_on:
+    - db-usermanagement
+    entrypoint:
+    - /app/docker/entrypoint_dev.sh
+    env_file:
+    - ./usermanagement-service/.env
+    environment:
+    - PYTHONUNBUFFERED=1
+    - DEBUG=True
+    ports:
+    - 8003:8000
+    volumes:
+    - ./usermanagement-service:/app
+    - ./usermanagement-service/docker:/app/docker
+volumes:
+  postgres_data_auth-service: {}
+  postgres_data_usermanagement-service: {}

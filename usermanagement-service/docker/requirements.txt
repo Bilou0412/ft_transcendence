@@ -1,0 +1,12 @@
+asgiref==3.8.1
+Django==5.1.2
+django-cors-headers==4.5.0
+djangorestframework==3.15.2
+psycopg2-binary==2.9.10
+PyJWT==2.9.0
+python-decouple==3.8
+six==1.16.0
+sqlparse==0.5.1
+typing_extensions==4.12.2
+drf-yasg
+requests
