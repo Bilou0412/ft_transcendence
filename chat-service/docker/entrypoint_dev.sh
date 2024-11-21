@@ -10,12 +10,12 @@
 # }
 
 # # Attendre que la base de données soit opérationnelle
-wait_for_db
+# wait_for_db
 
 # # Exécute les migrations
-echo "Exécution des migrations..."
-python manage.py makemigrations
-python manage.py migrate
+# echo "Exécution des migrations..."
+# python manage.py makemigrations
+# python manage.py migrate
 
 # Crée un superutilisateur si aucun n'existe
 # echo "Création du superutilisateur..."

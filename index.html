@@ -65,12 +65,12 @@
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
 
-            fetch('http://172.20.205.104:8000/api/auth/login/', {
+            fetch('http://localhost:8000/api/auth/login/', {
                 method: 'POST',
                 headers: {
                 'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ username: email, password: password })
+                body: JSON.stringify({ email: email, password: password })
             })
             .then(response => {
                 if (response.ok) {
@@ -92,7 +92,7 @@
             const password = document.getElementById('signup-password').value;
             const password2 = document.getElementById('signup-password2').value;
 
-            fetch('http://172.20.205.104:8000/api/auth/signup/', {
+            fetch('http://localhost:8000/api/auth/signup/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -108,7 +108,7 @@
         }
 
         function connectToChat() {
-            webSocket = new WebSocket('ws://172.20.205.104:8002/ws/chat/general/1/', ['Bearer_' + authToken]);
+            webSocket = new WebSocket('ws://localhost:8002/ws/chat/general/1/', ['Bearer_' + authToken]);
 
             webSocket.onopen = () => {
                 console.log('WebSocket connection opened');

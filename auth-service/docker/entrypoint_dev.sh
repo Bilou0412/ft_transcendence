@@ -3,7 +3,7 @@
 # Fonction pour attendre que la base de données soit prête
 wait_for_db() {
     echo "Attente de la base de données..."
-    until pg_isready -h db -p 5432; do
+    until pg_isready -h db-auth -p 5432; do
         sleep 1
     done
     echo "Base de données prête."
@@ -14,6 +14,7 @@ wait_for_db
 
 # Exécute les migrations
 echo "Exécution des migrations..."
+python manage.py makemigrations authService
 python manage.py migrate
 
 # Crée un superutilisateur si aucun n'existe

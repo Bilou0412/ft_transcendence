@@ -1,19 +1,21 @@
 services:
-  db:
-    image: postgres:13
+  db-auth:
+    image: postgres:17
     ports:
       - "5432:5432"
     env_file:
       - .env
     environment:
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_DB: ${AUTH_DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      # - db-service/:/app
+    # entrypoint: ["/app/docker/entrypoint_db.sh"]
     networks:
       - my_network
-
+  
   redis:
     image: redis:latest
     ports:
@@ -36,9 +38,9 @@ services:
     networks:
       my_network:
         aliases:
-          - alias
+          - auth
     depends_on:
-      - db
+      - db-auth
 
   # media-service:
   #   build:
@@ -48,7 +50,6 @@ services:
   #     - "8001:8001"
   #   volumes:
   #     - ./media-service:/app
-  #     # - ./docker:/app/docker
   #   environment:
   #     - PYTHONUNBUFFERED=1
   #   env_file:
@@ -71,7 +72,6 @@ services:
     networks:
       - my_network
     depends_on:
-      - db
       - redis
 
 networks:

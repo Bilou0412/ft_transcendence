@@ -2,3 +2,9 @@
     "type": "chat-message",
     "message": "okokok"
 }
+
+blocked = 'user'
+connected_users[self.userId] = UserInfo(id=self.userId, username=self.username, blocked=blocked)
+print(f'1users blocked: {connected_users[self.userId].blocked}')
+connected_users[self.userId].addBlocked('oui')
+print(f'2users blocked: {connected_users[self.userId].blocked}')

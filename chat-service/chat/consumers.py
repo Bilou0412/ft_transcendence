@@ -9,20 +9,23 @@ connected_users = {}
 class ChatConsumer(AsyncWebsocketConsumer):
     @auth_token
     async def connect(self):
-        self.chat_type = self.scope['url_route']['kwargs']['chat_type']
-        self.chat_id = self.scope['url_route']['kwargs']['chat_id']
-        self.chat_group_name = f'{self.chat_type}_{self.chat_id}'
-
+        self.chatType = self.scope['url_route']['kwargs']['chat_type']
+        self.chatId = self.scope['url_route']['kwargs']['chat_id']
+        self.chat_group_name = f'{self.chatType}_{self.chatId}'
+    
         await self.channel_layer.group_add(
             self.chat_group_name,
             self.channel_name
         )
-        connected_users[self.user_id] = UserInfo(id=self.user_id, username=self.username)
+        
+        blocked = ['jdenis']
+        connected_users[self.userId] = UserInfo(id=self.userId, username=self.username, blocked=blocked)
+
         await self.accept()
 
     @auth_token
     async def disconnect(self, close_code):
-        connected_users.pop(self.user_id, None)
+        connected_users.pop(self.userId, None)
         
         await self.channel_layer.group_discard(
             self.chat_group_name,
@@ -46,8 +49,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = event['message']
         sender = event['sender']
 
+        if sender != self.username and sender in connected_users[self.userId].blocked:
+            return
+
         await self.send(text_data=json.dumps({
             'type': 'chat_message',
             'message': message,
-            'sender': self.username
+            'sender': sender
         }))

@@ -3,8 +3,9 @@ POST http://127.0.0.1:8000/api/auth/login/
 Content-Type: application/json
 
 {
-    "username": "bilel.moudache0412@gmail.com",
-    "password": "Algerie93@"
+    "email": "reset.pass.ponggame@gmail.com",
+    "password": "Motdepasse12@@",
+    "otp": ""
 }
 
 ### Signup
@@ -12,10 +13,10 @@ POST http://127.0.0.1:8000/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "bi",
-    "password": "Algerie93@",
-    "password2": "Algerie93@",
-    "email": "bilel.moudache0412@gmail.com"
+    "username": "jdenis",
+    "password": "Motdepasse12@@",
+    "password2": "Motdepasse12@@",
+    "email": "resddeame@gmail.com"
 }
 
 ### Refresh Token
@@ -23,7 +24,7 @@ POST http://127.0.0.1:8000/api/auth/token/refresh/
 Content-Type: application/json
 
 {
-    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTczMTUzMDQ5NiwiaWF0IjoxNzMxNDQ0MDk2LCJqdGkiOiIxZTg5MGJmMjUwNmE0MDBlYTFlYjkzYzljN2VkOGU3ZSIsInVzZXJfaWQiOjN9.KUv1cZpJ6ayzJvuFMpOgSfDbgHOuluVI85DkT1SvtoM"
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTczMTQzNDIzOSwiaWF0IjoxNzMxMzQ3ODM5LCJqdGkiOiJmNDkzM2IwN2JmZTI0OTk2OTA4YjYyNWZhODA2MDEyZiIsInVzZXJfaWQiOjJ9.GqyLPvhYAN4mVJ9Jh7T9ZJrd7SEMNjgyDLifH_WUmes"
 }
 
 ### Request Password Reset
@@ -43,15 +44,15 @@ Content-Type: application/json
 }
 
 ### Confirm Password Reset
-POST http://127.0.0.1:8000/api/auth/password/change/
+
+POST http://127.0.0.1:8000/api/auth/password/update/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwOTkwNzA2LCJpYXQiOjE3MzA5ODcxMDYsImp0aSI6ImQ0ODZkZWZiN2EzMjRiNGViMmEyODcyMzc0YWQ4YjA2IiwidXNlcl9pZCI6M30.hkjJtvmDgwlBUQEp2t85eo3w4KhwVLzDxJdkpnBN_Qk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNDM1NTYwLCJpYXQiOjE3MzE0MzE5NjAsImp0aSI6ImUzMTkzNjY4MmViZTQzMGI4OWQzZDg1OGI1NTA4ZjUxIiwidXNlcl9pZCI6Mn0.L4uzPIEMGVoc3VpUm71EmBRmhybjVdAQrHg5A71nSrc
 
 {
-    "old_password": "Algerie93@",
-    "new_password": "Palestine93@"
+    "old_password": "Palestine93@",
+    "new_password": "Azerty93@"
 }
-
 ### Logout
 POST http://127.0.0.1:8000/api/auth/logout/
 Content-Type: application/json
@@ -65,15 +66,29 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 POST http://127.0.0.1:8000/api/auth/token/validate/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwMzc5Njg3LCJpYXQiOjE3MzAzNzYwODcsImp0aSI6ImRlZmIxMTk0YzI0OTRlZmFhNWI3NmJkMjBiYzY5YWE5IiwidXNlcl9pZCI6Mn0.9Q1cl2NxP2ioWaieUtg-Tg_IeHSHbHtO850CJATV6zU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNDM1NTYwLCJpYXQiOjE3MzE0MzE5NjAsImp0aSI6ImUzMTkzNjY4MmViZTQzMGI4OWQzZDg1OGI1NTA4ZjUxIiwidXNlcl9pZCI6Mn0.L4uzPIEMGVoc3VpUm71EmBRmhybjVdAQrHg5A71nSrc
+###
+POST http://127.0.0.1:8000/api/auth/users/info/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMTk1NDYwLCJpYXQiOjE3MzIxOTE4NjAsImp0aSI6IjJhNjg0NTk2OGU5MzQ3YzhiZjIwN2FiMjA0NDhjYjFlIiwidXNlcl9pZCI6Mn0.eaa0L0nxVR4fQ86bTFQoFqqH4yPI4s2zlfgI9zK9Ev0
+
+{
+    "user_ids": [1]
+}
+
+### 2FA
+
+GET http://127.0.0.1:8000/api/auth/2fa/enable/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxOTUzNTY3LCJpYXQiOjE3MzE5NDk5NjcsImp0aSI6IjU1ODBmZmM2OWI5NjQwNDY5NGRkZjhmZDM1OTFlYjY5IiwidXNlcl9pZCI6Mn0.O_sJEk5LbjnK8wNLNzHWazseDOFzE5_gLn1LZsxX9LQ
 
 ###
 
-PUT http://127.0.0.1:8000/api/auth/update_user/
+DELETE http://127.0.0.1:8000/api/auth/2fa/disable/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxMDczMjI4LCJpYXQiOjE3MzEwNjk2MjgsImp0aSI6IjkxNWEyNTc4ODkxMzRmZmRhYzJkMWQ2NWMyMjk2MTcyIiwidXNlcl9pZCI6M30.5HrDmC29Lgx5sJpoC3RCH1NXRABqhQlhcmzfPBukLQo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxOTUzNTExLCJpYXQiOjE3MzE5NDk5MTEsImp0aSI6IjA3MDlkYWM5YWQ3MDQ3YTRiNTBjN2VjZWU0NjNkNmE1IiwidXNlcl9pZCI6Mn0._e4EcQx9YEeedXz6jmwDRwWYSeGc3ksA2HPfhsU4DRI
 
-{
-    "username": "bilelfff",
-    "email": "bilel.moudache0412@gmail.com"
-}
+###
+POST http://127.0.0.1:8000/api/auth/2fa/verify/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNTA3ODU1LCJpYXQiOjE3MzE1MDQyNTUsImp0aSI6IjAzOTZiNzQ5ZGExMDRhOGI4ZTA4MDZkZjBlOThmNThkIiwidXNlcl9pZCI6Mn0.RW4Jqxnn8p-I3vcCBiGQZdC3sIP83dSciCpmAb4FNDo
