@@ -1,11 +1,11 @@
 services:
   db-usermanagement:
-    image: postgres:13
+    image: postgres:17
     ports:
       - "5433:5432"
     volumes:
       - .:/app
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_user:/var/lib/postgresql/data
     entrypoint: ["/app/docker/entrypoint_db.sh"]
     networks:
       - my_network
@@ -17,7 +17,6 @@ services:
       - "8001:8000"
     volumes:
       - .:/app
-      - ./docker:/app/docker
     environment:
       - PYTHONUNBUFFERED=1
       - DEBUG=True
@@ -33,7 +32,7 @@ services:
       - db-usermanagement
 
 volumes:
-  postgres_data:
+  postgres_data_user:
 
 networks:
   my_network:

@@ -1,23 +1,19 @@
 services:
-  db-auth:
-    image: postgres:17
+  redis:
+    image: redis:latest
     ports:
-      - "5432:5432"
-    volumes:
-      - .:/app
-      - postgres_data_auth:/var/lib/postgresql/data
-    entrypoint: ["/app/docker/entrypoint_db.sh"]
+      - "6380:6379"
     networks:
       - my_network
 
-
-  auth:
+  chat:
     build:
       context: ./docker
     ports:
-      - "8000:8000"
+      - "8002:8000"
     volumes:
       - .:/app
+      - ./docker:/app/docker
     environment:
       - PYTHONUNBUFFERED=1
       - DEBUG=True
@@ -26,13 +22,10 @@ services:
     networks:
       my_network:
         aliases:
-          - auth
+          - chat
     entrypoint: ["/app/docker/entrypoint_dev.sh"]
     depends_on:
-      - db-auth
-
-volumes:
-  postgres_data_auth:
+      - redis
 
 networks:
   my_network:
