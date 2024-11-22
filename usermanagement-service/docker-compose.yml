@@ -1,6 +1,6 @@
 services:
   db-usermanagement:
-    image: postgres:13
+    image: postgres:17
     ports:
       - "5433:5432"
     volumes:

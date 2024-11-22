@@ -1,4 +1,15 @@
 services:
+  media-db:
+    image: postgres:17
+    ports:
+      - "5434:5432"
+    volumes:
+      - .:/app
+      - postgres_data:/var/lib/postgresql/data
+    entrypoint: ["/app/docker/entrypoint_db.sh"]
+    networks:
+      - my_network
+
   media:
     build:
       context: ./docker
@@ -17,6 +28,11 @@ services:
         aliases:
           - media
     entrypoint: ["/app/docker/entrypoint_dev.sh"]
+    depends_on:
+      - media-db
+
+volumes:
+  postgres_data:
 
 networks:
   my_network:
