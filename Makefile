@@ -20,6 +20,10 @@ help:
 	@echo " make clean - Remove containers and volumes"
 
 up:
+	@if ! docker network ls --format '{{.Name}}' | grep -q "^my_network$$"; then \
+		echo "$(GREEN)Creating network my_network...$(NC)"; \
+		docker network create my_network; \
+	fi
 	@echo "$(GREEN)Starting services...$(NC)"
 	@for dir in $(SERVICE_DIRS); do \
 		(cd $$dir && docker compose up)& \
@@ -40,9 +44,11 @@ logs:
 		(cd $$dir && docker compose logs -f); \
 	done
 
-clean:
+clean: down
 	@echo "$(RED)Cleaning up...$(NC)"
 	@for dir in $(SERVICE_DIRS); do \
 		echo "Cleaning $$dir"; \
 		(cd $$dir && docker compose down -v --remove-orphans); \
 	done
+	rm -r media-service/images/profile_pictures media-service/db.sqlite3
+	docker network rm my_network

@@ -137,7 +137,7 @@ AUTH_USER_MODEL = 'authService.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', 'auth']
 
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
@@ -154,6 +154,8 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 SIMPLE_JWT = {    
     'BLACKLIST_AFTER_ROTATION': True,
