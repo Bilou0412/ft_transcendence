@@ -1,21 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<link rel="stylesheet" href="css/settings.css">
 	<link rel="stylesheet" href="https://unpkg.com/xp.css" />
 </head>
 <style>
 	body {
 		padding-top: 0px;
 	}
-	.progress {
-		width: 0;
-		transition: width 5s linear;
+	.title-bar {
+		width: calc(100% - 10px);
+		position: fixed;
+		top: 0;
+		z-index: 1000;
 	}
+	#startButton {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+
 </style>
 <body>
-	<progress value="70" max="100"></progress>
+	<div class="title-bar">
+		<div class="title-bar-text">Profile</div>
+		<div class="title-bar-controls">
+			<button aria-label="Close" id="close-button" onclick="route(event, '/')"></button>
+		</div>
+	</div>
+	<div>
+		<button id="startButton">Start Game</button>
+	</div>
     <!-- Game scripts -->
 	<script src="../js/router.js"></script>
-    <!-- <script src="../js/main.js" type="module" ></script> -->
+    <script>
+		document.getElementById('close-button').addEventListener('click', (event) => route(event));
+	</script>
 </body>
 </html>

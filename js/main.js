@@ -12,7 +12,7 @@ import { titleDisplay } from "./monitor_display.js";
 import { route } from "./router.js";
 
 // ///////////////////////////////////environment settings///////////////////////////////
-export let settings = new Settings();
+export let settings;
 
 ///////////////////////////////////main functions/////////////////////////////////////
 export async function quitPong() {
@@ -69,6 +69,7 @@ function resetGame() {
 }
 
 export async function startGame() {
+    // console.log('startGame');
     settings.gameStatus = 'playing';
     initSides();
     initMiddlePlatform();
@@ -76,18 +77,21 @@ export async function startGame() {
     initScoreboard();
     initClock();
     updateClock();
-    await sleep(10000);
+    await sleep(2000);
     resetGame();
 
 }
 
-if (settings) {
-    await sleep(2000);
-    document.getElementById('root').style.display = 'none';
-    initMonitor();
-    titleDisplay();
-    animate();
-    focusGame();
-    startGame();
-}
-
+document.getElementById('startButton').addEventListener('click', async () => {
+    settings = new Settings();
+    console.log('settings');
+    // if (settings) {
+        // await sleep(2000);
+        document.getElementById('root').style.display = 'none';
+        initMonitor();
+        titleDisplay();
+        animate();
+        focusGame();
+        startGame();
+    // }
+});

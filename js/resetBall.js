@@ -11,7 +11,8 @@ export function sleep(ms) {
 }
 
 export async function resetBall() {
-    
+    if (!settings)
+        return;
     ball.position.set(0, 1, 0.5);
 	settings.updateBallSpeed(0); // Réinitialise la vitesse de la balle
     settings.ballVelocity.set(0, 0, 0); // Pas de mouvement initial
@@ -23,7 +24,7 @@ export async function resetBall() {
     updatePaddleColor(1, 0x797979); // Réinitialise la couleur du paddle du joueur 1
     updatePaddleColor(2, 0x797979); // Réinitialise la couleur du paddle du joueur 2
 
-    await sleep(1000);
+    await sleep(2000);
 
 	settings.updateBallSpeed(settings.initialBallSpeed); // Réinitialise la vitesse de la balle
 	settings.updateBallVelocity(new THREE.Vector3(settings.ballSpeed * (settings.ServSide == 1 ? -1 : 1), 0, settings.ballSpeed * (Math.random() > 0.5 ? 1 : -1)));
