@@ -1,0 +1,9 @@
+body {
+	/* font-family: "Tahoma", sans-serif; */
+	font-family: "Tahoma";
+	display: flex;
+	height: 100%;
+	margin: 0;
+	padding-top: 20px;
+	background-color: #ebe9d9;
+}

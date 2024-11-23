@@ -1,0 +1,34 @@
+<head>
+	<title>Settings</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="css/settings.css">
+	<link rel="stylesheet" href="https://unpkg.com/xp.css" />
+
+	<style>
+		.title-bar {
+			width: calc(100% - 10px);
+			position: fixed;
+			top: 0;
+			z-index: 1000;
+		}
+	</style>
+
+</head>
+
+<body>
+	<div class="title-bar">
+		<div class="title-bar-text">Profile</div>
+		<div class="title-bar-controls">
+			<button aria-label="Close" id="close-button" onclick="route(event, '/')"></button>
+		</div>
+	</div>
+
+	<div id="main-content">
+		<!-- Content for settings page -->
+	</div>
+
+	<script src="../js/router.js"></script>
+	<script>
+		document.getElementById('close-button').addEventListener('click', (event) => route(event));
+	</script>
+</body>

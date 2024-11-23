@@ -6,7 +6,7 @@
     <link rel="icon" href="texture/icon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pongo</title>
+    <title>XPongo</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/utils/BufferGeometryUtils.js"></script>
     <!-- import of GLTF for model import -->
@@ -19,9 +19,32 @@
     <script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/RGBELoader.js"></script>
 </head>
 
-<body>
+<body data-show-navbar="true">
+    <div id="root">
+    <nav id="main-nav" class="sidebar">
+        <a href="/" class="nav-icon" onclick="route()">
+            <img src="/css/icon/home.ico" alt="Home Icon" />
+            <span>Home</span>
+        </a>
+        <a href="/profile" class="nav-icon" onclick="route()">
+            <img src="/css/icon/profile.ico" alt="Profile Icon" />
+            <span>Profile</span>
+        </a>
+        <a href="/settings" class="nav-icon" onclick="route()">
+            <img src="/css/icon/gear.ico" alt="Settings Icon" />
+            <span>Settings</span>
+        </a>
+        <a href="/pong" class="nav-icon" onclick="route()">
+            <img src="/css/icon/star.ico" alt="Pong" />
+            <span>Pong</span>
+        </a>
+    </nav>
+    <div id="main-page"></div>
+    </div>
+
+    <script src="js/router.js" type="module"></script>
     <!-- Game scripts -->
-    <script src="js/main.js" type="module" ></script>
+    <!-- <script src="js/main.js" type="module" ></script> -->
 
 </body>
 

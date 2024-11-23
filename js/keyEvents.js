@@ -1,10 +1,11 @@
 ///////////////////////////////////////imports////////////////////////////////////////
-import { settings } from './main.js';
+import { quitPong, settings } from './main.js';
 import { ball } from './ball_init.js';
 import { focusGame, focusMonitor } from './monitor.js';
 import { updatePaddleColor, pressedKeys } from './movements.js';
 import { sleep } from './resetBall.js';
-import { clearModes, settingDisplay } from './monitor_display.js';
+import { route } from './router.js';
+import {handleLogin} from './monitor_display.js';
 
 /////////////////////////////////////Keyboard/////////////////////////////////////////
 export async function onKeyDown(event) {
@@ -21,12 +22,16 @@ export async function onKeyDown(event) {
 
     if (event.key === 'Escape'){
         if ( settings.gameStatus === 'playing') {
-            focusMonitor();
+            // focusMonitor();
             if (settings.displayStatus === 'settings'){
                 clearModes();
                 settingDisplay();
             }
-			settings.updateGameStatus('paused');
+            // await sleep(2000);
+			// settings.updateGameStatus('paused');
+            // route(null, '/');
+            // settings.destroy();
+            quitPong();
         } 
         else if ( settings.gameStatus === 'paused')
         {
@@ -50,5 +55,5 @@ export function onMouseWheel(event) {
     settings.camera.position.y *= zoomFactor;
     settings.camera.position.z *= zoomFactor;
     
-    settings.camera.lookAt(0, 0, 6);
+    settings.camera.lookAt(0, 3, 6);
 }

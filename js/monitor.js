@@ -8,10 +8,11 @@ let MonitorDisplayCtx = null;
 let MonitorDisplayTexture = null;
 export function initMonitor(){
 	const glftLoader = new THREE.GLTFLoader();
-    glftLoader.load('./models/new_retro_computer/scene.gltf', (gltfScene) => {
+    glftLoader.load('./models/dell_monitor/scene.gltf', (gltfScene) => {
         // Set position and scale of the model
-        gltfScene.scene.position.z = settings.platformLength / 2 + 8;
-        gltfScene.scene.scale.set(2, 2, 2);
+        // gltfScene.scene.position.y = -0.5;
+        gltfScene.scene.position.z = settings.platformLength / 2 + 6;
+        gltfScene.scene.scale.set(0.01, 0.01, 0.01);
 
         settings.scene.add(gltfScene.scene);
 
@@ -61,8 +62,8 @@ export function focusGame() {
 
 export function focusMonitor() {
 	const monitorView = {
-		position: { x: 0, y: 3, z: 23.5 },
-		rotation: { x: -0.2, y: 0, z: 0 }
+		position: { x: 0, y: 3.2, z: 23 },
+		rotation: { x: -0, y: 0, z: 0 }
 	};
 	
     gsap.to(settings.camera.position, {

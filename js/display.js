@@ -66,8 +66,6 @@ export function initClock(){
 	Clock.width = 1200;
 	Clock.height = 600;
 	ClockCtx = Clock.getContext('2d');
-	
-	// updateClock();
 
 	ClockTexture = new THREE.CanvasTexture(Clock);
 	const ClockMaterial = new THREE.MeshBasicMaterial({ map: ClockTexture, transparent: true });
@@ -79,6 +77,10 @@ export function initClock(){
 };
 
 export const updateClock = () => {
+    if (!settings)
+    {
+        return;
+    }
 	ClockCtx.clearRect(0, 0, Clock.width, Clock.height);
 	ClockCtx.fillStyle = 'white';
 	ClockCtx.font = 'bold 100px "Digital-7"';

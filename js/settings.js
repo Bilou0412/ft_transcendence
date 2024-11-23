@@ -70,7 +70,7 @@ export class Settings {
         this.camera.position.y = 3;
         // this.camera.position.z = Math.max(this.platformWidth, this.platformLength) * 1;
         this.camera.position.z = 23.5;
-        this.camera.lookAt(0, 0, 6);
+        this.camera.lookAt(0, 3, 6);
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         this.scene.add(ambientLight);
@@ -79,6 +79,56 @@ export class Settings {
         this.directionalLight.position.set(5, 3, 23.5);
         // directionalLight.target.position.set(0, 0, 0);
         this.scene.add(this.directionalLight);
+    }
+    destroy() {
+        // Remove all children from the scene and dispose of them
+        while (this.scene.children.length > 0) {
+            const child = this.scene.children[0];
+            this.scene.remove(child);
+    
+            if (child.geometry) {
+                child.geometry.dispose();
+            }
+    
+            if (child.material) {
+                // If the material is an array (e.g., multi-material objects)
+                if (Array.isArray(child.material)) {
+                    child.material.forEach((material) => material.dispose());
+                } else {
+                    child.material.dispose();
+                }
+            }
+    
+            if (child.texture) {
+                child.texture.dispose();
+            }
+        }
+    
+        // Dispose of the renderer
+        this.renderer.dispose();
+    
+        // Remove the renderer's DOM element
+        if (this.renderer.domElement && this.renderer.domElement.parentNode) {
+            this.renderer.domElement.parentNode.removeChild(this.renderer.domElement);
+        }
+    
+        // Optionally, clear textures or background
+        if (this.scene.background && this.scene.background.dispose) {
+            this.scene.background.dispose();
+        }
+        if (this.scene.environment && this.scene.environment.dispose) {
+            this.scene.environment.dispose();
+        }
+    
+        // Reset variables if necessary
+        this.scene = null;
+        this.camera = null;
+        this.renderer = null;
+        this.cubes = [];
+        this.ballVelocity = null;
+    
+        // Remove event listeners
+        window.removeEventListener('resize', this.onResize);
     }
 
     ///////////////////////////////////update functions////////////////////////////////////

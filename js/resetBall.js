@@ -11,6 +11,7 @@ export function sleep(ms) {
 }
 
 export async function resetBall() {
+    
     ball.position.set(0, 1, 0.5);
 	settings.updateBallSpeed(0); // Réinitialise la vitesse de la balle
     settings.ballVelocity.set(0, 0, 0); // Pas de mouvement initial
