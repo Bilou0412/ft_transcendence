@@ -77,6 +77,8 @@ class Match(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     match_start_time = models.DateTimeField(null=True, blank=True)
     match_end_time = models.DateTimeField(null=True, blank=True)
+    confirmed_by_player_1 = models.BooleanField(default=False)
+    confirmed_by_player_2 = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Match between {self.player_1.user_id} and {self.player_2.user_id} - Status: {self.status}"

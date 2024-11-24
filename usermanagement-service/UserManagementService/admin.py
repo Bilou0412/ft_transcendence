@@ -30,9 +30,10 @@ class FriendshipAdmin(admin.ModelAdmin):
 
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
-    list_display = ('player_1', 'player_2', 'status', 'created_at', 'match_start_time', 'match_end_time')
+    list_display = ('player_1', 'player_2', 'status', 'created_at', 'match_start_time', 'match_end_time', 'confirmed_by_player_1', 'confirmed_by_player_2')
     search_fields = ('player_1__user_id', 'player_2__user_id')  # Recherche par les IDs des joueurs
     list_filter = ('status', 'created_at')  # Filtrer par statut du match et date de création
     ordering = ('-created_at',)  # Trier par date de création décroissante
     list_per_page = 20  # Afficher 20 éléments par page
-    fields = ('player_1', 'player_2', 'status', 'created_at', 'match_start_time', 'match_end_time')  # Contrôle des champs affichés
+    fields = ('player_1', 'player_2', 'status', 'created_at', 'match_start_time', 'match_end_time', 'confirmed_by_player_1', 'confirmed_by_player_2')  # Champs affichés
+

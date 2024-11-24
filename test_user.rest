@@ -1,16 +1,19 @@
-GET http://127.0.0.1:8001/user/stats/
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNDQ1Mzg0LCJpYXQiOjE3MzI0NDE3ODQsImp0aSI6IjRmMDgxNzliMTA4NjQ4ZmQ4NGJkMTFhYzY5N2IwZTk4IiwidXNlcl9pZCI6Mn0.DXrnXIWzqLN2olltcmKp3zlhVdq7ZMzULvsj5032ysw
-
-####
 POST http://127.0.0.1:8001/user/matches/create/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNDQ1Mzg0LCJpYXQiOjE3MzI0NDE3ODQsImp0aSI6IjRmMDgxNzliMTA4NjQ4ZmQ4NGJkMTFhYzY5N2IwZTk4IiwidXNlcl9pZCI6Mn0.DXrnXIWzqLN2olltcmKp3zlhVdq7ZMzULvsj5032ysw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNDcyNjc3LCJpYXQiOjE3MzI0NjkwNzcsImp0aSI6Ijg5YTVjNzA4MjM2NjQ4MzZiOWZiYzQ1NjQ0NjE5NDY5IiwidXNlcl9pZCI6M30.QAguFNT-xFffHGDSlHxBXZv78_FlLygFucosMqUoDBg
 
 {
-    "player_1": 1,
-    "player_2_id": 2,
-    "score_player_1": 21,
-    "score_player_2": 15,
-    "duration": 600
+    "player_id": 2 
+}
+###
+POST http://127.0.0.1:8001/user/matches/end/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNDczMTkwLCJpYXQiOjE3MzI0Njk1OTAsImp0aSI6ImYwNDc1MDI1ZjkwODQ1YTlhYjNiN2Y1ZGIwZGMwODVlIiwidXNlcl9pZCI6M30.FKjq8_shYh8AHyuF-axO2-uvXrl5TPAxP1Qo4kYeFog
+
+{
+  "match_id": 1,
+  "player_id": 1,
+  "score_player_1": 5,
+  "score_player_2": 3,
+  "duration": 120
 }

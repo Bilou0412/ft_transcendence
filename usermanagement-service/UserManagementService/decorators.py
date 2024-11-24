@@ -5,14 +5,42 @@ import requests
 
 def authorize_user(view_func):
     @wraps(view_func)
-    def _wrapped_view(request, *args, **kwargs):
-        token = request.headers.get('Authorization', '')
+    def wrapped_view(request, *args, **kwargs):
+        # Extraction du token (supporte 'Bearer token' ou juste 'token')
+        auth_header = request.headers.get('Authorization', '')
+        token = auth_header.replace('Bearer ', '') if auth_header else ''
+
         if not token:
-            return Response({'error': 'No token'}, status=status.HTTP_401_UNAUTHORIZED)
-        response = requests.post('http://auth:8000/api/auth/token/validate/', headers={'Authorization': token})
-        if response.status_code != 200:
-            return Response({'error': 'Invalid token', 'status': response.status_code}, status=status.HTTP_401_UNAUTHORIZED)
-        request.id = response.json()['id']
-        return view_func(request, *args, **kwargs)
-    
-    return _wrapped_view
+            return Response({
+                'error': 'No authorization token provided'
+            }, status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            # Validation du token avec le service d'auth
+            response = requests.post(
+                'http://auth:8000/api/auth/token/validate/',
+                headers={'Authorization': f'Bearer {token}'},
+                timeout=5  # Timeout de 5 secondes
+            )
+
+            if response.status_code != 200:
+                return Response({
+                    'error': 'Invalid or expired token',
+                    'status': response.status_code
+                }, status=status.HTTP_401_UNAUTHORIZED)
+
+            # Le token est valide, on récupère l'ID utilisateur
+            user_data = response.json()
+            request.id = user_data['id']
+            
+            # Appel de la vue protégée
+            return view_func(request, *args, **kwargs)
+
+        except requests.exceptions.RequestException as e:
+            # En cas d'erreur de connexion avec le service d'auth
+            return Response({
+                'error': 'Authentication service unavailable',
+                'details': str(e)
+            }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
+    return wrapped_view

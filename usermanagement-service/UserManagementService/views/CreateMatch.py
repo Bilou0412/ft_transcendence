@@ -1,56 +1,91 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from ..models import Match
+from django.db.models import Q
+from django.utils import timezone
+from ..models import Match, UserProfile
 from ..decorators import authorize_user
 
 @api_view(['POST'])
 @authorize_user
 def CreateMatch(request):
     """
-    Crée un match si aucun match n'existe entre les deux joueurs. Si un match existe,
-    et qu'il est en attente (`pending`), le joueur 2 peut valider ce match.
+    Crée un match ou confirme un match existant.
+    - Si le créateur (player_1) fait la requête : crée un nouveau match
+    - Si l'invité (player_2) fait la requête : confirme le match existant
     """
-    # Récupérer le token du joueur et son ID
-    player_1_id = request.id  # L'ID du joueur 1 extrait du token
-    player_2_id = request.data.get('player_2_id')  # L'ID du joueur 2 envoyé dans la requête
-    
-    # Vérifier si l'ID du joueur 2 a été envoyé
-    if not player_2_id:
-        return Response({"error": "Missing player 2 ID."}, status=status.HTTP_400_BAD_REQUEST)
+    authenticated_user_id = request.id  # ID de l'utilisateur qui fait la requête
+    other_player_id = request.data.get('player_id')  # ID de l'autre joueur
 
-    # Chercher un match existant entre les deux joueurs
-    match = Match.objects.filter(
-        (Q(player_1_id=player_1_id) & Q(player_2_id=player_2_id)) |
-        (Q(player_1_id=player_2_id) & Q(player_2_id=player_1_id))
+    if not other_player_id:
+        return Response({
+            "error": "Missing player_id in request"
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    if authenticated_user_id == other_player_id:
+        return Response({
+            "error": "Cannot create a match with yourself"
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    # Vérifier et créer les profils utilisateurs si nécessaire
+    try:
+        player_1_profile, _ = UserProfile.objects.get_or_create(user_id=authenticated_user_id)
+        player_2_profile, _ = UserProfile.objects.get_or_create(user_id=other_player_id)
+    except Exception as e:
+        return Response({
+            "error": f"Failed to retrieve or create user profiles: {str(e)}"
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    # Chercher un match existant entre ces deux joueurs
+    existing_match = Match.objects.filter(
+        (Q(player_1=player_1_profile) & Q(player_2=player_2_profile)) |
+        (Q(player_1=player_2_profile) & Q(player_2=player_1_profile)),
+        status__in=['pending', 'active']
     ).first()
 
-    # Si aucun match n'existe, on en crée un (création par le joueur 1)
-    if not match:
-        # Créer un match avec le statut 'pending'
-        match = Match.objects.create(player_1_id=player_1_id, player_2_id=player_2_id, status='pending')
-        return Response({
-            "message": "Match created successfully. Waiting for the other player to validate.",
-            "match_id": match.id,
-            "player_1_id": match.player_1_id,
-            "player_2_id": match.player_2_id
-        }, status=status.HTTP_201_CREATED)
-
-    # Si un match existe, vérifier s'il est en statut 'pending'
-    if match.status == 'pending':
-        # Vérifier si la requête vient du joueur 2
-        if request.id == player_2_id:
-            # Mettre à jour le statut du match en 'active'
-            match.status = 'active'
-            match.save()
+    # Cas où l'utilisateur authentifié est player_2 (confirmation de match)
+    if existing_match and existing_match.player_2 == player_1_profile:
+        if existing_match.status == 'pending':
+            existing_match.status = 'active'
+            existing_match.match_start_time = timezone.now()
+            existing_match.save()
+            
             return Response({
-                "message": "Match validated successfully.",
-                "match_id": match.id,
-                "player_1_id": match.player_1_id,
-                "player_2_id": match.player_2_id
+                "message": "Match confirmed and started",
+                "match_id": existing_match.id,
+                "player_1_id": existing_match.player_1.user_id,
+                "player_2_id": existing_match.player_2.user_id,
+                "status": existing_match.status,
+                "start_time": existing_match.match_start_time
             }, status=status.HTTP_200_OK)
         else:
-            return Response({"error": "Only player 2 can validate the match."}, status=status.HTTP_403_FORBIDDEN)
+            return Response({
+                "error": "Match is already active or cancelled"
+            }, status=status.HTTP_400_BAD_REQUEST)
 
-    # Si le match est déjà validé ou annulé, on retourne une erreur
-    return Response({"error": "Match already validated or cancelled."}, status=status.HTTP_400_BAD_REQUEST)
+    # Cas où l'utilisateur authentifié est player_1 (création de match)
+    if existing_match:
+        return Response({
+            "error": "A match already exists between these players"
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    # Créer un nouveau match
+    try:
+        match = Match.objects.create(
+            player_1=player_1_profile,  # Créateur est toujours player_1
+            player_2=player_2_profile,
+            status='pending'
+        )
+        
+        return Response({
+            "message": "Match created successfully. Waiting for player 2 to confirm.",
+            "match_id": match.id,
+            "player_1_id": match.player_1.user_id,
+            "player_2_id": match.player_2.user_id,
+            "status": match.status
+        }, status=status.HTTP_201_CREATED)
+
+    except Exception as e:
+        return Response({
+            "error": f"Failed to create match: {str(e)}"
+        }, status=status.HTTP_400_BAD_REQUEST)
