@@ -9,15 +9,16 @@ class UserProfile (models.Model):
 
     def __str__(self) -> str:
         return f"Profile of user {self.user_id}"
-    
+
+
 class MatchHistory(models.Model):
-    player_1 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='matches_as_player_1')
-    player_2 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='matches_as_player_2')
+    player_1 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='matches_as_player_1_history')
+    player_2 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='matches_as_player_2_history')
     date_of_match = models.DateTimeField(auto_now_add=True)
     score_player_1 = models.IntegerField()
     score_player_2 = models.IntegerField()
-    winner = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='won_matches', null=True, blank=True)
-    duration = models.IntegerField()  # Durée du match en secondes (ou toute autre unité que tu choisis)
+    winner = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='won_matches_history', null=True, blank=True)
+    duration = models.IntegerField()  # Durée du match en secondes
 
     def __str__(self):
         return f"Match between {self.player_1.user_id} and {self.player_2.user_id} on {self.date_of_match}"
@@ -37,21 +38,19 @@ class MatchHistory(models.Model):
     def update_user_profile(self, player):
         # Mettre à jour le nombre total de jeux
         player.nb_game += 1
-
         # Mettre à jour le nombre de victoires et de défaites
         if self.winner == player:
             player.nb_win += 1
         elif self.winner != player and self.winner is not None:
             player.nb_losses += 1
-
         # Mettre à jour la durée moyenne
         total_duration = player.avg_duration * (player.nb_game - 1) + self.duration
         player.avg_duration = total_duration / player.nb_game
-
         # Sauvegarder le profil mis à jour
         player.save()
 
-from django.db import models
+
+
 
 class Friendship(models.Model):
     # Référence aux deux utilisateurs qui sont amis
@@ -70,3 +69,15 @@ class Friendship(models.Model):
     
     def __str__(self):
         return f"Friendship between {self.user_1} and {self.user_2} ({self.status})"
+
+class Match(models.Model):
+    player_1 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='matches_as_player_1')
+    player_2 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='matches_as_player_2')
+    status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('active', 'Active'), ('cancelled', 'Cancelled')], default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    match_start_time = models.DateTimeField(null=True, blank=True)
+    match_end_time = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Match between {self.player_1.user_id} and {self.player_2.user_id} - Status: {self.status}"
+
