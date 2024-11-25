@@ -12,16 +12,17 @@ import { titleDisplay } from "./monitor_display.js";
 import { route } from "./router.js";
 
 // ///////////////////////////////////environment settings///////////////////////////////
-export let settings;
+export let settings = null;
 
 ///////////////////////////////////main functions/////////////////////////////////////
 export async function quitPong() {
-    settings.updateGameStatus('paused');
-    focusMonitor();
-    await sleep(2000);
-    settings.destroy();
+    if (settings) {
+        focusMonitor();
+        settings.destroy();
+        settings = null;
+    }
+    
     document.getElementById('root').style.display = 'block';
-    route(null, '/');
 
     //stop event listeners
     window.removeEventListener('keydown', onKeyDown, false);
@@ -29,10 +30,7 @@ export async function quitPong() {
     window.removeEventListener('wheel', onMouseWheel, false);
     //stop animation loop
     window.cancelAnimationFrame(animate);
-
-    settings = null;
 }
-
 
 // Animation loop
 function animate() {
@@ -69,7 +67,7 @@ function resetGame() {
 }
 
 export async function startGame() {
-    // console.log('startGame');
+    if (!settings) return;
     settings.gameStatus = 'playing';
     initSides();
     initMiddlePlatform();
@@ -79,19 +77,15 @@ export async function startGame() {
     updateClock();
     await sleep(2000);
     resetGame();
-
 }
 
-document.getElementById('startButton').addEventListener('click', async () => {
+export async function initializeGame() {
     settings = new Settings();
     console.log('settings');
-    // if (settings) {
-        // await sleep(2000);
-        document.getElementById('root').style.display = 'none';
-        initMonitor();
-        titleDisplay();
-        animate();
-        focusGame();
-        startGame();
-    // }
-});
+    document.getElementById('root').style.display = 'none';
+    initMonitor();
+    titleDisplay();
+    animate();
+    focusGame();
+    startGame();
+}

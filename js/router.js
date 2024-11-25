@@ -2,8 +2,22 @@
 const lastClickTimes = new Map();
 const DOUBLE_CLICK_DELAY = 300;
 
-// Keep track of the current pong script
+// Keep track of the current pong script and module
 let currentPongScript = null;
+let pongModule = null;
+let startButtonListener = null;
+
+const attachStartButtonListener = async () => {
+    const startButton = document.getElementById('startButton');
+    if (startButton && !startButton.hasListener) {
+        startButtonListener = async () => {
+            const { initializeGame } = await import('./main.js');
+            initializeGame();
+        };
+        startButton.addEventListener('click', startButtonListener);
+        startButton.hasListener = true;
+    }
+};
 
 export const route = (event = null, forcedPath = null) => {
     event = event || window.event;
@@ -33,7 +47,6 @@ export const route = (event = null, forcedPath = null) => {
             lastClickTimes.set(path, currentTime);
         }
     } else if (forcedPath) {
-        // Forced path without click
         window.history.pushState({}, "", path);
         handleLocation();
     }
@@ -47,31 +60,35 @@ const routes = {
     "/pong": "/html/pong.html"
 };
 
-const cleanupPongScript = () => {
+const cleanupPongScript = async () => {
+    if (pongModule && typeof pongModule.quitPong === 'function') {
+        await pongModule.quitPong();
+    }
+    
+    const startButton = document.getElementById('startButton');
+    if (startButton && startButtonListener) {
+        startButton.removeEventListener('click', startButtonListener);
+        startButton.hasListener = false;
+    }
+    
     if (currentPongScript) {
-        // If the script defined a cleanup function, call it
-        if (window.cleanupPong && typeof window.cleanupPong === 'function') {
-            window.cleanupPong();
-            window.cleanupPong = null;
-        }
-        
-        // Remove the script element
         currentPongScript.remove();
         currentPongScript = null;
     }
+
+    pongModule = null;
 };
 
 const insertHTMLAndWaitForButton = async (html) => {
-    // Insert the HTML
     document.getElementById("main-page").innerHTML = html;
     
-    // Wait for the button to be available in DOM
     return new Promise((resolve) => {
         const checkButton = () => {
-            if (document.getElementById('startButton')) {
+            const button = document.getElementById('startButton');
+            if (button) {
+                attachStartButtonListener();
                 resolve();
             } else {
-                // Check again in a few milliseconds
                 setTimeout(checkButton, 10);
             }
         };
@@ -79,30 +96,38 @@ const insertHTMLAndWaitForButton = async (html) => {
     });
 };
 
+const loadPongModule = async () => {
+    try {
+        pongModule = await import('../js/main.js');
+        return true;
+    } catch (error) {
+        console.error('Error loading pong module:', error);
+        return false;
+    }
+};
+
 const handleLocation = async () => {
     const path = window.location.pathname;
     console.log(path);
     
-    // Clean up pong script if we're navigating away from pong
-    if (currentPongScript && path !== '/pong') {
-        cleanupPongScript();
+    if ((currentPongScript || pongModule) && path !== '/pong') {
+        await cleanupPongScript();
     }
     
     const route = routes[path] || routes[404];
     const html = await fetch(route).then((data) => data.text());
     
     if (path === '/pong') {
-        // Insert HTML and wait for button to be available
         await insertHTMLAndWaitForButton(html);
         
-        // Now load the script
         const script = document.createElement('script');
         script.src = '../js/main.js';
         script.type = 'module';
         currentPongScript = script;
         document.getElementById("main-page").appendChild(script);
+        
+        await loadPongModule();
     } else {
-        // For other routes, just insert the HTML normally
         document.getElementById("main-page").innerHTML = html;
     }
     

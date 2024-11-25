@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link rel="stylesheet" href="css/style.css">
+		<link rel="icon" href="texture/icon.png">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>XPongo</title>
+	</head>
+	<body>
+		<style>
+			body {
+				background-image: url('texture/lockscreen_clean.png');
+				background-repeat: no-repeat;
+				background-attachment: fixed;
+				background-size: cover;
+				background-position: center;
+			}
+
+			/* Logo */
+			.lockscreen img{
+				display: flex;
+				position: absolute;
+				top: 40%;
+				left: 40%;
+				transform: translate(-50%, -50%);
+				width: 250px;
+			}
+
+			/* Name */
+			.lockscreen h1{
+				display: flex;
+				position: absolute;
+				top: 50%;
+				left: 39.8%;
+				transform: translate(-50%, -50%);
+				font-size: 45px;
+				color: white;
+			}
+
+			/* Instructions */
+			.lockscreen p{
+				display: flex;
+				position: absolute;
+				top: 60%;
+				left: 34%;
+				transform: translate(-50%, -50%);
+				font-size: 18px;
+				color: white;
+			}
+
+			.flex-button {
+				display: flex;
+				position: absolute;
+			}
+
+			.flex-button span {
+				color: white;
+				font-family: "XP";
+				font-size: 30px;
+				position: absolute;
+				white-space: nowrap;
+				top: -1600%;
+				left: 500%;
+			}
+
+			.flex-button img {
+				width: 60px;
+				height: 60px;
+				margin: 0 auto;
+				display: block;
+			}
+
+			.loginButton {
+				top: 25%;
+				left: 65%;
+			}
+
+			.log42Button {
+				top: 45%;
+				left: 65%;
+			}
+
+			.guestButton {
+				top: 65%;
+				left: 65%;
+			}
+
+			.register-button {
+				display: flex;
+				position: absolute;
+			}
+
+			.register-button span{
+				color: white;
+				font-family: "XP";
+				font-size: 15px;
+				position: absolute;
+				white-space: nowrap;
+				top: -150%;
+				left: 300%;
+			}
+
+			.register-button img {
+				width: 70px;
+				height: 70px;
+				margin: 0 auto;
+				display: block;
+			}
+
+			.register {
+				top: 90%;
+				left: 5%;
+			}
+
+			.orangeText {
+				color: #ff8c00;
+			}
+
+		</style>
+		<!-- icon left side -->
+		<div class="lockscreen">
+			<div class="lockscreen-icon">
+				<img src="texture/icon.png" alt="XPongo Icon">
+			</div>
+			<div class="lockscreen-text">
+				<h1><span class="orangeText">XP</span>ongo </h1>
+				<p>To begin chose an authentification methode</p>
+			</div>
+
+			<div class="image-button">
+				<button class="flex-button loginButton">
+					<span>Login</span>
+					<img src="/texture/rounded_login.png" alt="login" />
+				</button>
+				<button class="flex-button log42Button">
+					<span>Login with 42</span>
+					<img src="/texture/rounded_log42.png" alt="log42" />
+				</button>
+				<button class="flex-button guestButton">
+					<span>Guest</span>
+					<img src="/texture/rounded_guest.png" alt="guest" />
+				</button>
+				<button class="register-button register">
+					<span>No account ? Register here</span>
+					<img src="/texture/register.png" alt="register" />
+				</button>
+			</div>
+
+</html>

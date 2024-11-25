@@ -26,6 +26,8 @@ export async function resetBall() {
 
     await sleep(2000);
 
+    if (!settings)
+        return;
 	settings.updateBallSpeed(settings.initialBallSpeed); // Réinitialise la vitesse de la balle
 	settings.updateBallVelocity(new THREE.Vector3(settings.ballSpeed * (settings.ServSide == 1 ? -1 : 1), 0, settings.ballSpeed * (Math.random() > 0.5 ? 1 : -1)));
 	// settings.updateBallVelocity(new THREE.Vector3(settings.ballSpeed * (settings.ServSide == 1 ? -1 : 1), 0, 0));
