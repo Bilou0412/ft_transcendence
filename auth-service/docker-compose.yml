@@ -1,0 +1,40 @@
+services:
+  db-auth:
+    image: postgres:17
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - my_network
+
+
+  auth:
+    build:
+      context: ./docker
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - ./docker:/app/docker
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DEBUG=True
+    env_file:
+      - .env
+    networks:
+      my_network:
+        aliases:
+          - auth
+    entrypoint: ["/app/docker/entrypoint_dev.sh"]
+    depends_on:
+      - db-auth
+
+volumes:
+  postgres_data:
+
+networks:
+  my_network:
+    external: true
