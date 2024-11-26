@@ -53,10 +53,6 @@ function animate() {
     }
 }
 
-window.addEventListener('keydown', onKeyDown, false);
-window.addEventListener('keyup', onKeyUp, false);
-window.addEventListener('wheel', onMouseWheel, false);
-
 function resetGame() {
     if (!settings) 
         return;
@@ -80,6 +76,9 @@ export async function startGame() {
 }
 
 export async function initializeGame() {
+    window.addEventListener('keydown', onKeyDown, false);
+    window.addEventListener('keyup', onKeyUp, false);
+    window.addEventListener('wheel', onMouseWheel, false);
     settings = new Settings();
     console.log('settings');
     document.getElementById('root').style.display = 'none';

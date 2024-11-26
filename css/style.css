@@ -1,6 +1,4 @@
 body {
-	/* font-family: "Tahoma", sans-serif; */
-	/* font-family: "Tahoma"; */
 	font-family: "XP";
 	display: flex;
 	height: 100%;
@@ -44,6 +42,224 @@ body:not([data-show-navbar="true"]) #main-nav {
     display: none;
 }
 
+/*/////////////////////////////////////// Lockscreen ///////////////////////////////////////*/
+/* Logo */
+.lockscreen img{
+	display: flex;
+	position: absolute;
+	top: 40%;
+	left: 40%;
+	transform: translate(-50%, -50%);
+	width: 300px;
+}
+
+/* Name */
+.lockscreen h1{
+	display: flex;
+	position: absolute;
+	top: 50%;
+	left: 39.8%;
+	transform: translate(-50%, -50%);
+	font-size: 45px;
+	color: white;
+}
+
+/* Instructions */
+.lockscreen p{
+	display: flex;
+	position: absolute;
+	top: 60%;
+	left: 34%;
+	transform: translate(-50%, -50%);
+	font-size: 18px;
+	color: white;
+}
+
+.flex-button {
+	all: unset;
+	width: 60px;
+	height: 60px;
+	display: flex;
+	position: absolute;
+	opacity: 0.5;
+}
+
+.flex-button:hover {
+	opacity: 1;
+}
+
+.flex-button span {
+	color: white;
+	font-family: "XP";
+	font-size: 30px;
+	position: absolute;
+	white-space: nowrap;
+	left: 150%;
+}
+
+.flex-button img {
+	all: unset;
+	width: 60px;
+	height: 60px;
+	/* margin: 0 auto; */
+	/* display: block; */
+}
+
+.loginButton {
+	top: 25%;
+	left: 65%;
+}
+
+.log42Button {
+	top: 45%;
+	left: 65%;
+}
+
+.guestButton {
+	top: 65%;
+	left: 65%;
+}
+
+.register-button {
+	all: unset;
+	width: 70px;
+	/* display: flex; */
+	position: absolute;
+}
+
+.register-button span{
+	color: white;
+	font-family: "XP";
+	font-size: 15px;
+	position: absolute;
+	white-space: nowrap;
+	top: -150%;
+	left: 80%;
+}
+
+.register-button img {
+	width: 70px;
+	height: 70px;
+	margin: 0 auto;
+	display: block;
+}
+
+.register {
+	top: 90%;
+	left: 5%;
+}
+
+.orangeText {
+	color: #ff8c00;
+}
+
+.login-form {
+	display: none; /* Hide login form by default */
+}
+
+.login-form.show {
+	display: block; /* Show login form when 'show' class is added */
+}
+
+.field_row {
+	position: absolute;
+	top: 31%;
+	left: 72%;
+    display: flex;
+    gap: 20px; /* Space between fields */
+	align-items: flex-end;
+}
+
+.field-row-stacked {
+    flex: 1; /* Equal width for both fields */
+    display: flex;
+    flex-direction: column;
+}
+
+.field-row-stacked label {
+    margin-bottom: 5px; /* Space between label and input */
+}
+
+.field-row-stacked input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box; /* Ensures padding doesn't increase width */
+}
+
+.submitBtn {
+	all : unset;
+	position: absolute;
+	top: 37.3%;
+	left: 92%;
+	transform: translate(-50%, -50%);
+}
+
+.submitBtn img {
+	all: unset;
+	width: 20px;
+	height: 20px;
+}
+
+.forgot-password {
+	position: absolute;
+	white-space: nowrap;
+	text-align: center;
+	font-size: 8px;
+	width: 80px;
+	top: 40%;
+	left: 82.3%;
+}
+
+.register-form {
+	display: none; /* Hide register form by default */
+	position: absolute;
+	top: 15%;
+	left: 5%;
+}
+
+.title-bar-text {
+	color: white;
+	font-family: "XP";
+}
+
+.register-form.show {
+	display: block
+}
+
+.regi_field_row {
+	display: flex;
+    flex-direction: column;
+    gap: 10px;
+	padding: 20px;
+}
+
+input{
+	all : unset;
+	width: 200px;
+}
+
+.submitRegiBtn {
+	all : unset;
+	position: absolute;
+	top: 160px;	
+	left: 92%;
+	transform: translate(-50%, -50%);
+}
+
+.submitRegiBtn img {
+	all: unset;
+	width: 25px;
+	height: 25px;
+}
+
+.pass_message {
+	display: none;
+	font-size: 10px;
+	padding: 20px;
+}
+
+
+/*/////////////////////////////////////// Fonts ///////////////////////////////////////*/
 @font-face {
     font-family: 'Digital-7';
     src: url('fonts/digital_7/digital-7 (mono).ttf') format('truetype');
