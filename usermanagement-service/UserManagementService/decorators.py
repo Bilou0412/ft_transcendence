@@ -1,3 +1,4 @@
+from django.conf import settings
 from functools import wraps
 from rest_framework.response import Response
 from rest_framework import status
@@ -44,3 +45,15 @@ def authorize_user(view_func):
             }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
     return wrapped_view
+
+def authorize_remote_service(func):
+    @wraps(func)
+    def wrapper(request, *args, **kwargs):
+        # Vérifie la clé d'API dans les en-têtes
+        api_key = request.headers.get("X-API-KEY")
+        if api_key != settings.REMOTE_SERVICE_API_KEY:
+            return Response({
+                "error": "Unauthorized: Invalid API key"
+            }, status=status.HTTP_401_UNAUTHORIZED)
+        return func(request, *args, **kwargs)
+    return wrapper

@@ -3,7 +3,7 @@ POST http://127.0.0.1:8000/api/auth/login/
 Content-Type: application/json
 
 {
-    "email": "fefe@gmail.com",
+    "email": "ji@gmail.com",
     "password": "Motdepasse12@@",
     "otp": ""
 }
@@ -13,10 +13,10 @@ POST http://127.0.0.1:8000/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "bmoudach",
+    "username": "ji",
     "password": "Motdepasse12@@",
     "password2": "Motdepasse12@@",
-    "email": "fewfew@gmail.com"
+    "email": "ji@gmail.com"
 }
 
 ### Refresh Token
