@@ -1,32 +1,48 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
-from .models import UserInfo
-from .decorators import auth_token
-import httpx
-
-connected_users = {}
+from ..decorators import auth_token
+# from . import connected_users
+from django.core.cache import cache
 
 class ChatConsumer(AsyncWebsocketConsumer):
     @auth_token
     async def connect(self):
         self.chatType = self.scope['url_route']['kwargs']['chat_type']
         self.chatId = self.scope['url_route']['kwargs']['chat_id']
-        self.chat_group_name = f'{self.chatType}_{self.chatId}'
-    
+        self.chat_group_name = 'error'
+
+        if self.chatType == 'game':
+            self.chat_group_name = f'{self.chatType}_{self.chatId}'
+        elif self.chatType == 'direct':
+            if self.userId == int(self.chatId):
+                await self.send(text_data=json.dumps({
+                    'type': 'error',
+                    'message': 'Invalid chat id'
+                }))
+                return
+            if not cache.get(self.chatId):
+                await self.send(text_data=json.dumps({
+                    'type': 'error',
+                    'message': 'User not connected'
+                }))
+                return
+            participants = sorted([self.userId, int(self.chatId)])
+            self.chat_group_name = f'{self.chatType}_{participants[0]}_{participants[1]}'
+        else:
+            await self.send(text_data=json.dumps({
+                'type': 'error',
+                'message': 'Invalid chat type'
+            }))
+            return
         await self.channel_layer.group_add(
             self.chat_group_name,
             self.channel_name
         )
         
-        blocked = ['jdenis']
-        connected_users[self.userId] = UserInfo(id=self.userId, username=self.username, blocked=blocked)
-
         await self.accept()
 
     @auth_token
     async def disconnect(self, close_code):
-        connected_users.pop(self.userId, None)
-        
         await self.channel_layer.group_discard(
             self.chat_group_name,
             self.channel_name
@@ -49,8 +65,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = event['message']
         sender = event['sender']
 
-        if sender != self.username and sender in connected_users[self.userId].blocked:
-            return
+        # if sender != self.username and sender in connected_users[self.userId].blocked:
+        #     return
 
         await self.send(text_data=json.dumps({
             'type': 'chat_message',

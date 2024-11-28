@@ -12,7 +12,7 @@ def auth_token(func):
 			token = subprotocols[0]
 			if not token.startswith("Bearer_"):
 				raise DenyConnection("Invalid authorization format")
-			tokenVal = token[len("Bearer "):].strip()
+			tokenVal = token[len("Bearer_"):].strip()
 			if not tokenVal:
 				raise DenyConnection("Authorization token missing")
 
@@ -25,7 +25,8 @@ def auth_token(func):
 				raise DenyConnection("Invalid authorization token")
 
 			userData = validateResponse.json()
-			self.userId = userData.get('id')
+			self.userId = int(userData.get('id'))
+			print(self.userId)
 
 			async with httpx.AsyncClient(timeout=5) as userInfosClient:
 				userInfosResponse = await userInfosClient.post(
@@ -44,6 +45,6 @@ def auth_token(func):
 		except httpx.RequestError as exc:
 			raise DenyConnection(f"Authentication service unreachable: {exc}")
 		except Exception as exc:
-			raise DenyConnection("Authentication failed")
+			raise DenyConnection(f"Authentication failed: {exc}")
 
 	return wrapper
