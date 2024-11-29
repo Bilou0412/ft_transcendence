@@ -14,7 +14,7 @@ class UserProfile(models.Model):
 class Friendship(models.Model):
     user_1 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='friendship_user_1')
     user_2 = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='friendship_user_2')
-    status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('blocked', 'Blocked')], default='pending')
+    status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('accepted', 'Accepted')], default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -35,5 +35,15 @@ class Match(models.Model):
     def __str__(self):
         return f"Match {self.id}: {self.player_1.user_id} vs {self.player_2.user_id}"
 
+class BlockedUser(models.Model):
+    blocker = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='blocked_users')
+    blocked = models.ForeignKey('UserProfile', on_delete=models.CASCADE, related_name='blocked_by')
+    created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('blocker', 'blocked')  # Empêche le doublon du blocage
+        verbose_name = "Blocked User"
+        verbose_name_plural = "Blocked Users"
 
+    def __str__(self):
+        return f"Block {self.blocker.user_id} blocked {self.blocked.user_id}"

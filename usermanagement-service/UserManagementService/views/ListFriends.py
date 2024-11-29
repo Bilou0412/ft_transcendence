@@ -17,6 +17,6 @@ def ListFriends(request):
             if friendship.status == 'accepted':
                 friend = friendship.user_1 if friendship.user_2 == user_profile else friendship.user_2
                 friends.append(friend.user_id)
-        return Response(friends)
+        return Response({ "user_id": request.id, "friends": friends })
     except UserProfile.DoesNotExist:
         return Response({"message": "User not found"}, status=404)

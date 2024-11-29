@@ -1,0 +1,11 @@
+BlockUser
+UnblockUser
+GetBlockedUser
+
+SendFrindsrequest       ok
+UpdateFriendshipStatus  ok
+GetFriendshipStatus     ok
+
+CreateMatch             ok
+GetHistoryMatch         ok
+

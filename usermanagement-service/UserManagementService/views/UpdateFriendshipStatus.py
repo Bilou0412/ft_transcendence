@@ -5,6 +5,7 @@ from ..models import UserProfile, Friendship
 from ..decorators import authorize_user
 from django.db.models import Q  # Assure-toi que ton décorateur est bien importé
 
+
 @api_view(['POST'])
 @authorize_user  # Appliquer le décorateur pour l'authentification
 def UpdateFriendshipStatus(request):
@@ -25,9 +26,9 @@ def UpdateFriendshipStatus(request):
     user_id = request.id  # L'ID de l'utilisateur est extrait du token
 
     # Vérifier si le statut est valide
-    if status_choice not in ['accepted', 'refused', 'blocked']:
+    if status_choice not in ['accepted', 'refused']:
         return Response({
-            "error": "Invalid status. Choose from 'accepted', 'refused', or 'blocked'."
+            "error": "Invalid status. Choose from 'accepted', 'refused'."
         }, status=status.HTTP_400_BAD_REQUEST)
 
     try:
@@ -38,8 +39,7 @@ def UpdateFriendshipStatus(request):
         # Vérifier si une demande d'amitié est en attente
         friendship = Friendship.objects.filter(
             (Q(user_1=user_profile) & Q(user_2=friend_profile)) |
-            (Q(user_1=friend_profile) & Q(user_2=user_profile)),
-            status='pending'
+            (Q(user_1=friend_profile) & Q(user_2=user_profile))
         ).first()
 
         if not friendship:
@@ -48,8 +48,14 @@ def UpdateFriendshipStatus(request):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # Mettre à jour le statut de la demande d'amitié
-        friendship.status = status_choice
-        friendship.save()
+        if status_choice == 'refused':
+            friendship.delete()
+            return Response({
+                "message": "Friendship request refused and deleted successfully."
+            }, status=status.HTTP_200_OK)
+        else:
+            friendship.status = status_choice
+            friendship.save()
 
         return Response({
             "message": f"Friendship request {status_choice} successfully.",

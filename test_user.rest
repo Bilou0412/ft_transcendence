@@ -17,7 +17,7 @@ GET http://127.0.0.1:8001/user/3/matches/
 
 POST http://127.0.0.1:8001/user/friends/request/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNzYwODkxLCJpYXQiOjE3MzI3NTcyOTEsImp0aSI6Ijk0M2NmYjkwZTYxNzQ5NzM4OTllNTIyYTBiYmJhOWEyIiwidXNlcl9pZCI6Mn0.T6OykBUgtlacqF3GMxGn1C8ZO4ydoWmPhEqSWk52A48
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyODgxNzAxLCJpYXQiOjE3MzI4NzgxMDEsImp0aSI6IjE0NTY1NjlkYzQwYjRmZTA5ZmI0YjNkNDU2MDc1MDY3IiwidXNlcl9pZCI6NH0.oBIwgRXLybYrZUSFLExHW97MZpA5gNtkfJmXONAMcDw
 
 {
   "friend_id": 3
@@ -26,9 +26,23 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 ###
 POST http://127.0.0.1:8001/user/friends/update/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNzYxMTQ1LCJpYXQiOjE3MzI3NTc1NDUsImp0aSI6IjQxNDE4ODNjNzRmOTQzNDNiYTYwNzdhMzlhZjgzMTgwIiwidXNlcl9pZCI6M30.Bd31EIXrgV8l4rbOOSzPaYGPuzqbsJZdW2GWoILznNY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyODgxNzM4LCJpYXQiOjE3MzI4NzgxMzgsImp0aSI6Ijk4NTUyNGE1OTExMzQ3OWU4ZWEwNWZlMzY0ZWVhZThjIiwidXNlcl9pZCI6M30.dmKvZEWhL93snrXg1Fflfl3qgAz727HzWN_kZogQ_I0
 
 {
-  "friend_id": 2,
-  "status": "blocked"
+  "friend_id": 4,
+  "status": "accepted"
+}
+###
+GET http://127.0.0.1:8001/user/friends/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyODgxNzM4LCJpYXQiOjE3MzI4NzgxMzgsImp0aSI6Ijk4NTUyNGE1OTExMzQ3OWU4ZWEwNWZlMzY0ZWVhZThjIiwidXNlcl9pZCI6M30.dmKvZEWhL93snrXg1Fflfl3qgAz727HzWN_kZogQ_I0
+
+###
+
+POST http://127.0.0.1:8001/user/block/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyODgzMzU1LCJpYXQiOjE3MzI4Nzk3NTUsImp0aSI6ImIyMzA1NzhhYmQyZjQ2ZjA4NDUwODQ4MmRlY2ExMjUyIiwidXNlcl9pZCI6Mn0.e7WJP5ykHIY6kfJ83dE33dBJKNY0-J8wbiJZaXbBbuw
+
+{
+  "user_to_block": 4
 }
