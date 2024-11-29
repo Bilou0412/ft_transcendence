@@ -7,6 +7,8 @@ from .views.ListFriends import ListFriends
 from .views.BlockUser import BlockUser
 from .views.SendRequest import SendRequest
 from .views.UserStats import UserStats
+from .views.ListBlocked import ListBlocked
+from .views.UnblockUser import UnblockUser
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,5 +26,7 @@ urlpatterns = [
     path('user/friends/', ListFriends, name='listfriends'),
 
     # Block
-    path('user/block/', BlockUser, name='blockuser'),   
+    path('user/block/request/', BlockUser, name='blockuser'),
+    path('user/block/', ListBlocked, name='listblocked'),
+    path('user/unblock/', UnblockUser, name='unblockuser'),
 ]

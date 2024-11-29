@@ -1,6 +1,6 @@
-BlockUser
-UnblockUser
-GetBlockedUser
+BlockUser               ok
+UnblockUser             ok
+GetBlockedUser          ok
 
 SendFrindsrequest       ok
 UpdateFriendshipStatus  ok

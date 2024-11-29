@@ -39,10 +39,23 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 
 ###
 
-POST http://127.0.0.1:8001/user/block/
+POST http://127.0.0.1:8001/user/block/request/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyODgzMzU1LCJpYXQiOjE3MzI4Nzk3NTUsImp0aSI6ImIyMzA1NzhhYmQyZjQ2ZjA4NDUwODQ4MmRlY2ExMjUyIiwidXNlcl9pZCI6Mn0.e7WJP5ykHIY6kfJ83dE33dBJKNY0-J8wbiJZaXbBbuw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyODg2ODI2LCJpYXQiOjE3MzI4ODMyMjYsImp0aSI6ImVlODc5OTMwYjhjNjQ5NjM4MTgwMWQ5ZmZhNTRmNWY3IiwidXNlcl9pZCI6Mn0.lAWc_AIATAlFqdm7IEZabFw9Kq_L2IZqU_7ZX9vNvPI
 
 {
   "user_to_block": 4
+}
+###
+GET http://127.0.0.1:8001/user/block/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyODg2ODI2LCJpYXQiOjE3MzI4ODMyMjYsImp0aSI6ImVlODc5OTMwYjhjNjQ5NjM4MTgwMWQ5ZmZhNTRmNWY3IiwidXNlcl9pZCI6Mn0.lAWc_AIATAlFqdm7IEZabFw9Kq_L2IZqU_7ZX9vNvPI
+
+###
+POST http://127.0.0.1:8001/user/unblock/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyODg3ODg4LCJpYXQiOjE3MzI4ODQyODgsImp0aSI6ImZiZmM2YjI1YWNkYjQ5YjM4Y2JkYzgxNWJiZTYzMjg2IiwidXNlcl9pZCI6Mn0.bT1lz30-IVIZSCI4sNEym8hyNoMgWvdg7hmblAKf9KM
+
+{
+  "user_to_unblock": 3
 }
