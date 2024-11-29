@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserProfile, Friendship, Match
+from .models import UserProfile, Friendship, Match, BlockedUser
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
@@ -22,6 +22,14 @@ class FriendshipAdmin(admin.ModelAdmin):
     list_per_page = 20
 
 
+@admin.register(BlockedUser)
+class BlockedUserAdmin(admin.ModelAdmin):
+    list_display = ('blocker', 'blocked', 'created_at')
+    search_fields = ('blocker__user_id', 'blocked__user_id')
+    list_filter = ('created_at',)
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at',)
+    list_per_page = 20
 
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
@@ -64,5 +72,7 @@ class MatchAdmin(admin.ModelAdmin):
         if obj:  # Si on édite un objet existant
             return ['created_at', 'player_1', 'player_2']
         return []
+
+
 
 
