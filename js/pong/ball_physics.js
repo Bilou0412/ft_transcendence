@@ -60,7 +60,7 @@ function paddleCollision(closestIntersection, closestCube, potentialPosition)
         if (Math.abs(closestIntersection.z - paddleMiddleOnplane) < settings.lineLength / 2 + 0.2) 
         {
             // Front face collision - use angle-based rebound
-            const maxAngle = 0.2;
+            const maxAngle = 0.5;
             const angle = Math.max(maxAngle * -1, Math.min(maxAngle, ((potentialPosition.z - paddleMiddleOnplane) / (settings.lineLength / 2)) * maxAngle));
 
             settings.ballVelocity.z = angle;
@@ -104,10 +104,10 @@ export function updateBallPosition()
     const potentialPosition = ball.position.clone().add(new THREE.Vector3(settings.ballVelocity.x, 0, settings.ballVelocity.z));
 
     // Create a ray for collision detection (only in XZ plane)
-    const rayDirection = new THREE.Vector3(settings.ballVelocity.x, -0.2, settings.ballVelocity.z).normalize();
+    const rayDirection = new THREE.Vector3(settings.ballVelocity.x, -0.3, settings.ballVelocity.z).normalize();
     // ray that check left and right from the main ray
-    const rayDirectionLeft = new THREE.Vector3(settings.ballVelocity.x, -0.2, settings.ballVelocity.z - 0.5).normalize();
-    const rayDirectionRight = new THREE.Vector3(settings.ballVelocity.x, -0.2, settings.ballVelocity.z + 0.5).normalize();
+    const rayDirectionLeft = new THREE.Vector3(settings.ballVelocity.x, -0.3, settings.ballVelocity.z - 0.5).normalize();
+    const rayDirectionRight = new THREE.Vector3(settings.ballVelocity.x, -0.3, settings.ballVelocity.z + 0.5).normalize();
     const ray = new THREE.Ray(ball.position, rayDirection);
     const rayLeft = new THREE.Ray(ball.position, rayDirectionLeft);
     const rayRight = new THREE.Ray(ball.position, rayDirectionRight);

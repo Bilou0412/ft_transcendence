@@ -3,16 +3,6 @@
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="css/settings.css">
 	<link rel="stylesheet" href="https://unpkg.com/xp.css" />
-
-	<style>
-		.title-bar {
-			width: calc(100% - 10px);
-			position: fixed;
-			top: 0;
-			z-index: 1000;
-		}
-	</style>
-
 </head>
 
 <body>
@@ -24,11 +14,44 @@
 	</div>
 
 	<div id="main-content">
-		<!-- Content for settings page -->
+		<section class="tabs" style="max-width: 1500px" id = "setting_tabs">
+			<menu role="tablist" aria-label="Sample Tabs">
+			  <button role="tab" aria-selected="true" aria-controls="tab-A">Profile</button>
+			  <button role="tab" aria-controls="tab-B">Pong</button>
+			</menu>
+			<!-- the tab content -->
+			<article role="tabpanel" id="tab-A">
+			  <h3>Profile settings</h3>
+			  <p>
+				Edit profile settings here
+			  </p>
+			  <p>
+				Lorem
+			  </p>
+			</article>
+
+
+			<article role="tabpanel" hidden id="tab-B">
+			  <h3>Pong settings</h3>
+			  <!-- <p>Edit pong settings</p> -->
+			  <fieldset>
+				<legend>Field dimensions</legend>
+				<div class="field-row">
+				  <input id="size10" type="radio" name="fieldset-example2">
+				  <label for="size10">10x30</label>
+				</div>
+				<div class="field-row">
+				  <input id="size30" type="radio" name="fieldset-example2" checked>
+				  <label for="size30">30x50</label>
+				</div>
+				<div class="field-row">
+				  <input id="size50" type="radio" name="fieldset-example2">
+				  <label for="size50">50x70</label>
+				</div>
+			  </fieldset>
+			</article>
+		  </section>
 	</div>
 
 	<script src="../js/router.js"></script>
-	<script>
-		document.getElementById('close-button').addEventListener('click', (event) => route(event));
-	</script>
 </body>

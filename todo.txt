@@ -1,3 +1,3 @@
-- Fix le fait de pas pouvoir lancer 2 fois le Pong  //OK
-- fix le reload des pages qui foire                 //OK?
-- add content aux pages
+- fix le reload des pages qui foire			//NGINX
+- add content aux pages						
+- add table pong 							

@@ -4,7 +4,7 @@ import { ball } from './ball_init.js';
 import { focusGame, focusMonitor } from './monitor.js';
 import { updatePaddleColor, pressedKeys } from './movements.js';
 import { sleep } from './resetBall.js';
-import { route } from './router.js';
+import { route } from '../router.js';
 import {handleLogin} from './monitor_display.js';
 
 /////////////////////////////////////Keyboard/////////////////////////////////////////

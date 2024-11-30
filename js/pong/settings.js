@@ -37,7 +37,7 @@ export class Settings {
         this.targetHeight = 0.6; // Lift height for the cubes
         this.liftSpeed = 0.1; // Speed of the cubes lift
         this.moveSpeed = 0.3; // Speed of the paddles
-        this.initialBallSpeed = 0.3; // Initial speed of the ball
+        this.initialBallSpeed = 0.5; // Initial speed of the ball
         this.ballSizeScale = 2; // Ball size
         this.speedIncreaseFactor = 1.0; // Speed increase factor after each hit
         this.superChargeCount = 5; // Number of hits to supercharge the ball
@@ -155,4 +155,5 @@ export class Settings {
             ease: "power2.inOut"
         });
     }
+    updateTime() { this.gameStartTime = Date.now(); }
 }

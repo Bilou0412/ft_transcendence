@@ -1,6 +1,20 @@
 ///////////////////////////////////////imports////////////////////////////////////////
 import { settings } from './main.js';
 
+/////////////////////////////////////Table////////////////////////////////////////
+export function initTable()
+{
+    const glftLoader = new THREE.GLTFLoader();
+    glftLoader.load('./models/table/scene.gltf', (gltfScene) => {
+        // Set position and scale of the model
+        gltfScene.scene.position.y = -57;
+        // gltfScene.scene.position.z = settings.platformLength / 2 + 6;
+        gltfScene.scene.scale.set(30, 30, 30);
+
+        settings.scene.add(gltfScene.scene);
+
+    });
+}
 
 ///////////////////////////////////////monitor////////////////////////////////////////
 let MonitorDisplay = null;
