@@ -11,7 +11,6 @@ body {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
-	/* align-items: center; */
 }
 
 .nav-icon {
@@ -35,7 +34,6 @@ body {
 	text-align: center;
 	font-size: 11px;
 	text-shadow: 1px 1px 2px black;
-	/* font-weight: bold; */
 }
 
 body:not([data-show-navbar="true"]) #main-nav {
@@ -119,8 +117,6 @@ body:not([data-show-navbar="true"]) #main-nav {
 	all: unset;
 	width: 60px;
 	height: 60px;
-	/* margin: 0 auto; */
-	/* display: block; */
 }
 
 .loginButton {
@@ -141,7 +137,6 @@ body:not([data-show-navbar="true"]) #main-nav {
 .register-button {
 	all: unset;
 	width: 70px;
-	/* display: flex; */
 	position: absolute;
 }
 

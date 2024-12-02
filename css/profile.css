@@ -15,8 +15,6 @@ body {
 	position: fixed;
     top: 50%;
     left: 34%;
-	/* top: 50%;
-	left: 50%; */
     transform: translate(-50%, -50%);
 }
 
@@ -24,8 +22,6 @@ body {
 	position: fixed;
     top: 50%;
     left: 83%;
-	/* top: 50%;
-	left: 50%; */
     transform: translate(-50%, -50%);
 }
 
@@ -40,7 +36,7 @@ body {
 }
 
 #userID {
-	position: absolute;
+	position: flex;
 	font-size: 50px;
 	top: 13%;
 	left: 30%;
@@ -97,6 +93,7 @@ td, th {
 #statistics{
 	position: absolute;
 	max-width: 400px;
+	overflow: hidden;
 	top: 40%;
 	left: 65%;
 }
@@ -132,7 +129,6 @@ td, th {
 }
 
 .friend-actions {
-	/* padding-left: auto; */
 	display: flex;
 	gap: 10px;
 }
