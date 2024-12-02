@@ -1,7 +1,6 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 from ..decorators import auth_token
-# from . import connected_users
 from django.core.cache import cache
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -14,20 +13,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if self.chatType == 'game':
             self.chat_group_name = f'{self.chatType}_{self.chatId}'
         elif self.chatType == 'direct':
-            if self.userId == int(self.chatId):
-                await self.send(text_data=json.dumps({
-                    'type': 'error',
-                    'message': 'Invalid chat id'
-                }))
-                return
-            if not cache.get(self.chatId):
-                await self.send(text_data=json.dumps({
-                    'type': 'error',
-                    'message': 'User not connected'
-                }))
-                return
-            participants = sorted([self.userId, int(self.chatId)])
-            self.chat_group_name = f'{self.chatType}_{participants[0]}_{participants[1]}'
+            self.newDMConnection()
         else:
             await self.send(text_data=json.dumps({
                 'type': 'error',
@@ -65,11 +51,26 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = event['message']
         sender = event['sender']
 
-        # if sender != self.username and sender in connected_users[self.userId].blocked:
-        #     return
 
         await self.send(text_data=json.dumps({
             'type': 'chat_message',
             'message': message,
             'sender': sender
         }))
+
+    async def newDMConnection(self):
+        if self.userId == int(self.chatId):
+            await self.send(text_data=json.dumps({
+                'type': 'error',
+                'message': 'Invalid chat id'
+            }))
+            return
+        if not cache.get(self.chatId):
+            await self.send(text_data=json.dumps({
+                'type': 'error',
+                'message': 'User not connected'
+            }))
+            return
+        participants = sorted([self.userId, int(self.chatId)])
+        self.chat_group_name = f'{self.chatType}_{participants[0]}_{participants[1]}'
+
