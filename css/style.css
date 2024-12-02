@@ -207,8 +207,8 @@ body:not([data-show-navbar="true"]) #main-nav {
 .submitBtn {
 	all : unset;
 	position: absolute;
-	top: 37.3%;
-	left: 92%;
+	top: 35.5%;
+	left: 95%;
 	transform: translate(-50%, -50%);
 }
 
@@ -225,7 +225,7 @@ body:not([data-show-navbar="true"]) #main-nav {
 	font-size: 8px;
 	width: 80px;
 	top: 40%;
-	left: 82.3%;
+	left: 80%;
 }
 
 .register-form {

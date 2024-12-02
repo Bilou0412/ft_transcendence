@@ -62,6 +62,11 @@
 						<label for="pswrdField">Password</label>
 						<input id="pswrdField" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required />
 					</div>
+					<!-- 2fa -->
+					<div class="field-row-stacked 2fa">
+						<label for="usrnameField">Code 2FA</label>
+						<input id="2faField" name="2fa" type="text" placeholder="code (optional)" autocomplete="username"/>
+					</div>
 				</div>
 				<button type="submit" class="submitBtn">
 					<img src="/texture/enter.png" alt="green_arrow" />
@@ -118,8 +123,14 @@
 			loginButton.addEventListener('click', function() {
 				// Toggle the 'show' class to display/hide the login form
 				loginForm.classList.toggle('show');
+				
+				// Set button opacity based on form visibility
+				if (loginForm.classList.contains('show')) {
+					loginButton.style.opacity = '1';
+				} else {
+					loginButton.style.opacity = '0.5';  // or whatever your default opacity is
+				}
 			});
-
 
 			//////////////////////////// Show/Hide Register Form ////////////////////////////
 			// Get references to the register button and register form

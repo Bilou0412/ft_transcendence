@@ -1,3 +1,0 @@
-- fix le reload des pages qui foire			//NGINX
-- add content aux pages						
-- add table pong 							
