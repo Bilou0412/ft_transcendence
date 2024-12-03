@@ -6,7 +6,7 @@ services:
     networks:
       - my_network
 
-  chat:
+  remote:
     build:
       context: ./docker
     ports:

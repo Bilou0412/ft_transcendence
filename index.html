@@ -49,7 +49,6 @@
 
         let paddle1Direction = 0;
         let paddle2Direction = 0;
-        console.log("ok");
         const ws = new WebSocket('ws://localhost:8000/ws/pong/oui/');
 
         let gameStarted = false;
@@ -65,20 +64,27 @@
                 playerRole = message.data;
                 console.log('Assigned role:', playerRole);
             }
-            if (message.event === 'paddle_moved') {
-                if (message.data.player === 'player1' && playerRole !== 'player1') {
-                    paddle1.position.y = message.data.position;
-                    paddle1Direction = message.data.direction;
-                    console.log('paddle1Direction:', paddle1Direction);
-                } else if (message.data.player === 'player2' && playerRole !== 'player2') {
-                    paddle2Direction = message.data.direction;
-                    paddle2.position.y = message.data.position;
-                    console.log('paddle2Direction:', paddle2Direction);
-                }
-
+            if (message.event === 'game_update') {
+                ball.position.x = message.data.ball.x;
+                ball.position.y = message.data.ball.y;
+                paddle1.position.y = message.data.players.left.pos.y;
+                paddle2.position.y = message.data.players.right.pos.y;
             }
+            // if (message.event === 'paddle_moved') {
+            //     if (message.data.player === 'left' && playerRole !== 'left') {
+            //         paddle1.position.y = message.data.position;
+            //         paddle1Direction = message.data.direction;
+            //         console.log('paddle1Direction:', paddle1Direction);
+            //     } else if (message.data.player === 'right' && playerRole !== 'right') {
+            //         paddle2Direction = message.data.direction;
+            //         paddle2.position.y = message.data.position;
+            //         console.log('paddle2Direction:', paddle2Direction);
+            //     }
+            // }
             if (message.event === 'game_started') {
                 gameStarted = true;
+                // console.log('ballDirection:', message.data.ball_direction);
+                // ballDirection = message.data.ball_direction;
                 console.log('Game started');
             }
             if (message.event === 'game_ended') {
@@ -97,27 +103,40 @@
         });
 
         document.addEventListener('keydown', (event) => {
-            if (playerRole === 'player1') {
-                if (event.key === 'w') {
-                    paddle1Direction = 1;
-                } else if (event.key === 's') {
-                    paddle1Direction = -1;
+            // if (playerRole === 'left') {
+            //     if (event.key === 'w') {
+            //         paddle1Direction = 1;
+            //     } else if (event.key === 's') {
+            //         paddle1Direction = -1;
+            //     }
+            // } else if (playerRole === 'right') {
+            //     if (event.key === 'w') {
+            //         paddle2Direction = 1;
+            //     } else if (event.key === 's') {
+            //         paddle2Direction = -1;
+            //     }
+            // }
+            let new_direction = 0;
+
+            if (event.key === 'w')
+                new_direction = 0.5;
+            else if (event.key === 's')
+                new_direction = -0.5;
+            ws.send(JSON.stringify({
+                event: 'paddle_moved',
+                data: {
+                    player: playerRole,
+                    direction: new_direction
                 }
-            } else if (playerRole === 'player2') {
-                if (event.key === 'w') {
-                    paddle2Direction = 1;
-                } else if (event.key === 's') {
-                    paddle2Direction = -1;
-                }
-            }
+            }));
         });
 
         document.addEventListener('keyup', (event) => {
-            if (playerRole === 'player1') {
+            if (playerRole === 'left') {
                 if (event.key === 'w' || event.key === 's') {
                     paddle1Direction = 0;
                 }
-            } else if (playerRole === 'player2') {
+            } else if (playerRole === 'right') {
                 if (event.key === 'w' || event.key === 's') {
                     paddle2Direction = 0;
                 }
@@ -126,7 +145,6 @@
 
         function resetGame() {
             ball.position.set(0, 0, 0);
-            ballDirection = { x: 0.1, y: 0.1 };
             paddle1.position.y = 0;
             paddle2.position.y = 0;
             paddle1Direction = 0;
@@ -140,32 +158,32 @@
                 return;
             }
 
-            if (paddle1Direction !== 0) {
-                paddle1.position.y += paddle1Direction * 0.1;
-                if (playerRole === 'player1') {
-                    ws.send(JSON.stringify({
-                        event: 'paddle_moved',
-                        data: {
-                            player: 'player1',
-                            position: paddle1.position.y,
-                            direction: paddle1Direction
-                        }
-                    }));
-                }
-            }
-            if (paddle2Direction !== 0) {
-                paddle2.position.y += paddle2Direction * 0.1;
-                if (playerRole === 'player2') {
-                    ws.send(JSON.stringify({
-                        event: 'paddle_moved',
-                        data: {
-                            player: 'player2',
-                            position: paddle2.position.y,
-                            direction: paddle2Direction
-                        }
-                    }));
-                }
-            }
+            // if (paddle1Direction !== 0) {
+            //     paddle1.position.y += paddle1Direction * 0.1;
+            //     if (playerRole === 'left') {
+            //         ws.send(JSON.stringify({
+            //             event: 'paddle_moved',
+            //             data: {
+            //                 player: 'left',
+            //                 position: paddle1.position.y,
+            //                 direction: paddle1Direction
+            //             }
+            //         }));
+            //     }
+            // }
+            // if (paddle2Direction !== 0) {
+            //     paddle2.position.y += paddle2Direction * 0.1;
+            //     if (playerRole === 'right') {
+            //         ws.send(JSON.stringify({
+            //             event: 'paddle_moved',
+            //             data: {
+            //                 player: 'right',
+            //                 position: paddle2.position.y,
+            //                 direction: paddle2Direction
+            //             }
+            //         }));
+            //     }
+            // }
 
             // ball.position.x += ballDirection.x * 0.5;
             // ball.position.y += ballDirection.y * 0.5;
