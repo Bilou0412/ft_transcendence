@@ -1,7 +1,6 @@
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 import random
-from datetime import datetime
 
 class Player:
 	def __init__ (self, id):
@@ -26,6 +25,12 @@ class Ball:
 	def move (self):
 		self.pos['x'] += self.velocity * self.direction['x']
 		self.pos['y'] += self.velocity * self.direction['y']
+	
+	def predict_move(self):
+		return {
+			'x': self.pos['x'] + self.velocity * self.direction['x'],
+			'y': self.pos['y'] + self.velocity * self.direction['y']
+		}
 
 
 class Game:
@@ -35,7 +40,6 @@ class Game:
 		self.players = []
 		self.group_name = group_name
 		self.status = False
-		self.last_update_time = datetime.now()
 
 	def add_player (self, player):
 		self.players.append(player)
@@ -48,70 +52,44 @@ class Game:
 		if len(self.players) == 2:
 			self.status = True
 		self.reset()
-		self.time = datetime.now()
-		await get_channel_layer().group_send(
-			self.group_name,{'type': 'assign_role'})
 		await get_channel_layer().group_send(
 			self.group_name, {
 				'type': 'game_started',
-				'data': {
-					'ball': {
-						'direction': self.ball.direction,
-						'velocity': self.ball.velocity
-					}
+				# 'data': {
+				# 	'ball': self.ball.pos,
 				# 	'players': {
 				# 		'left': {'pos': self.players[0].pos, 'score': self.players[0].score},
 				# 		'right': {'pos': self.players[1].pos, 'score': self.players[1].score}
 				# 	}
 
-				}
+				# }
 			}
 		)
 
 	def end (self):
 		self.status = False
 
-	async def reset (self):
+	def reset (self):
 		self.ball.pos = {'x': 0, 'y': 0}
 		self.ball.direction = {'x': random.choice([-0.1, 0.1]), 'y': random.choice([-0.1, 0.1])}
 		self.players[0].pos = {'x': -10, 'y': 0}
 		self.players[1].pos = {'x': 10, 'y': 0}
-		await get_channel_layer().group_send(
-			self.group_name, {
-				'type': 'game_reset',
-				'data': {
-					'ball': {
-						'direction': self.ball.direction,
-					}
-				}})
-				# 	'players': {
-				# 		'left': {'pos': self.players[0].pos, 'score': self.players[0].score},
-				# 		'right': {'pos': self.players[1].pos, 'score': self.players[1].score}
-				# 	}
-
-		# 		}
-		# 	}
-		# )
 
 	async def update (self):
 		try:
-			# now = datetime.now()
-			# delta_time = (now - self.last_update_time).total_seconds()
-			# self.last_update_time = now
-
 			self.ball.move()
 			self.players[0].move()
 			self.players[1].move()
 			paddle1 = self.players[0].pos
 			paddle2 = self.players[1].pos
-			# print(f'ball: {self.ball.pos}')
+			
 			if self.ball.pos['y'] <= -10 or self.ball.pos['y'] >= 10:
 				self.ball.direction['y'] *= -1
-			
-			if self.ball.pos['x'] <= paddle1['x'] + 0.5 and \
+			# print('lllllllllllllllaaaaaaaaaaaaaaaaaaaaa')
+			if self.ball.pos['x'] <= paddle1['x'] + 1 and \
 				self.ball.pos['y'] <= paddle1['y'] + 2.5 and \
 				self.ball.pos['y'] >= paddle1['y'] - 2.5 or \
-				self.ball.pos['x'] >= paddle2['x'] - 0.5 and \
+				self.ball.pos['x'] >= paddle2['x'] - 1 and \
 				self.ball.pos['y'] <= paddle2['y'] + 2.5 and \
 				self.ball.pos['y'] >= paddle2['y'] - 2.5 :
 				self.ball.direction['x'] *= -1

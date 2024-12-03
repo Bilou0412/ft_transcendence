@@ -164,7 +164,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 	async def game_started(self, event):
 		await self.send(text_data=json.dumps({
 			'event': 'game_started',
-			'data': event['data']
+			# 'data': event['data']
 		}))
 
 	async def player_disconnected(self, event):
