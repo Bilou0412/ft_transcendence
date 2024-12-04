@@ -54,18 +54,18 @@ class PongConsumer(AsyncWebsocketConsumer):
 		# print(f'glob var game: {games_loop_task}')
 
 		games[self.group_name].add_player(Player(self.role))
-		if len(games[self.group_name].players) == 2:
-			await games[self.group_name].start()
+		# if len(games[self.group_name].players) == 2:
+		# 	await games[self.group_name].start()
 
 
 	async def disconnect(self, close_code):
 		games[self.group_name].remove_player(self.role)
-		games[self.group_name].end()
+		# games[self.group_name].end()
 		if len(games[self.group_name].players) == 0:
 			del games[self.group_name]
 
-		await self.channel_layer.group_send(
-			self.group_name,{'type': 'game_ended'})
+		# await self.channel_layer.group_send(
+		# 	self.group_name,{'type': 'game_ended'})
 		await self.channel_layer.group_send(
 			self.group_name,{'type': 'player_disconnected'})
 
@@ -104,21 +104,17 @@ class PongConsumer(AsyncWebsocketConsumer):
 			return
 
 		game = games[self.group_name]
-		game.players[self.role].direction = float(data['direction'])
+		direction = data['direction']
+		game.players[self.role].direction += 0.5 if direction == 'up' else -0.5
 		print(f'player direction: {game.players[self.role].direction}')
-		# await self.channel_layer.group_send(
-		# 	self.group_name,
-		# 	{
-		# 		'type': 'paddle_moved',
-		# 		'data': data
-		# 	}
-		# )
 
 	async def handle_start_game(self, data):
+		print(f'game started: {self.group_name}')
+		await games[self.group_name].start()
 		await self.channel_layer.group_send(
 			self.group_name,
 			{
-				'type': 'game_started',
+				'type': 'start_game',
 			}
 		)
 
@@ -127,7 +123,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 			self.group_name,
 			{
 				'type': 'game_ended',
-				# 'data': data
+				'data': data
 			}
 		)
 
@@ -161,9 +157,9 @@ class PongConsumer(AsyncWebsocketConsumer):
 			'data': event['data']
 		}))
 
-	async def game_started(self, event):
+	async def start_game(self, event):
 		await self.send(text_data=json.dumps({
-			'event': 'game_started',
+			'event': 'start_game',
 			# 'data': event['data']
 		}))
 
@@ -181,7 +177,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 	async def game_ended(self, event):
 		await self.send(text_data=json.dumps({
 			'event': 'game_ended',
-			# 'data': event['data']
+			'data': event['data']
 		}))
 
 	async def game_update(self, event):
