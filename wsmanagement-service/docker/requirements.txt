@@ -37,3 +37,4 @@ Twisted==24.10.0
 txaio==23.1.1
 typing_extensions==4.12.2
 zope.interface==7.1.1
+django-redis
