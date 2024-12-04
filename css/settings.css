@@ -1,12 +1,3 @@
-body {
-	font-family: "XP";
-	display: flex;
-	height: 100%;
-	margin: 0;
-	padding-top: 20px;
-	background-color: #ebe9d9;
-}
-
 .title-bar {
 	width: calc(100% - 10px);
 	position: fixed;
@@ -14,19 +5,19 @@ body {
 	z-index: 1000;
 }
 
+.title-bar-text {
+	font-family: "XP";
+}
+
+
 /* Position tabs at the top of the screen */
 .tabs {
     position: fixed;
-	font-family: "tahoma";
+	font-family: "XP";
     top: 50px; /* Adjust based on title bar height */
     left: 50%; /* Center horizontally */
     transform: translateX(-50%); /* Ensure perfect centering */
     width: calc(100% - 100px); /* Adjust width as needed */
     max-width: 1500px; /* Maintain original max-width */
     z-index: 10; /* Ensure it's above other content */
-}
-
-@font-face {
-	font-family: 'XP';
-	src: url(fonts/xp/xp.ttf) format('truetype');
 }

@@ -1,82 +1,89 @@
-body {
-	padding-top: 0px;
-	background-color: #ebe9d9;
-}
-
 .title-bar {
 	width: calc(100% - 10px);
 	position: fixed;
 	top: 0px;
-	left: 0px;
 	z-index: 1000;
 }
 
+.window-body {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+/* =====================================User window===================================== */
 #profileDisplay {
+    width: 65%;
+    height:90%;
+    display: flex;
 	position: fixed;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: space-evenly;
     top: 50%;
     left: 34%;
     transform: translate(-50%, -50%);
 }
 
-#friendDisplay {
-	position: fixed;
-    top: 50%;
-    left: 83%;
-    transform: translate(-50%, -50%);
+/* --------------------------------Header-------------------------------- */
+.window-header {
+    display: flex;
+    justify-content: center;
+	align-items: center;
+    gap : 30px;
+    padding: 5 px;
 }
 
 #userIcon {
-	position: absolute;
 	border: 5px solid #ffffff;
 	border-radius: 3%;
-	top : 5%;
-	left: 1.5%;
 	height: 200px;
-	width: auto
 }
 
 #userID {
-	position: flex;
 	font-size: 50px;
-	top: 13%;
-	left: 30%;
 }
 
 .IDHash {
 	color:rgb(114, 114, 114);
 }
 
-#editBtn {
-	position: absolute;
-	top: 15%;
-	left: 58%;
+
+
+/* --------------------------------Tables-------------------------------- */
+.flex-tables {
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+	align-items: space-evenly;
+    gap: 20px;
 }
 
-h2 {
-	position: absolute;
-	top: 30%;
-	margin-left: 20px;
-}
-
-h3 {
-	position: absolute;
-	font-size: 2.5rem;
-	top: 30%;
-	left: 65%;
+/* wrapper around the table to make the table scrolable in small window */
+.table-wrapper {
+    overflow-x: auto;
+    max-width: 100%;
 }
 
 table {
 	font-family: arial, sans-serif;
 	border-collapse: collapse;
 	background-color: #ffffff;
-	width: 60%;
-  }
+    width: 100%;
+}
 
 td, th {
 	border: 1px solid #000000;
-	text-align: left;
 	padding: 8px;
+}
 
+#history{
+    min-width: 600px;
+}
+
+#statistics{
+    min-width: 400px;
 }
 
 .stat {
@@ -84,29 +91,27 @@ td, th {
 	min-width: 100px;
 }
 
-#history{
-	position: absolute;
-	top: 40%;
-	margin-left: 20px;
+
+/* ====================================Friends window==================================== */
+#friendDisplay {
+    width: 31%; 
+    height: 90%;
+	position: fixed;
+    top: 50%;
+    left: 83%;
+    transform: translate(-50%, -50%);
 }
 
-#statistics{
-	position: absolute;
-	max-width: 400px;
-	overflow: hidden;
-	top: 40%;
-	left: 65%;
-}
-
-#search_bar{
+#search_bar {
 	position: absolute;
 	top:5%;
 	left: 2.5%;
 	width: 95%;
 }
 
+/* --------------------------------Friends list-------------------------------- */
 .friend-list-container {
-	position: absolute;
+	position: fixed;
 	top: 10%;
 	left: 5%;
 	width: 90%;
@@ -131,4 +136,28 @@ td, th {
 .friend-actions {
 	display: flex;
 	gap: 10px;
+}
+
+@media screen and (max-width: 480px) {
+    body {
+        font-size: 14px;
+    }
+
+    .main-content {
+        flex-direction: column;
+    }
+
+    #userID {
+        font-size: 1.5rem;
+    }
+
+    .friend-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .friend-actions {
+        margin-top: 10px;
+    }
 }

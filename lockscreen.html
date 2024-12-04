@@ -2,6 +2,7 @@
 <html lang="en">
 	<head>
 		<link rel="stylesheet" href="css/style.css">
+		<link rel="stylesheet" href="../css/lockscreen.css">
 		<link rel="stylesheet" href="xp.css/dist/XP.css" />
 		<link rel="icon" href="texture/icon.png">
 		<meta charset="UTF-8">
@@ -9,71 +10,66 @@
 		<title>XPongo</title>
 	</head>
 	<body>
-		<style>
-			body {
-				font-family: "XP";
-				background-image: url('texture/lockscreen_clean.png');
-				background-repeat: no-repeat;
-				background-attachment: fixed;
-				background-size: cover;
-				background-position: center;
-			}
-
-			
-		</style>
 		<!-- icon left side -->
-		<div class="lockscreen">
-			<div class="lockscreen-icon">
-				<img src="texture/pong_logo.png" alt="XPongo Icon">
+		<div class="main-flex-box">
+			<div class="left-flex">
+				<div class="lockscreen-icon">
+					<img src="texture/pong_logo.png" alt="XPongo Icon">
+				</div>
+				<div class="lockscreen-text">
+					<h1><span class="orangeText">XP</span>ongo </h1>
+					<p>To begin chose an authentification methode</p>
+				</div>
 			</div>
-			<div class="lockscreen-text">
-				<h1><span class="orangeText">XP</span>ongo </h1>
-				<p>To begin chose an authentification methode</p>
-			</div>
-
-			<div class="image-button">
+			<div class="right-flex">
 				<button class="flex-button loginButton"  id="showLoginForm">
+					<img src="/css/icon/rounded_login.png" alt="login" />
 					<span>Login</span>
-					<img src="/texture/rounded_login.png" alt="login" />
 				</button>
 				<button class="flex-button log42Button">
+					<img src="/css/icon/rounded_log42.png" alt="log42" />
 					<span>Login with 42</span>
-					<img src="/texture/rounded_log42.png" alt="log42" />
 				</button>
 				<button class="flex-button guestButton">
+					<img src="/css/icon/rounded_guest.png" alt="guest" />
 					<span>Guest</span>
-					<img src="/texture/rounded_guest.png" alt="guest" />
-				</button>
-				<button class="register-button register" id="showRegisterForm">
-					<span>No account yet? Register here</span>
-					<img src="/texture/register.png" alt="register" />
 				</button>
 			</div>
 		</div>
+
+		<div class="bottom-flex-box">
+			<button class="register-button" id="showRegisterForm">
+				<img src="/css/icon/register.png" alt="register" />
+				<span>No account yet? Register here</span>
+			</button>
+		</div>
+		
 
 		<div class="login-form" id="loginFormContainer">
 			<form action="/login" method="POST">
-				<div class="field_row">
-					<div class="field-row-stacked username">
-						<label for="usrnameField">Email</label>
-						<input id="usrnameField" name="username" type="text" placeholder="Enter your email" autocomplete="username" required />
+				<div class="login-flex">
+					<div class="field-row-flex">
+						<div class="field-row-stacked username">
+							<label for="usrnameField">Email</label>
+							<input id="usrnameField" name="username" type="text" placeholder="Enter your email" autocomplete="username" required />
+						</div>
+						<div class="field-row-stacked password">
+							<label for="pswrdField">Password</label>
+							<input id="pswrdField" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required />
+						</div>
+						<div class="field-row-stacked 2fa">
+							<label for="usrnameField">Code 2FA</label>
+							<input id="2faField" name="2fa" type="text" placeholder="code (optional)" autocomplete="username"/>
+						</div>
+						<button type="submit" class="submitBtn">
+							<img src="/css/icon/enter.png" alt="green_arrow" />
+						</button>
 					</div>
-					<div class="field-row-stacked password">
-						<label for="pswrdField">Password</label>
-						<input id="pswrdField" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required />
-					</div>
-					<!-- 2fa -->
-					<div class="field-row-stacked 2fa">
-						<label for="usrnameField">Code 2FA</label>
-						<input id="2faField" name="2fa" type="text" placeholder="code (optional)" autocomplete="username"/>
-					</div>
+					<button class="forgot-password">Forgot password</button>
 				</div>
-				<button type="submit" class="submitBtn">
-					<img src="/texture/enter.png" alt="green_arrow" />
-				</button>
-				<button class="forgot-password">Forgot password</button>
 			</form>
 		</div>
+
 		<div class="register-form" id="registerFormContainer">
 			<div class="window" style="width: 400px">
 				<div class="title-bar">
@@ -83,32 +79,36 @@
 				  </div>
 				</div>
 				<form action="/register" method="POST">
-					<div class="regi_field_row">
-						<div class="regi_field-row-stacked mail">
-							<label for="emailRegiField">Email</label>
-							<input id="emailRegiField" name="email" type="email" placeholder="Enter your email" autocomplete="email" required />
+					<div class="regi-form-flex">
+						<div class="register-flex">
+							<div class="regi_field_row">
+								<div class="regi_field-row-stacked mail">
+									<label for="emailRegiField">Email</label>
+									<input id="emailRegiField" name="email" type="email" placeholder="Enter your email" autocomplete="email" required />
+								</div>
+								<div class="regi_field-row-stacked username">
+									<label for="usrnameRegiField">Username</label>
+									<input id="usrnameRegiField" name="username" type="text" placeholder="Enter your username" autocomplete="username" required />
+								</div>
+								<div class="regi_field-row-stacked password">
+									<label for="pswrdRegiField">Password</label>
+									<input id="pswrdRegiField" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required />
+								</div>
+								<div class="regi_field-row-stacked repassword">
+									<label for="repswrdRegiField">Confirm Password</label>
+									<input id="repswrdRegiField" name="repassword" type="password" placeholder="Confirm your password" autocomplete="valid-password" required />
+								</div>
+							</div>
+							<button type="submit" class="submitRegiBtn" id="submitRegiBtn">
+								<img src="/css/icon/enter.png" alt="green_arrow" />
+							</button>
 						</div>
-						<div class="regi_field-row-stacked username">
-							<label for="usrnameRegiField">Username</label>
-							<input id="usrnameRegiField" name="username" type="text" placeholder="Enter your username" autocomplete="username" required />
+						<div class="pass_message" id="pass_message">
+							<p> 1 lowercase letter </p>
+							<p> 1 uppercase letter </p>
+							<p> 1 number</p>
+							<p> 8 characters </p>
 						</div>
-						<div class="regi_field-row-stacked password">
-							<label for="pswrdRegiField">Password</label>
-							<input id="pswrdRegiField" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required />
-						</div>
-						<div class="regi_field-row-stacked repassword">
-							<label for="repswrdRegiField">Confirm Password</label>
-							<input id="repswrdRegiField" name="repassword" type="password" placeholder="Confirm your password" autocomplete="valid-password" required />
-						</div>
-					</div>
-					<button type="submit" class="submitRegiBtn" id="submitRegiBtn">
-						<img src="/texture/enter.png" alt="green_arrow" />
-					</button>
-					<div class="pass_message" id="pass_message">
-						<p> 1 lowercase letter </p>
-						<p> 1 uppercase letter </p>
-						<p> 1 number</p>
-						<p> 8 characters </p>
 					</div>
 				</form>
 			</div>

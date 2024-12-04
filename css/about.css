@@ -1,24 +1,9 @@
-body {
-	font-family: "XP";
-	display: flex;
-	height: 100%;
-	margin: 0;
-	padding-top: 20px;
-	background-color: #ebe9d9;
-}
-
 .title-bar {
 	width: calc(100% - 10px);
 	position: fixed;
 	top: 0;
 	z-index: 1000;
 }
-
-/* ul {
-	position: absolute;
-	top: 20%;
-	left: 20px;
-} */
 
 /* Position tabs at the top of the screen */
 .tabs {
@@ -32,7 +17,3 @@ body {
     z-index: 10; /* Ensure it's above other content */
 }
 
-@font-face {
-	font-family: 'XP';
-	src: url(fonts/xp/xp.ttf) format('truetype');
-}
