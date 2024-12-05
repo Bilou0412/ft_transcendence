@@ -17,6 +17,7 @@
 		<button type="submit">Login</button>
 	</form>
 	<button id="logout-button" style="display:none;">Logout</button>
+	<h2 id="username-display" style="display:none;"></h2>
 	<ul id="user-list"></ul>
 
 	<script>
@@ -39,8 +40,10 @@
 				});
 				const data = await response.json();
 				const accessToken = data.access;
+				const username = data.user.username;
 				localStorage.setItem('accessToken', accessToken);
-				connectWebSocket(accessToken);
+				localStorage.setItem('username', username);
+				connectWebSocket(accessToken, username);
 			} catch (error) {
 				console.error('Error during login or WebSocket connection:', error);
 			}
@@ -48,10 +51,11 @@
 
 		document.getElementById('logout-button').addEventListener('click', function() {
 			localStorage.removeItem('accessToken');
+			localStorage.removeItem('username');
 			location.reload();
 		});
 
-		function connectWebSocket(accessToken) {
+		function connectWebSocket(accessToken, username) {
 			const userList = document.getElementById('user-list');
 			const socket = new WebSocket(`ws://localhost:8002/ws/lobby/`, [`Bearer_${accessToken}`]);
 
@@ -61,9 +65,17 @@
 					userList.innerHTML = '';
 					data.users.forEach(user => {
 						const li = document.createElement('li');
-						li.textContent = user;
+						li.textContent = `${user.username} (ID: ${user.id})`;
+						const inviteButton = document.createElement('button');
+						inviteButton.textContent = 'Invite';
+						inviteButton.onclick = function() {
+							sendInvite(user.id, socket);
+						};
+						li.appendChild(inviteButton);
 						userList.appendChild(li);
 					});
+				} else if (data.type === 'invite_code') {
+					displayInviteCode(data.invite_code);
 				}
 			};
 
@@ -71,6 +83,8 @@
 				console.log('WebSocket connection established');
 				document.getElementById('login-form').style.display = 'none';
 				document.getElementById('logout-button').style.display = 'block';
+				document.getElementById('username-display').textContent = `Logged in as: ${username}`;
+				document.getElementById('username-display').style.display = 'block';
 			};
 
 			socket.onclose = function() {
@@ -78,10 +92,21 @@
 			};
 		}
 
+		function sendInvite(inviteeId, socket) {
+			socket.send(JSON.stringify({
+				invitee_id: inviteeId
+			}));
+		}
+
+		function displayInviteCode(inviteCode) {
+			alert(`Invite code: ${inviteCode}`);
+		}
+
 		window.onload = function() {
 			const accessToken = localStorage.getItem('accessToken');
-			if (accessToken) {
-				connectWebSocket(accessToken);
+			const username = localStorage.getItem('username');
+			if (accessToken && username) {
+				connectWebSocket(accessToken, username);
 			}
 		};
 	</script>
