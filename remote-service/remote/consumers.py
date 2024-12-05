@@ -11,27 +11,21 @@ REDIS_URL = f"redis://{host}:{port}"
 
 games = {}
 games_loop_task = None
+games_lock = asyncio.Lock()
 
 async def games_loop():
 	while True:
 		for game in games.values():
+			# print(f'game: {game.group_name} || status: {game.status}')
 			if game.status:
 				# print(f'active: {game.group_name}')
 				await game.update()
 		await asyncio.sleep(0.016)  # Adjust the sleep time as needed
 
-async def games_send_data_loop():
-	while True:
-		for game in games.values():
-			if game.status:
-				# print(f'active: {game.group_name}')
-				await game.update()
-		await asyncio.sleep(0.5)  # Adjust the sleep time as needed
-
-
 class PongConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		global games_loop_task
+		# print(dir(self))
 		self.room_name = self.scope['url_route']['kwargs']['room_name']
 		self.group_name = f'pong_{self.room_name}'
 		print(f"Connecting to group: {self.group_name}")
@@ -42,36 +36,37 @@ class PongConsumer(AsyncWebsocketConsumer):
 		)
 		await self.accept()
 
-		if self.group_name not in games:
-			games[self.group_name] = Game(self.group_name)
-			self.role = 0
-		else :
-			self.role = 1
-		
-		if games_loop_task is None:
-			games_loop_task = asyncio.create_task(games_loop())
-			print("Started games loop task")
-		# print(f'glob var game: {games_loop_task}')
+		async with games_lock:
+			if self.group_name not in games:
+				games[self.group_name] = Game(self.group_name)
+				self.role = 0
+			else :
+				self.role = 1
+			
+			if games_loop_task is None:
+				games_loop_task = asyncio.create_task(games_loop())
+				print("Started games loop task")
 
-		games[self.group_name].add_player(Player(self.role))
-		# if len(games[self.group_name].players) == 2:
-		# 	await games[self.group_name].start()
-
+			await games[self.group_name].add_player(Player(self.role))
 
 	async def disconnect(self, close_code):
-		games[self.group_name].remove_player(self.role)
-		# games[self.group_name].end()
-		if len(games[self.group_name].players) == 0:
-			del games[self.group_name]
+		async with games_lock:
+		# print(f'Disconnecting from group: {self.group_name}')
+		# if self.group_name in games:
+			tmp = len(games[self.group_name].players)
+			await games[self.group_name].remove_player(self.role)
+			print(f'my_name: {self.role} ||len before remove: {tmp} || len after remove: {len(games[self.group_name].players)}')
 
-		# await self.channel_layer.group_send(
-		# 	self.group_name,{'type': 'game_ended'})
-		await self.channel_layer.group_send(
-			self.group_name,{'type': 'player_disconnected'})
+			await games[self.group_name].end()
+			if len(games[self.group_name].players) == 0:
+				del games[self.group_name]
+				print(f"Deleted game: {self.group_name}")
 
-		await self.channel_layer.group_discard(
-			self.group_name,self.channel_name)
-		
+
+
+			await self.channel_layer.group_discard(
+				self.group_name,self.channel_name)
+
 
 	async def receive(self, text_data):
 		try:
@@ -106,32 +101,22 @@ class PongConsumer(AsyncWebsocketConsumer):
 		game = games[self.group_name]
 		direction = data['direction']
 		game.players[self.role].direction += 0.5 if direction == 'up' else -0.5
-		print(f'player direction: {game.players[self.role].direction}')
 
 	async def handle_start_game(self, data):
 		print(f'game started: {self.group_name}')
 		await games[self.group_name].start()
-		await self.channel_layer.group_send(
-			self.group_name,
-			{
-				'type': 'start_game',
-			}
-		)
+		# await self.channel_layer.group_send(
+		# 	self.group_name,
+		# 	{
+		# 		'type': 'start_game',
+		# 	}
+		# )
 
 	async def handle_end_game(self, data):
 		await self.channel_layer.group_send(
 			self.group_name,
 			{
 				'type': 'game_ended',
-				'data': data
-			}
-		)
-
-	async def handle_score_update(self, data):
-		await self.channel_layer.group_send(
-			self.group_name,
-			{
-				'type': 'score_updated',
 				'data': data
 			}
 		)
@@ -166,7 +151,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 	async def player_disconnected(self, event):
 		if self.role == 1:
 			self.role = 0
-		await self.assign_role(event)
+		# await self.assign_role(event)
 
 	async def assign_role(self, event):
 		await self.send(text_data=json.dumps({
@@ -189,12 +174,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 	async def game_reset(self, event):
 		await self.send(text_data=json.dumps({
 			'event': 'game_reset',
-			'data': event['data']
-		}))
-
-	async def score_updated(self, event):
-		await self.send(text_data=json.dumps({
-			'event': 'score_updated',
 			'data': event['data']
 		}))
 

@@ -87,12 +87,16 @@
                 ball.position.y = message.data.ball.y;
                 paddle1.position.y = message.data.players.left.pos.y;
                 paddle2.position.y = message.data.players.right.pos.y;
-                // if (scoreLeft !== message.data.left || scoreRight !== message.data.right) {
-                //     scoreLeft = message.data.left.score;
-                //     scoreRight = message.data.right.score;
-                //     document.getElementById('score-left').textContent = scoreLeft;
-                //     document.getElementById('score-right').textContent = scoreRight;
-                // }
+                if (scoreLeft !== message.data.left || scoreRight !== message.data.right) {
+
+                    document.getElementById('score-left').textContent = '';
+                    document.getElementById('score-right').textContent = '';
+                    
+                    scoreLeft = message.data.players.left.score;
+                    scoreRight = message.data.players.right.score;
+                    document.getElementById('score-left').textContent = scoreLeft;
+                    document.getElementById('score-right').textContent = scoreRight;
+                    }
             }
             // if (message.event === 'score_updated') {
             // }
