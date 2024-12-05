@@ -13,15 +13,7 @@ export class Settings {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
 
-        // Add environment map
-        // const environment = new THREE.RoomEnvironment();
-        // const pmremGenerator = new THREE.PMREMGenerator(this.renderer);
-        // const envMapTexture = pmremGenerator.fromScene(environment);
-        // this.scene.environment = envMapTexture.texture;
-        // pmremGenerator.dispose();
-        // Load the background texture
-        // this.backgroundTexture = new THREE.TextureLoader().load('texture/sky.jpg');
-        // this.scene.background = new THREE.Color(0x191919);
+
         const rgbeLoader = new THREE.RGBELoader();
         rgbeLoader.load('../texture/royal_esplanade_4k.hdr', ( texture ) => {
 
@@ -66,18 +58,15 @@ export class Settings {
         this.player2Positions = Array(this.lineLength).fill().map((_, index) => ({ x: this.platformWidth - 1, z: centerZ + index }));
 
         ///////////////////////////////////visual settings////////////////////////////////////
-        // this.camera.position.y = Math.max(this.platformWidth, this.platformLength) * 0.8;
-        this.camera.position.y = 3;
-        // this.camera.position.z = Math.max(this.platformWidth, this.platformLength) * 1;
-        this.camera.position.z = 23.5;
-        this.camera.lookAt(0, 3, 6);
+        this.camera.position.y = 2.7;
+        this.camera.position.z = 22.75;
+        this.camera.rotation.x = -0.97;
+        this.camera.lookAt(0, this.camera.position.y, 6);
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         this.scene.add(ambientLight);
         this.directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        // directionalLight.position.set(1, 1, 1);
         this.directionalLight.position.set(5, 3, 23.5);
-        // directionalLight.target.position.set(0, 0, 0);
         this.scene.add(this.directionalLight);
     }
     destroy() {

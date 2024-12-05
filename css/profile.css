@@ -127,6 +127,11 @@ td, th {
 	justify-content: space-between;
 }
 
+.friend-item img {
+    width: 50px;
+    height: 50px;
+}
+
 .friend-list {
 	max-height: 1000px;
 	overflow-y: auto;

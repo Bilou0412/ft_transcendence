@@ -23,10 +23,8 @@ let MonitorDisplayTexture = null;
 export function initMonitor(){
 	const glftLoader = new THREE.GLTFLoader();
     glftLoader.load('./models/dell_monitor/scene.gltf', (gltfScene) => {
-        // Set position and scale of the model
-        // gltfScene.scene.position.y = -0.5;
         gltfScene.scene.position.z = settings.platformLength / 2 + 6;
-        gltfScene.scene.scale.set(0.01, 0.01, 0.01);
+        gltfScene.scene.scale.set(0.01, 0.0086, 0.01);
 
         settings.scene.add(gltfScene.scene);
 
@@ -76,7 +74,7 @@ export function focusGame() {
 
 export function focusMonitor() {
 	const monitorView = {
-		position: { x: 0, y: 3.2, z: 23 },
+		position: { x: 0, y: 2.7, z: 22.75 },
 		rotation: { x: -0, y: 0, z: 0 }
 	};
 	

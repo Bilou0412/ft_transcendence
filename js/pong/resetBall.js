@@ -33,7 +33,3 @@ export async function resetBall() {
 	// settings.updateBallVelocity(new THREE.Vector3(settings.ballSpeed * (settings.ServSide == 1 ? -1 : 1), 0, 0));
 
 }
-
-export function pauseGame() {
-
-}

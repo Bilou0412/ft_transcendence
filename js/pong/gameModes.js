@@ -2,7 +2,6 @@ import { settings, startGame } from "./main.js";
 import { clearBall } from "./ball_init.js";
 import { clearSides, clearMiddle } from "./roundedBox.js";
 import { clearScoreboard } from "./display.js";
-// import { clearModes, gameModesDisplay } from "./monitor_display.js";
 
 export function gameMode(length, width, line){
 	clearBall();
