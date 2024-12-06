@@ -38,7 +38,7 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
         
-        const paddleWidth = 1, paddleHeight = 5;
+        const paddleWidth = 1, paddleHeight = 7;
         const geometry = new THREE.BoxGeometry(paddleWidth, paddleHeight, 1);
         const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
         const paddle1 = new THREE.Mesh(geometry, material);

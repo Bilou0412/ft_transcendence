@@ -105,12 +105,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 	async def handle_start_game(self, data):
 		print(f'game started: {self.group_name}')
 		await games[self.group_name].start()
-		# await self.channel_layer.group_send(
-		# 	self.group_name,
-		# 	{
-		# 		'type': 'start_game',
-		# 	}
-		# )
 
 	async def handle_end_game(self, data):
 		await self.channel_layer.group_send(

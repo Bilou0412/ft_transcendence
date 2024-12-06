@@ -114,6 +114,50 @@ class Game:
 		self.players[1].pos = {'x': 10, 'y': 0}
 		# self.score = {'left': 0, 'right': 0}
 
+	def check_collision(self, paddle):
+		# Ball properties
+		ball_x, ball_y = self.ball.pos['x'], self.ball.pos['y']
+		ball_radius = 0.5  # Assuming the self.ball has a radius of 1
+	
+		# Rectangle properties
+		rect_x, rect_y = paddle['x'], paddle['y']
+		rect_width, rect_height = 1, 7
+	
+		# Check collision with rectangle boundaries
+		if (rect_x - rect_width / 2 <= ball_x + ball_radius <= rect_x + rect_width / 2 or
+    		rect_x - rect_width / 2 <= ball_x - ball_radius <= rect_x + rect_width / 2) and \
+    		(rect_y - rect_height / 2 <= ball_y + ball_radius <= rect_y + rect_height / 2 or
+    		rect_y - rect_height / 2 <= ball_y - ball_radius <= rect_y + rect_height / 2):
+			return True
+		return False
+			# return False
+	
+	def handle_collision(self, paddle):
+		if self.check_collision(paddle):
+			# Adjust ball position to prevent it from glitching into the paddle
+			ball_x, ball_y = self.ball.pos['x'], self.ball.pos['y']
+			ball_radius = 0.5  # Assuming the ball has a radius of 0.5
+
+			rect_x, rect_y = paddle['x'], paddle['y']
+			rect_width, rect_height = 1, 7  # Assuming the paddle is 1 unit wide and 7 units tall
+
+			# Determine the side of the collision and adjust position
+        # Determine the side of the collision and adjust position
+			if ball_x < rect_x - rect_width / 2:
+				self.ball.pos['x'] = rect_x - rect_width / 2 - ball_radius
+				self.ball.direction['x'] *= -1
+			elif ball_x > rect_x + rect_width / 2:
+				self.ball.pos['x'] = rect_x + rect_width / 2 + ball_radius
+				self.ball.direction['x'] *= -1
+
+			if ball_y < rect_y - rect_height / 2:
+				self.ball.pos['y'] = rect_y - rect_height / 2 - ball_radius
+				self.ball.direction['y'] *= -1
+			elif ball_y > rect_y + rect_height / 2:
+				self.ball.pos['y'] = rect_y + rect_height / 2 + ball_radius
+				self.ball.direction['y'] *= -1
+
+
 	async def update (self):
 		try:
 			self.ball.move()
@@ -127,14 +171,8 @@ class Game:
 			if self.ball.pos['y'] <= -15 or self.ball.pos['y'] >= 15:
 				self.ball.direction['y'] *= -1
 
-			# paddles collision
-			if self.ball.pos['x'] <= left_paddle['x'] + 1 and \
-				self.ball.pos['y'] <= left_paddle['y'] + 3 and \
-				self.ball.pos['y'] >= left_paddle['y'] - 3 or \
-				self.ball.pos['x'] >= right_paddle['x'] - 1 and \
-				self.ball.pos['y'] <= right_paddle['y'] + 3 and \
-				self.ball.pos['y'] >= right_paddle['y'] - 3 :
-				self.ball.direction['x'] *= -1
+			self.handle_collision(left_paddle)
+			self.handle_collision(right_paddle)
 
 			# score
 			if self.ball.pos['x'] <= left_paddle['x'] - 1:

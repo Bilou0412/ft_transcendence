@@ -13,7 +13,7 @@ services:
       - "8000:8000"
     volumes:
       - .:/app
-      - ./docker:/app/docker
+      # - ./docker:/app/docker
     environment:
       - PYTHONUNBUFFERED=1
       - DEBUG=True
@@ -22,7 +22,7 @@ services:
     networks:
       my_network:
         aliases:
-          - chat
+          - remote
     entrypoint: ["/app/docker/entrypoint_dev.sh"]
     depends_on:
       - redis

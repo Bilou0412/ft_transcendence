@@ -1,53 +1,48 @@
 # Variables
-COMPOSE = docker-compose
-
-# Find all service directories
+COMPOSE = docker compose
 SERVICE_DIRS := $(wildcard *-service)
+NETWORK = my_network
 
-# Colors for better readability
+# Colors
 GREEN = \033[0;32m
 RED = \033[0;31m
 NC = \033[0m
 
 # Phony targets
-.PHONY: help up down logs clean
+.PHONY: help up down logs clean create-network logs-terminator
 
 help:
 	@echo "$(GREEN)Available commands:$(NC)"
-	@echo " make up   - Start all services"
-	@echo " make down - Stop all services"
-	@echo " make logs - View logs"
-	@echo " make clean - Remove containers and volumes"
+	@echo " make up             - Start all services"
+	@echo " make down           - Stop all services"
+	@echo " make logs           - View logs"
+	@echo " make logs-terminator - View logs in Terminator (one pane per service)"
+	@echo " make clean          - Remove containers and volumes"
 
-up:
-	@if ! docker network ls --format '{{.Name}}' | grep -q "^my_network$$"; then \
-		echo "$(GREEN)Creating network my_network...$(NC)"; \
-		docker network create my_network; \
+create-network:
+	@if ! docker network ls --format '{{.Name}}' | grep -q "^$(NETWORK)$$"; then \
+		echo "$(GREEN)Creating network $(NETWORK)...$(NC)"; \
+		docker network create $(NETWORK); \
 	fi
+
+up: create-network
 	@echo "$(GREEN)Starting services...$(NC)"
-	@for dir in $(SERVICE_DIRS); do \
-		(cd $$dir && docker compose up)& \
-	done
-	@wait
-	
+	@$(foreach dir, $(SERVICE_DIRS), \
+		(echo "Starting $(dir)"; cd $(dir) && $(COMPOSE) up -d) &&) true
+
 down:
 	@echo "$(GREEN)Stopping services...$(NC)"
-	@for dir in $(SERVICE_DIRS); do \
-		echo "Stopping $$dir"; \
-		(cd $$dir && docker compose down); \
-	done
+	@$(foreach dir, $(SERVICE_DIRS), \
+		(echo "Stopping $(dir)"; cd $(dir) && $(COMPOSE) down) &&) true
 
 logs:
-	@echo "$(GREEN)Showing logs for all services...$(NC)"
-	@for dir in $(SERVICE_DIRS); do \
-		echo "Logs for $$dir:"; \
-		(cd $$dir && docker compose logs -f); \
-	done
+	@echo "$(GREEN)Opening GNOME Terminal with tabs for all services...$(NC)"
+	@$(foreach dir, $(SERVICE_DIRS), \
+  		(gnome-terminal -- bash -c "cd $(dir) && docker compose logs -f; exec bash" &) &&) true
 
-clean:
+
+clean: down
 	@echo "$(RED)Cleaning up...$(NC)"
-	@for dir in $(SERVICE_DIRS); do \
-		echo "Cleaning $$dir"; \
-		(cd $$dir && docker compose down -v --remove-orphans); \
-	done
-	docker network rm my_network
+	@$(foreach dir, $(SERVICE_DIRS), \
+		(echo "Cleaning $(dir)"; cd $(dir) && $(COMPOSE) down -v --remove-orphans) &&) true
+	@docker network rm $(NETWORK) || true
