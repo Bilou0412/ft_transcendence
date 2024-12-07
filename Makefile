@@ -38,7 +38,8 @@ down:
 logs:
 	@echo "$(GREEN)Opening GNOME Terminal with tabs for all services...$(NC)"
 	@$(foreach dir, $(SERVICE_DIRS), \
-  		(gnome-terminal -- bash -c "cd $(dir) && docker compose logs -f; exec bash" &) &&) true
+		(cd $(dir) && $(COMPOSE) logs -f) &) true
+  		# (gnome-terminal -- bash -c "cd $(dir) && docker compose logs -f; exec bash" &) &&) true
 
 
 clean: down

@@ -9,13 +9,14 @@ class Player:
 		# self.id = id
 		self.pos = {'x': 0, 'y': 0}
 		self.direction = 0
+		self.dimension = {'w': 0.6, 'h': 7}
 
 	def move (self):
 		self.pos['y'] += self.direction
-		if self.pos['y'] > 15:
-			self.pos['y'] = 15
-		if self.pos['y'] < -15:
-			self.pos['y'] = -15
+		if self.pos['y'] + 3.5 > 15:
+			self.pos['y'] = 15 - 3.5
+		if self.pos['y'] - 3.5 < -15:
+			self.pos['y'] = -15 + 3.5
 
 class Ball:
 	def __init__ (self):
@@ -83,14 +84,14 @@ class Game:
 				}
 			}
 		)
-		self.score = {'left': 0, 'right': 0}
+		self.score['left'] = self.score['right'] = 0
 
 	async def send_data (self, data):
 		await get_channel_layer().group_send(
 			self.group_name, data)
 
 	async def send_update(self):
-		print('sending update')
+		# print('sending update')
 		await self.send_data( {
 				'type': 'game_update',
 				'data': {
@@ -112,7 +113,6 @@ class Game:
 		self.ball.direction = {'x': random.choice([-0.1, 0.1]), 'y': random.choice([-0.1, 0.1])}
 		self.players[0].pos = {'x': -10, 'y': 0}
 		self.players[1].pos = {'x': 10, 'y': 0}
-		# self.score = {'left': 0, 'right': 0}
 
 	def check_collision(self, paddle):
 		# Ball properties
@@ -120,14 +120,14 @@ class Game:
 		ball_radius = 0.5  # Assuming the self.ball has a radius of 1
 	
 		# Rectangle properties
-		rect_x, rect_y = paddle['x'], paddle['y']
-		rect_width, rect_height = 1, 7
+		rect_x, rect_y = paddle.pos['x'], paddle.pos['y']
+		rect_width, rect_height = paddle.dimension['w'], paddle.dimension['h']
 	
 		# Check collision with rectangle boundaries
-		if (rect_x - rect_width / 2 <= ball_x + ball_radius <= rect_x + rect_width / 2 or
-    		rect_x - rect_width / 2 <= ball_x - ball_radius <= rect_x + rect_width / 2) and \
-    		(rect_y - rect_height / 2 <= ball_y + ball_radius <= rect_y + rect_height / 2 or
-    		rect_y - rect_height / 2 <= ball_y - ball_radius <= rect_y + rect_height / 2):
+		if (rect_x - rect_width * 0.5 <= ball_x + ball_radius <= rect_x + rect_width * 0.5 or
+    		rect_x - rect_width * 0.5 <= ball_x - ball_radius <= rect_x + rect_width * 0.5) and \
+    		(rect_y - rect_height * 0.5 <= ball_y + ball_radius <= rect_y + rect_height * 0.5 or
+    		rect_y - rect_height * 0.5 <= ball_y - ball_radius <= rect_y + rect_height * 0.5):
 			return True
 		return False
 			# return False
@@ -138,11 +138,10 @@ class Game:
 			ball_x, ball_y = self.ball.pos['x'], self.ball.pos['y']
 			ball_radius = 0.5  # Assuming the ball has a radius of 0.5
 
-			rect_x, rect_y = paddle['x'], paddle['y']
-			rect_width, rect_height = 1, 7  # Assuming the paddle is 1 unit wide and 7 units tall
+			rect_x, rect_y = paddle.pos['x'], paddle.pos['y']
+			rect_width, rect_height = paddle.dimension['w'], paddle.dimension['h']
 
 			# Determine the side of the collision and adjust position
-        # Determine the side of the collision and adjust position
 			if ball_x < rect_x - rect_width / 2:
 				self.ball.pos['x'] = rect_x - rect_width / 2 - ball_radius
 				self.ball.direction['x'] *= -1
@@ -160,12 +159,13 @@ class Game:
 
 	async def update (self):
 		try:
-			self.ball.move()
-			self.players[0].move()
-			self.players[1].move()
+			left_paddle = self.players[0]
+			right_paddle = self.players[1]
 
-			left_paddle = self.players[0].pos
-			right_paddle = self.players[1].pos
+			self.ball.move()
+			left_paddle.move()
+			right_paddle.move()
+
 			
 			# walls collision 
 			if self.ball.pos['y'] <= -15 or self.ball.pos['y'] >= 15:
@@ -175,23 +175,20 @@ class Game:
 			self.handle_collision(right_paddle)
 
 			# score
-			if self.ball.pos['x'] <= left_paddle['x'] - 1:
+			if self.ball.pos['x'] <= left_paddle.pos['x'] - 1:
 				self.score['left'] += 1
 				self.reset()
-			if self.ball.pos['x'] >= right_paddle['x'] + 1:
+			if self.ball.pos['x'] >= right_paddle.pos['x'] + 1:
 				self.score['right'] += 1
 				self.reset()
 			
-			self.players[0].direction = 0
-			self.players[1].direction = 0
+			left_paddle.direction = 0
+			right_paddle.direction = 0
 
 			await self.send_update()
 
-			# print(f'scores update: left: {self.players[0].score}, right: {self.players[1].score}')
 			if self.score['left'] == 10 or self.score['right'] == 10:
-				# print('game ended')
 				await self.end()
-				self.reset()
 		
 		except Exception as e:
 			print(f'update Error: {str(e)}')

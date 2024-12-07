@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pong Game with Three.js</title>
     <style>
-        body {
+        html, body {
             margin: 0;
+            height: 100%;
+            background-color: pink; /* Outside background color */
         }
         
         canvas {
@@ -22,9 +23,15 @@
             font-size: 24px;
             font-family: Arial, sans-serif;
         }
-        </style>
+        #start-game-button {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+        }
+    </style>
 </head>
-
 <body>
     <div id="scoreboard">
         <span id="score-left">0</span> - <span id="score-right">0</span>
@@ -37,37 +44,34 @@
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
-        
-        const paddleWidth = 1, paddleHeight = 7;
+
+        // Create the inside background
+        const backgroundGeometry = new THREE.PlaneGeometry(20, 30);
+        const backgroundMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff }); // Blue color
+        const background = new THREE.Mesh(backgroundGeometry, backgroundMaterial);
+        background.position.z = -1; // Position it behind the game objects
+        scene.add(background);
+
+        const paddleWidth = 0.6, paddleHeight = 7;
         const geometry = new THREE.BoxGeometry(paddleWidth, paddleHeight, 1);
         const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
         const paddle1 = new THREE.Mesh(geometry, material);
         const paddle2 = new THREE.Mesh(geometry, material);
         scene.add(paddle1);
         scene.add(paddle2);
-        
+
         paddle1.position.x = -10;
         paddle2.position.x = 10;
-        
+
         const ballGeometry = new THREE.SphereGeometry(0.5, 32, 32);
         const ballMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
         const ball = new THREE.Mesh(ballGeometry, ballMaterial);
         scene.add(ball);
 
-        ball.position.set(0, 0, 0);
-        let ballDirection = { x: 0.1, y: 0.1 };
-
-        camera.position.z = 20;
+        camera.position.z = 30;
         let playerRole = null;
-
-        let paddle1Direction = 0;
-        let paddle2Direction = 0;
-        const ws = new WebSocket('ws://localhost:8000/ws/pong/key/');
-
+        const ws = new WebSocket('ws://172.20.205.104:8000/ws/pong/key/');
         let gameStarted = false;
-
-        let winner;
-
         let scoreLeft = 0;
         let scoreRight = 0;
 
@@ -87,12 +91,12 @@
                 ball.position.y = message.data.ball.y;
                 paddle1.position.y = message.data.players.left.pos.y;
                 paddle2.position.y = message.data.players.right.pos.y;
-                if (scoreLeft !== message.data.left || scoreRight !== message.data.right) {
+                if (scoreLeft !== message.data.players.left.score || scoreRight !== message.data.players.right.score) {
                     scoreLeft = message.data.players.left.score;
                     scoreRight = message.data.players.right.score;
                     document.getElementById('score-left').textContent = scoreLeft;
                     document.getElementById('score-right').textContent = scoreRight;
-                    }
+                }
             }
             if (message.event === 'start_game') {
                 gameStarted = true;
@@ -105,7 +109,6 @@
                 } else if (message.data.winner !== 'unfinished') {
                     alert('You lost!');
                 }
-
                 resetGame();
                 console.log('Game ended');
             }
@@ -130,66 +133,57 @@
 
         let keysPressed = {};
 
-        document.addEventListener('keydown', (event) => {
+        window.addEventListener('keydown', function (event) {
             keysPressed[event.key] = true;
+            sendPaddleMovement();
         });
 
-        document.addEventListener('keyup', (event) => {
+        window.addEventListener('keyup', function (event) {
             keysPressed[event.key] = false;
+            sendPaddleMovement();
         });
 
-        function updatePaddlePosition() {
-            let new_direction = 0;
-            if (keysPressed['w']) {
-                new_direction = "up";
-            } else if (keysPressed['s']) {
-                new_direction = "down";
-            }
-        
-            if (new_direction !== 0) {
-                ws.send(JSON.stringify({
-                    event: 'paddle_moved',
-                    data: {
-                        player: playerRole,
-                        direction: new_direction
-                    }
-                }));
+        window.addEventListener('blur', function () {
+            keysPressed = {};
+            sendPaddleMovement();
+        });
+
+        function sendPaddleMovement() {
+            if (ws.readyState === WebSocket.OPEN) {
+                let direction = 0;
+                if (keysPressed['w']) {
+                    direction = 'up';
+                } else if (keysPressed['s']) {
+                    direction = 'down';
+                }
+                if (direction !== 0) {
+                    ws.send(JSON.stringify({
+                        event: 'paddle_moved',
+                        data: { direction: direction, role: playerRole }
+                    }));
+                }
             }
         }
 
+        setInterval(sendPaddleMovement, 10); // Check and send paddle movement every 100ms
+
         function resetGame() {
-            keysPressed = {};
+            ball.position.set(0, 0, 0);
+            ballDirection = { x: 0.1, y: 0.1 };
+            paddle1.position.y = 0;
+            paddle2.position.y = 0;
+            scoreLeft = 0;
+            scoreRight = 0;
             document.getElementById('score-left').textContent = scoreLeft;
             document.getElementById('score-right').textContent = scoreRight;
         }
 
         function animate() {
             requestAnimationFrame(animate);
-
-            // if (!gameStarted) {
-            //     return;
-            // }
-            console.log(keysPressed)
-            updatePaddlePosition();
             renderer.render(scene, camera);
-            paddle1Direction = 0;
-            paddle2Direction = 0;
         }
+
         animate();
-
-        setInterval(() => {
-            for (let key in keysPressed) {
-                if (keysPressed[key]) {
-                    // If any key is still pressed, reset it
-                    keysPressed[key] = false;
-                }
-            }
-        }, 2000); // Check every second
-
     </script>
-    <div id="scoreboard">
-        <span id="score-left">0</span> - <span id="score-right">0</span>
-    </div>
 </body>
-
 </html>

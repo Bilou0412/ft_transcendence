@@ -93,7 +93,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 			await self.send_error(f'Error: {str(e)}')
 
 	async def handle_paddle_moved(self, data):
-		print(f'self.role: {self.role} || Paddle moved: {data}')
+		# print(f'self.role: {self.role} || Paddle moved: {data}')
 		
 		if games[self.group_name].status == False:
 			return
@@ -176,5 +176,3 @@ class PongConsumer(AsyncWebsocketConsumer):
 			'event': 'unknown_event',
 			'data': event['data']
 		}))
-
-# asyncio.create_task(games_loop())
