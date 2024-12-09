@@ -2,7 +2,7 @@ services:
   db-media:
     image: postgres:13
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - .:/app
       - postgres_data:/var/lib/postgresql/data
@@ -15,7 +15,7 @@ services:
     build:
       context: ./docker
     ports:
-      - "8000:8000"
+      - "8002:8000"
     volumes:
       - .:/app
       - ./docker:/app/docker

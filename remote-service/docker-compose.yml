@@ -1,16 +1,9 @@
 services:
-  redis:
-    image: redis:latest
-    ports:
-      - "6380:6379"
-    networks:
-      - my_network
-
   remote:
     build:
       context: ./docker
     ports:
-      - "8000:8000"
+      - "8003:8000"
     volumes:
       - .:/app
       # - ./docker:/app/docker
@@ -24,8 +17,6 @@ services:
         aliases:
           - remote
     entrypoint: ["/app/docker/entrypoint_dev.sh"]
-    depends_on:
-      - redis
 
 networks:
   my_network:
