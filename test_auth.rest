@@ -2,22 +2,6 @@
 POST http://127.0.0.1:8000/api/auth/login/
 Content-Type: application/json
 
-{
-    "email": "bilel@gmail.com",
-    "password": "Motdepasse12@@",
-    "otp": ""
-}
-
-### Signup
-POST http://127.0.0.1:8000/api/auth/signup/
-Content-Type: application/json
-
-{
-    "username": "jde",
-    "password": "Motdepasse12@@",
-    "password2": "Motdepasse12@@",
-    "email": "jde@gmail.com"
-}
 
 ### Refresh Token
 POST http://127.0.0.1:8000/api/auth/token/refresh/
