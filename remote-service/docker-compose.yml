@@ -1,0 +1,23 @@
+services:
+  remote:
+    build:
+      context: ./docker
+    ports:
+      - "8003:8000"
+    volumes:
+      - .:/app
+      # - ./docker:/app/docker
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DEBUG=True
+    env_file:
+      - .env
+    networks:
+      my_network:
+        aliases:
+          - remote
+    entrypoint: ["/app/docker/entrypoint_dev.sh"]
+
+networks:
+  my_network:
+    external: true
