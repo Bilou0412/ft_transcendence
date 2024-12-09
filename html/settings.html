@@ -3,7 +3,7 @@
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="../css/style.css">
 	<link rel="stylesheet" href="../css/settings.css">
-	<link rel="stylesheet" <link rel="stylesheet" href="xp.css/dist/XP.css" /> />
+	<link rel="stylesheet" href="../css/xp.css/dist/XP.css"/>
 </head>
 
 <body>
@@ -14,45 +14,28 @@
 		</div>
 	</div>
 
-	<div id="main-content">
-		<section class="tabs" style="max-width: 1500px" id = "setting_tabs">
-			<menu role="tablist" aria-label="Sample Tabs">
-			  <button role="tab" aria-selected="true" aria-controls="tab-A">Profile</button>
-			  <button role="tab" aria-controls="tab-B">Pong</button>
-			</menu>
-			<!-- the tab content -->
-			<article role="tabpanel" id="tab-A">
-			  <h3>Profile settings</h3>
-			  <p>
-				Edit profile settings here
-			  </p>
-			  <p>
-				Lorem
-			  </p>
-			</article>
-
-
-			<article role="tabpanel" hidden id="tab-B">
-			  <h3>Pong settings</h3>
-			  <!-- <p>Edit pong settings</p> -->
-			  <fieldset>
-				<legend>Field dimensions</legend>
-				<div class="field-row">
-				  <input id="size10" type="radio" name="fieldset-example2">
-				  <label for="size10">10x30</label>
+	<div class="main-content">
+		<div class="window" id="profileDisplay">
+			<div class="title-bar">
+			  <div class="title-bar-text">Edit Profile</div>
+			</div>
+			<div class="window-body">
+				<div class="profileView">
+					<!-- icon + username -->
 				</div>
-				<div class="field-row">
-				  <input id="size30" type="radio" name="fieldset-example2" checked>
-				  <label for="size30">30x50</label>
+				<div class="editFields">
+					<!-- current sett + edit buttons -->
 				</div>
-				<div class="field-row">
-				  <input id="size50" type="radio" name="fieldset-example2">
-				  <label for="size50">50x70</label>
-				</div>
-			  </fieldset>
-			</article>
-		  </section>
+			</div>
+		</div>
+		<div class="window" id="optionDisplay">
+			<div class="title-bar">
+			  <div class="title-bar-text">Option</div>
+			</div>
+			<div class="window-body">
+				<!-- Options -->
+		</div>
 	</div>
 
-	<script src="../js/router.js"></script>
+	<!-- <script src="../js/router.js"></script> -->
 </body>

@@ -9,15 +9,22 @@
 	font-family: "XP";
 }
 
-
-/* Position tabs at the top of the screen */
-.tabs {
+#profileDisplay {
+    width: 65%;
+    height:90%;
     position: fixed;
-	font-family: "XP";
-    top: 50px; /* Adjust based on title bar height */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Ensure perfect centering */
-    width: calc(100% - 100px); /* Adjust width as needed */
-    max-width: 1500px; /* Maintain original max-width */
-    z-index: 10; /* Ensure it's above other content */
+    top: 50%;
+    left: 34%;
+    transform: translate(-50%, -50%);
+
+}
+
+#optionDisplay {
+    width: 31%; 
+    height: 90%;
+    position: fixed;
+    top: 50%;
+    left: 83%;
+    transform: translate(-50%, -50%);
+
 }

@@ -23,7 +23,7 @@ export async function quitPong() {
         settings = null;
     }
     
-    document.getElementById('root').style.display = 'block';
+    document.getElementById('nav').style.display = 'block';
     document.getElementById('Taskbar').style.display = 'block';
 
     //stop event listeners
@@ -120,7 +120,8 @@ export async function initializeGame() {
     settings.updateTime();
     animate();
     startGame();
-    document.getElementById('root').style.display = 'none';
+    document.getElementById('nav').style.display = 'none';
+    document.getElementById('startButton').style.display = 'none';
     document.getElementById('Taskbar').style.display = 'none';
     focusGame();
 
