@@ -1,16 +1,21 @@
 services:
-  redis:
-    image: redis:latest
+  db-media:
+    image: postgres:13
     ports:
-      - "6380:6379"
+      - "5432:5432"
+    volumes:
+      - .:/app
+      - postgres_data:/var/lib/postgresql/data
+    entrypoint: ["/app/docker/entrypoint_db.sh"]
     networks:
       - my_network
 
-  chat:
+
+  media:
     build:
       context: ./docker
     ports:
-      - "8002:8000"
+      - "8000:8000"
     volumes:
       - .:/app
       - ./docker:/app/docker
@@ -22,10 +27,10 @@ services:
     networks:
       my_network:
         aliases:
-          - chat
+          - media
     entrypoint: ["/app/docker/entrypoint_dev.sh"]
     depends_on:
-      - redis
+      - db-media
 
 volumes:
   postgres_data:
