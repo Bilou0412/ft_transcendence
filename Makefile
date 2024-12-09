@@ -44,4 +44,3 @@ clean: down
 	@echo "$(RED)Cleaning up...$(NC)"
 	@$(foreach dir, $(SERVICE_DIRS), \
 		(echo "Cleaning $(dir)"; cd $(dir) && $(COMPOSE) down -v --remove-orphans) &&) true
-	@docker network rm $(NETWORK) || true
