@@ -1,0 +1,49 @@
+
+# Upload nouvel utilisateur
+POST http://127.0.0.1:8001/api/media/upload/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxMDc3ODA4LCJpYXQiOjE3MzEwNzQyMDgsImp0aSI6IjZiM2U3MmZlOTAzZjQwYjNhYTM0ZTllN2U3ZmM1NGViIiwidXNlcl9pZCI6Mn0.EXU0BlwyUOw14owoObelpL1R8AdoKErT7kiHU6TQhow
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="image"; filename="photo_profil.jpg"
+Content-Type: image/jpeg
+
+< /mnt/nfs/homes/soutin/Pictures/spider_man_meme.jpg
+------WebKitFormBoundary--
+###
+
+# Remplacer image
+POST http://127.0.0.1:8001/api/media/upload/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxMDc3ODA4LCJpYXQiOjE3MzEwNzQyMDgsImp0aSI6IjZiM2U3MmZlOTAzZjQwYjNhYTM0ZTllN2U3ZmM1NGViIiwidXNlcl9pZCI6Mn0.EXU0BlwyUOw14owoObelpL1R8AdoKErT7kiHU6TQhow
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="image"; filename="photo_profil.gif"
+Content-Type: image/gif
+
+< /mnt/nfs/homes/soutin/Pictures/non-mario.gif
+------WebKitFormBoundary--
+###
+
+# Upload sans image
+POST http://localhost:8001/api/media/upload/
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxMDc3ODA4LCJpYXQiOjE3MzEwNzQyMDgsImp0aSI6IjZiM2U3MmZlOTAzZjQwYjNhYTM0ZTllN2U3ZmM1NGViIiwidXNlcl9pZCI6Mn0.EXU0BlwyUOw14owoObelpL1R8AdoKErT7kiHU6TQhow
+
+------WebKitFormBoundary--
+###
+
+# Get image d un mec avec image
+GET http://127.0.0.1:8001/api/media/profile-images/bi/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxMDc3ODcwLCJpYXQiOjE3MzEwNzQyNzAsImp0aSI6IjdhMGI2YTQ0NTg0NzRiYTI5MmEzMTZlOTliMzNlYWI1IiwidXNlcl9pZCI6M30.lmXXNJsV3L_BV9ef1DR_DoW60T-U4-k9nzSnBtXw3hY
+###
+
+# Get image d un mec sans image
+GET http://127.0.0.1:8001/api/media/profile-images/jd/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwOTA1MzM2LCJpYXQiOjE3MzA5MDE3MzYsImp0aSI6ImY0YjU3ZjgyYWYzYTQ4YjRhOGNjYzMyMTEzYmI5OWY5IiwidXNlcl9pZCI6M30.4ungZg6WDGDhF_Y2Vhavz3p_VgAlqc8xsPFPTmqgqrE
+###
+
+# Delete image
+DELETE  http://127.0.0.1:8001/api/media/delete
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMwOTA1MzM2LCJpYXQiOjE3MzA5MDE3MzYsImp0aSI6ImY0YjU3ZjgyYWYzYTQ4YjRhOGNjYzMyMTEzYmI5OWY5IiwidXNlcl9pZCI6M30.4ungZg6WDGDhF_Y2Vhavz3p_VgAlqc8xsPFPTmqgqrE
+###
