@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Connected Users</title>
+</head>
+<body>
+	<h1>Connected Users</h1>
+	<form id="login-form">
+		<label for="email">Email:</label>
+		<input type="email" id="email" name="email" required>
+		<br>
+		<label for="password">Password:</label>
+		<input type="password" id="password" name="password" required>
+		<br>
+		<button type="submit">Login</button>
+	</form>
+	<button id="logout-button" style="display:none;">Logout</button>
+	<h2 id="username-display" style="display:none;"></h2>
+	<ul id="user-list"></ul>
+
+	<script>
+		document.getElementById('login-form').addEventListener('submit', async function(event) {
+			event.preventDefault();
+			const email = document.getElementById('email').value;
+			const password = document.getElementById('password').value;
+
+			try {
+				const response = await fetch('http://127.0.0.1:8000/api/auth/login/', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						email: email,
+						password: password,
+						otp: ''
+					})
+				});
+				const data = await response.json();
+				const accessToken = data.access;
+				const username = data.user.username;
+				localStorage.setItem('accessToken', accessToken);
+				localStorage.setItem('username', username);
+				connectWebSocket(accessToken, username);
+			} catch (error) {
+				console.error('Error during login or WebSocket connection:', error);
+			}
+		});
+
+		document.getElementById('logout-button').addEventListener('click', function() {
+			localStorage.removeItem('accessToken');
+			localStorage.removeItem('username');
+			location.reload();
+		});
+
+		function connectWebSocket(accessToken, username) {
+			const userList = document.getElementById('user-list');
+			const socket = new WebSocket(`ws://localhost:8002/ws/lobby/`, [`Bearer_${accessToken}`]);
+
+			socket.onmessage = function(event) {
+				const data = JSON.parse(event.data);
+				if (data.type === 'list_user_connected') {
+					userList.innerHTML = '';
+					data.users.forEach(user => {
+						const li = document.createElement('li');
+						li.textContent = `${user.username} (ID: ${user.id})`;
+						const inviteButton = document.createElement('button');
+						inviteButton.textContent = 'Invite';
+						inviteButton.onclick = function() {
+							sendInvite(user.id, socket);
+						};
+						li.appendChild(inviteButton);
+						userList.appendChild(li);
+					});
+				} else if (data.type === 'invite_code') {
+					displayInviteCode(data.invite_code);
+				}
+			};
+
+			socket.onopen = function() {
+				console.log('WebSocket connection established');
+				document.getElementById('login-form').style.display = 'none';
+				document.getElementById('logout-button').style.display = 'block';
+				document.getElementById('username-display').textContent = `Logged in as: ${username}`;
+				document.getElementById('username-display').style.display = 'block';
+			};
+
+			socket.onclose = function() {
+				console.log('WebSocket connection closed');
+			};
+		}
+
+		function sendInvite(inviteeId, socket) {
+			socket.send(JSON.stringify({
+				invitee_id: inviteeId
+			}));
+		}
+
+		function displayInviteCode(inviteCode) {
+			alert(`Invite code: ${inviteCode}`);
+		}
+
+		window.onload = function() {
+			const accessToken = localStorage.getItem('accessToken');
+			const username = localStorage.getItem('username');
+			if (accessToken && username) {
+				connectWebSocket(accessToken, username);
+			}
+		};
+	</script>
+</body>
+</html>
