@@ -10,3 +10,5 @@ sqlparse==0.5.1
 typing_extensions==4.12.2
 drf-yasg
 requests
+channels
+channels-redis

@@ -52,15 +52,26 @@ logs:
 		(gnome-terminal -- bash -c "cd $(dir) && docker compose logs -f; exec bash" &) &&) true
 
 
-clean: down
+clean:
 	@echo "$(RED)Cleaning up...$(NC)"
 	@$(foreach dir, $(SERVICE_DIRS), \
-        (echo "Cleaning $(dir)"; cd $(dir) && $(COMPOSE) down -v --remove-orphans) &&) true
-	@if docker network ls --format '{{.Name}}' | grep -q "^$(NETWORK)$$"; then \
+        (echo "Cleaning $(dir)"; cd $(dir) && $(COMPOSE) down -v --remove-orphans || true) &&) true
+	@if docker ps -a --format '{{.Names}}' | grep -q "^$(REDIS)$$"; then \
+		echo "$(RED)Removing Redis container...$(NC)"; \
+		docker stop $(REDIS) && docker rm $(REDIS); \
+	fi
+	@if docker network inspect $(NETWORK) >/dev/null 2>&1; then \
+		echo "$(RED)Checking for containers connected to $(NETWORK)...$(NC)"; \
+		CONTAINERS=$$(docker network inspect -f '{{range .Containers}}{{.Name}} {{end}}' $(NETWORK)); \
+		if [ -n "$$CONTAINERS" ]; then \
+			echo "$(RED)Force disconnecting containers from $(NETWORK)...$(NC)"; \
+			for container in $$CONTAINERS; do \
+				docker network disconnect -f $(NETWORK) $$container; \
+			done; \
+		fi; \
 		echo "$(RED)Removing network $(NETWORK)...$(NC)"; \
 		docker network rm $(NETWORK); \
 	fi
-	@if docker ps -a --format '{{.Names}}' | grep -q "^redis$$"; then \
-		echo "$(RED)Removing Redis container...$(NC)"; \
-		docker rm redis; \
-    fi
+	@echo "$(RED)Pruning unused volumes...$(NC)"
+	@docker volume prune -f
+
