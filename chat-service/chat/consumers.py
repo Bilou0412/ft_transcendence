@@ -1,6 +1,6 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
-from ..decorators import auth_token
+from .decorators import auth_token
 from django.core.cache import cache
 
 class ChatConsumer(AsyncWebsocketConsumer):

@@ -1,4 +1,15 @@
 services:
+  db-chat:
+    image: postgres:13
+    ports:
+      - "5433:5432"
+    volumes:
+      - .:/app
+      - postgres_data:/var/lib/postgresql/data
+    entrypoint: ["/app/docker/entrypoint_db.sh"]
+    networks:
+      - my_network
+
   chat:
     build:
       context: ./docker
@@ -17,6 +28,8 @@ services:
         aliases:
           - chat
     entrypoint: ["/app/docker/entrypoint_dev.sh"]
+    depends_on:
+      - db-chat
 
 volumes:
   postgres_data:
