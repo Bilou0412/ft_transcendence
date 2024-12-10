@@ -2,11 +2,13 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from channels.layers import get_channel_layer
+from django.core.cache import cache
 import json
+from asgiref.sync import async_to_sync
 
 
 @api_view(['POST'])
-def friend_request(request):
+def FriendRequest(request):
     try:
         data = request.data
         receiver_id = data.get('receiver_id')
@@ -16,12 +18,19 @@ def friend_request(request):
         if not receiver_id or not sender_id:
             return Response({'error': 'Inviter ID and Invitee ID are required'}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Vérifier si le receiver est connecté
+        connected_user_ids = cache.get('connected_user_ids', set())
+        if receiver_id not in connected_user_ids:
+            return Response({'message': 'Receiver is not connected'},  status=status.HTTP_200_OK)
+
         # Obtenir le layer de canal pour envoyer un message à la connexion WebSocket
         channel_layer = get_channel_layer()
+        print(f"Sending friend request to user_{receiver_id}")
 
         # Envoie d'une demande via WebSocket (envoie un message au groupe WebSocket de l'utilisateur invité)
-        channel_layer.group_send(
-            f"user_{receiver_id}",  # Groupe unique pour chaque utilisateur connecté
+        async_to_sync(channel_layer.group_send)(
+            # Groupe unique pour chaque utilisateur connecté
+            f"user_{receiver_id}",
             {
                 'type': 'friend_request',
                 'receiver_id': receiver_id,

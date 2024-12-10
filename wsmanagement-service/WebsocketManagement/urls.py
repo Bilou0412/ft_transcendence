@@ -20,5 +20,5 @@ from .views import FriendRequest
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('ws/',FriendRequest,"friendrequest"),
+    path('ws/',FriendRequest,name="friendrequest"),
 ]

@@ -96,3 +96,13 @@ class LobbyConsumer(AsyncWebsocketConsumer):
 				'inviter_id': inviter_id,
 				'invitee_id': invitee_id
 			}))
+
+	async def friend_request(self, event):
+		sender_id = event['sender_id']
+		receiver_id = event['receiver_id']
+		if self.userId == receiver_id:
+			await self.send(text_data=json.dumps({
+				'type': 'friend_request',
+				'sender_id': sender_id,
+				'receiver_id': receiver_id
+			}))
