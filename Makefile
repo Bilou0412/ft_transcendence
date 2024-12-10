@@ -35,7 +35,7 @@ create-redis:
 up: create-network create-redis
 	@echo "$(GREEN)Starting services...$(NC)"
 	@$(foreach dir, $(SERVICE_DIRS), \
-		(echo "Starting $(dir)"; cd $(dir) && $(COMPOSE) up -d) &&) true
+		(echo "Starting $(dir)"; cd $(dir) && $(COMPOSE) up --build -d) &&) true
 
 down:
 	@echo "$(GREEN)Stopping services...$(NC)"

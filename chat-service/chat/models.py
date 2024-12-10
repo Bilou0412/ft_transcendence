@@ -1,17 +1,17 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 class Conversation(models.Model):
-    participants = models.ManyToManyField(User, related_name='conversations')
+    participant1 = models.IntegerField()
+    participant2 = models.IntegerField()
 
     def __str__(self):
-        return f'Conversation between {", ".join([user.username for user in self.participants.all()])}'
+        return f'Conversation between {self.participant1} and {self.participant2}'
 
 class DirectMessage(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    sender = models.CharField(max_length=255)
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'From {self.sender.username}: {self.content[:20]}'
+        return f'From {self.sender}: {self.content[:20]}'

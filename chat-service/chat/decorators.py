@@ -26,8 +26,7 @@ def auth_token(func):
 
 			userData = validateResponse.json()
 			self.userId = int(userData.get('id'))
-			print(self.userId)
-
+			
 			async with httpx.AsyncClient(timeout=5) as userInfosClient:
 				userInfosResponse = await userInfosClient.post(
 					'http://auth:8000/api/auth/users/info/',

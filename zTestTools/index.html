@@ -107,7 +107,7 @@
             })
             .then(data => {
                 authToken = data.access;
-                connectToLobby();
+                // connectToLobby();
             })
             .catch(error => console.error('Error logging in:', error));
         }
@@ -134,7 +134,7 @@
         }
 
         function connectToLobby() {
-            lobbyWebSocket = new WebSocket('ws://localhost:8002/ws/lobby/', ['Bearer_' + authToken]);
+            lobbyWebSocket = new WebSocket('ws://localhost:8002/ws/lobby', ['Bearer_' + authToken]);
 
             lobbyWebSocket.onopen = () => {
                 console.log('Lobby WebSocket connection opened');
@@ -187,7 +187,7 @@
                 directWebSocket.close();
             }
 
-            directWebSocket = new WebSocket(`ws://localhost:8002/ws/chat/direct/${userId}/`, ['Bearer_' + authToken]);
+            directWebSocket = new WebSocket(`ws://localhost:8001/ws/chat/${userId}/`, ['Bearer_' + authToken]);
 
             directWebSocket.onopen = () => {
                 console.log('Direct Message WebSocket connection opened');
@@ -198,13 +198,18 @@
 
             directWebSocket.onmessage = event => {
                 const message = JSON.parse(event.data);
-                const messageElement = document.createElement('div');
-                messageElement.textContent = `${message.sender}: ${message.message}`;
-                document.getElementById('direct-messages').appendChild(messageElement);
-            };
 
-            directWebSocket.onclose = () => {
-                console.log('Direct Message WebSocket connection closed');
+                if (message.type === 'message_history') {
+                    message.messages.forEach(msg => {
+                        const messageElement = document.createElement('div');
+                        messageElement.textContent = `${msg.sender}: ${msg.content}`;
+                        document.getElementById('direct-messages').appendChild(messageElement);
+                    });
+                } else if (message.type === 'chat_message') {
+                    const messageElement = document.createElement('div');
+                    messageElement.textContent = `${message.sender}: ${message.message}`;
+                    document.getElementById('direct-messages').appendChild(messageElement);
+                }
             };
         }
 
