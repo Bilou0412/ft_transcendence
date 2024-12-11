@@ -15,27 +15,42 @@
 	</div>
 
 	<div class="main-content">
-		<div class="window" id="profileDisplay">
+		<div class="window" id="profileWindow">
 			<div class="title-bar">
 			  <div class="title-bar-text">Edit Profile</div>
 			</div>
-			<div class="window-body">
+			<div class="profileBody">
 				<div class="profileView">
-					<!-- icon + username -->
+					<img src = "../css/icon/pong_logo.png" id="userIcon">
+					<span id="userID">Username<span class="IDHash">#ID</span></span>
 				</div>
 				<div class="editFields">
-					<!-- current sett + edit buttons -->
+					<div class="editSet">
+						<span id="userPP">Profile.png</span></span>
+						<button id="editBtn" onclick="">Edit</button>
+					</div>
+					<div class="editSet">
+						<span id="username">Username</span></span>
+						<button id="editBtn" onclick="">Edit</button>
+					</div>
+					<div class="editSet">
+						<span id="userpwrd">************</span></span>
+						<button id="editBtn" onclick="">Edit</button>
+					</div>
+					<div class="editSet">
+						<span id="userMail">Username@gmail.com</span></span>
+						<button id="editBtn" onclick="">Edit</button>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="window" id="optionDisplay">
+		<div class="window" id="optionWindow">
 			<div class="title-bar">
 			  <div class="title-bar-text">Option</div>
 			</div>
-			<div class="window-body">
-				<!-- Options -->
+			<div class="optionBody">
+				<button id="btn2FA" onclick="">Activate 2-factor authentification</button>
+				<button id="changeAcc" onclick="">Switch Account</button>
 		</div>
 	</div>
-
-	<!-- <script src="../js/router.js"></script> -->
 </body>
