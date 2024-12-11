@@ -26,8 +26,7 @@ def auth_token(func):
 
 			userData = validateResponse.json()
 			self.userId = int(userData.get('id'))
-			print(self.userId)
-
+			
 			async with httpx.AsyncClient(timeout=5) as userInfosClient:
 				userInfosResponse = await userInfosClient.post(
 					'http://auth:8000/api/auth/users/info/',
@@ -40,7 +39,10 @@ def auth_token(func):
 			userData = userInfosResponse.json()
 			self.username = userData.get(str(self.userId)).get('username')
 
-			return await func(self, *args, **kwargs)
+			if func.__name__ == 'connect':
+				return await func(self, tokenVal, *args, **kwargs)
+			else:
+				return await func(self, *args, **kwargs)
         
 		except httpx.RequestError as exc:
 			raise DenyConnection(f"Authentication service unreachable: {exc}")

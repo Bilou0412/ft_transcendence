@@ -14,7 +14,7 @@ wait_for_db
 
 # Exécute les migrations
 echo "Exécution des migrations..."
-python manage.py makemigrations authService
+python manage.py makemigrations chat
 python manage.py migrate
 
 # Crée un superutilisateur si aucun n'existe
