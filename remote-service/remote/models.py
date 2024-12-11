@@ -2,11 +2,11 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 import random
 from datetime import datetime
-import asyncio
+import httpx
 
 class Player:
 	def __init__ (self, id):
-		# self.id = id
+		self.id = id
 		self.pos = {'x': 0, 'y': 0}
 		self.direction = 0
 		self.dimension = {'w': 0.6, 'h': 7}
@@ -64,6 +64,7 @@ class Game:
 			return
 		self.status = True
 		self.reset()
+		self.time = datetime.now()
 		await self.send_data( {'type': 'assign_role'}
 		)
 		await self.send_data( {'type': 'start_game'}
@@ -71,7 +72,6 @@ class Game:
 
 	async def end (self):
 		print('game ended')
-		# time_past = datetime.now() - self.time
 		self.status = False
 		if self.score['left'] == 10 or self.score['right'] == 10:
 			winner = 'left' if self.score['left'] == 10 else 'right'
@@ -84,6 +84,23 @@ class Game:
 				}
 			}
 		)
+		if winner == 'unfinished':
+			self.score['left'] = self.score['right'] = 0
+			return
+		end_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
+		start_time = self.time.strftime('%Y-%m-%dT%H:%M:%SZ')
+		async with httpx.AsyncClient(timeout=5) as userManagerClient:
+			userManagerResponse = await userManagerClient.post(
+				'http://usermanagement:8000/user/matches/create/',
+				json={
+					'player_1_id': self.players[0].id,
+					'player_2_id': self.players[1].id,
+					'match_start_time': start_time,
+					'match_end_time': end_time,
+					'score_player_1': self.score['left'],
+					'score_player_2': self.score['right'],
+				}
+			)
 		self.score['left'] = self.score['right'] = 0
 
 	async def send_data (self, data):

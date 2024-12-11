@@ -14,31 +14,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
             self.participants = sorted([self.userId, int(self.chatId)])
             self.chat_group_name = f'{self.participants[0]}_{self.participants[1]}'
-            if self.userId == int(self.chatId):
-                await self.send(text_data=json.dumps({
-                    'type': 'error',
-                    'message': 'Invalid chat id'
-                }))
-                await self.close()
-                return
-            async with httpx.AsyncClient(timeout=5) as userInfosClient:
-                userInfosResponse = await userInfosClient.post(
-					'http://auth:8000/api/auth/users/info/',
-					headers={'Authorization': f'Bearer {tokenVal}'},
-					json={"user_ids": [self.chatId]}
-				)
-            if userInfosResponse.status_code == 404:
-                raise  DenyConnection("User not found")
-            async with httpx.AsyncClient(timeout=5) as userInfosClient:
-                userInfosResponse = await userInfosClient.get(
-					'http://usermanagement:8000/user/friends/',
-					headers={'Authorization': f'Bearer {tokenVal}'}
-				)
-            if userInfosResponse.status_code != 200:
-                raise  DenyConnection("Unauthorized")
-            friends = userInfosResponse.json()
-            if int(self.chatId) not in friends['friends']:
-                raise  DenyConnection("User not friend")
+            
+            await self.validate_user_and_friends(tokenVal)
             self.conversation = await self.get_conversation()
 
             await self.channel_layer.group_add(
@@ -57,6 +34,29 @@ class ChatConsumer(AsyncWebsocketConsumer):
         except Exception as e:
             print(f'Error in connect: {e}')
             await self.close()
+
+    async def validate_user_and_friends(self, tokenVal):
+        if self.userId == int(self.chatId):
+            raise DenyConnection("User cannot chat with self")
+        async with httpx.AsyncClient(timeout=5) as userInfosClient:
+            userInfosResponse = await userInfosClient.post(
+				'http://auth:8000/api/auth/users/info/',
+				headers={'Authorization': f'Bearer {tokenVal}'},
+				json={"user_ids": [self.chatId]}
+			)
+        if userInfosResponse.status_code == 404:
+            raise DenyConnection("User not found")
+        async with httpx.AsyncClient(timeout=5) as userInfosClient:
+            userInfosResponse = await userInfosClient.get(
+				'http://usermanagement:8000/user/friends/',
+				headers={'Authorization': f'Bearer {tokenVal}'}
+			)
+        print(userInfosResponse.json())
+        if userInfosResponse.status_code != 200:
+            raise  DenyConnection("Unauthorized")
+        friends = userInfosResponse.json()
+        if int(self.chatId) not in friends['friends']:
+            raise  DenyConnection("Users not friend")
 
     @auth_token
     async def disconnect(self, close_code):
@@ -77,7 +77,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 }))
                 return
 
-            # conversation = await self.get_conversation()
             await self.create_message(self.conversation, self.username, message)
 
             await self.channel_layer.group_send(

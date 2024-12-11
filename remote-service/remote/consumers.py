@@ -1,8 +1,7 @@
 import json
 from django.conf import settings
 from channels.generic.websocket import AsyncWebsocketConsumer
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
+from .decorators import auth_token
 from .models import Game, Player
 import asyncio
 
@@ -23,32 +22,38 @@ async def games_loop():
 		await asyncio.sleep(0.016)  # Adjust the sleep time as needed
 
 class PongConsumer(AsyncWebsocketConsumer):
+	@auth_token
 	async def connect(self):
-		global games_loop_task
-		# print(dir(self))
-		self.room_name = self.scope['url_route']['kwargs']['room_name']
-		self.group_name = f'pong_{self.room_name}'
-		print(f"Connecting to group: {self.group_name}")
+		try:
+			global games_loop_task
+			# print(dir(self))
+			self.room_name = self.scope['url_route']['kwargs']['room_name']
+			self.group_name = f'pong_{self.room_name}'
+			print(f"Connecting to group: {self.group_name}")
 
-		await self.channel_layer.group_add(
-			self.group_name,
-			self.channel_name
-		)
-		await self.accept()
+			await self.channel_layer.group_add(
+				self.group_name,
+				self.channel_name
+			)
+			await self.accept()
 
-		async with games_lock:
-			if self.group_name not in games:
-				games[self.group_name] = Game(self.group_name)
-				self.role = 0
-			else :
-				self.role = 1
-			
-			if games_loop_task is None:
-				games_loop_task = asyncio.create_task(games_loop())
-				print("Started games loop task")
+			async with games_lock:
+				if self.group_name not in games:
+					games[self.group_name] = Game(self.group_name)
+					self.role = 0
+				else :
+					self.role = 1
+				
+				if games_loop_task is None:
+					games_loop_task = asyncio.create_task(games_loop())
+					print("Started games loop task")
 
-			await games[self.group_name].add_player(Player(self.role))
+				await games[self.group_name].add_player(Player(self.userId))
 
+		except Exception as e:
+			print(f'Error: {str(e)}')
+
+	@auth_token
 	async def disconnect(self, close_code):
 		async with games_lock:
 		# print(f'Disconnecting from group: {self.group_name}')
@@ -66,7 +71,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 			await self.channel_layer.group_discard(
 				self.group_name,self.channel_name)
-
 
 	async def receive(self, text_data):
 		try:

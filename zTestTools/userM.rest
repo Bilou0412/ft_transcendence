@@ -11,7 +11,7 @@ Content-Type: application/json
 }
 
 ###
-GET http://127.0.0.1:8001/user/3/matches/
+GET http://127.0.0.1:8004/user/3/matches/
 
 ###
 
