@@ -4,6 +4,7 @@ from rest_framework import status
 from ..models import UserProfile, Friendship
 from ..decorators import authorize_user
 from django.db.models import Q  # Assure-toi que ton décorateur est bien importé
+import requests
 
 @api_view(['POST'])
 @authorize_user  # Appliquer le décorateur pour l'authentification
@@ -13,6 +14,7 @@ def SendRequest(request):
     Si l'utilisateur ou l'ami n'existe pas, leurs profils seront créés automatiquement.
     """
     data = request.data
+    print(data)
     required_fields = ['friend_id']
     missing_fields = [field for field in required_fields if field not in data]
 
@@ -55,6 +57,19 @@ def SendRequest(request):
             user_2=friend_profile,
             status='pending'
         )
+
+        # Envoyer une demande d'amitié via le service WebSocket
+        ws_url = 'http://wsmanagement:8000/ws/'
+        ws_data = {
+            'receiver_id': friend_id,
+            'sender_id': user_id
+        }
+        ws_response = requests.post(ws_url, json=ws_data)
+
+        if ws_response.status_code != 200:
+            return Response({
+                "error": "Failed to send friend request via WebSocket service."
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response({
             "message": "Friendship request sent successfully.",

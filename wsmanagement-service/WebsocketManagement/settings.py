@@ -25,7 +25,6 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -55,9 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-	'http://localhost:3000'
-]
+
 
 ROOT_URLCONF = 'WebsocketManagement.urls'
 
@@ -131,6 +128,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', 'wsmanagement']
 
 ASGI_APPLICATION = "WebsocketManagement.asgi.application"
 

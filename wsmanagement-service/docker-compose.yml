@@ -15,7 +15,7 @@ services:
     networks:
       my_network:
         aliases:
-          - websocketmanagement
+          - wsmanagement
     entrypoint: ["/app/docker/entrypoint_dev.sh"]
 
 volumes:

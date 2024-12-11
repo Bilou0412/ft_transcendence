@@ -100,6 +100,8 @@ class LobbyConsumer(AsyncWebsocketConsumer):
 	async def friend_request(self, event):
 		sender_id = event['sender_id']
 		receiver_id = event['receiver_id']
+
+		# Ne notifier que le destinataire
 		if self.userId == receiver_id:
 			await self.send(text_data=json.dumps({
 				'type': 'friend_request',

@@ -1,12 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Connected Users</title>
+	<style>
+		.friend-request {
+			background-color: #f0f0f0;
+			padding: 10px;
+			margin: 10px 0;
+			border-radius: 5px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+		#friend-requests {
+			margin-top: 20px;
+		}
+		.user-item {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin: 10px 0;
+		}
+		.user-actions {
+			display: flex;
+			gap: 10px;
+		}
+	</style>
 </head>
-
 <body>
 	<h1>Connected Users</h1>
 	<form id="login-form">
@@ -20,14 +42,21 @@
 	</form>
 	<button id="logout-button" style="display:none;">Logout</button>
 	<h2 id="username-display" style="display:none;"></h2>
+	
+	<div id="friend-requests">
+		<h3>Friend Requests</h3>
+		<ul id="friend-request-list"></ul>
+	</div>
+	
 	<ul id="user-list"></ul>
 
 	<script>
+		let globalSocket = null;
+
 		document.getElementById('login-form').addEventListener('submit', async function (event) {
 			event.preventDefault();
 			const email = document.getElementById('email').value;
 			const password = document.getElementById('password').value;
-
 			try {
 				const response = await fetch('http://127.0.0.1:8000/api/auth/login/', {
 					method: 'POST',
@@ -43,43 +72,48 @@
 				const data = await response.json();
 				const accessToken = data.access;
 				const username = data.user.username;
+				const userId = data.user.id;
 				sessionStorage.setItem('accessToken', accessToken);
 				sessionStorage.setItem('username', username);
-				connectWebSocket(accessToken, username);
+				sessionStorage.setItem('userId', userId);
+				connectWebSocket(accessToken, username, userId);
 			} catch (error) {
 				console.error('Error during login or WebSocket connection:', error);
 			}
 		});
 
 		document.getElementById('logout-button').addEventListener('click', function () {
+			if (globalSocket) {
+				globalSocket.close();
+			}
 			sessionStorage.removeItem('accessToken');
 			sessionStorage.removeItem('username');
+			sessionStorage.removeItem('userId');
 			location.reload();
 		});
 
-		function connectWebSocket(accessToken, username) {
+		function connectWebSocket(accessToken, username, userId) {
 			const userList = document.getElementById('user-list');
+			const friendRequestList = document.getElementById('friend-request-list');
 			const socket = new WebSocket(`ws://localhost:8005/ws/lobby/`, [`Bearer_${accessToken}`]);
+			globalSocket = socket;
 
 			socket.onmessage = function (event) {
 				const data = JSON.parse(event.data);
-				if (data.type === 'list_user_connected') {
-					userList.innerHTML = '';
-					data.users.forEach(user => {
-						const li = document.createElement('li');
-						li.textContent = `${user.username} (ID: ${user.id})`;
-						const inviteButton = document.createElement('button');
-						inviteButton.textContent = 'Invite';
-						inviteButton.onclick = function () {
-							sendInvite(user.id, socket);
-						};
-						li.appendChild(inviteButton);
-						userList.appendChild(li);
-					});
-				} else if (data.type === 'invite_code') {
-					displayInviteCode(data.invite_code);
-				} else if (data.type === 'friend_request') {
-					alert(`Friend request from user ID: ${data.sender_id}`);
+				console.log('Received WebSocket message:', data);
+
+				switch(data.type) {
+					case 'list_user_connected':
+						handleUserList(data, userList, userId, socket);
+						break;
+					case 'invite_code':
+						displayInviteCode(data);
+						break;
+					case 'friend_request':
+						handleFriendRequest(data, friendRequestList);
+						break;
+					default:
+						console.log('Unhandled message type:', data.type);
 				}
 			};
 
@@ -94,6 +128,47 @@
 			socket.onclose = function () {
 				console.log('WebSocket connection closed');
 			};
+
+			socket.onerror = function (error) {
+				console.error('WebSocket error:', error);
+			};
+		}
+
+		function handleUserList(data, userList, currentUserId, socket) {
+			userList.innerHTML = '';
+			data.users
+				.filter(user => user.id !== currentUserId)
+				.forEach(user => {
+					const li = document.createElement('li');
+					li.classList.add('user-item');
+
+					const userInfo = document.createElement('span');
+					userInfo.textContent = `${user.username} (ID: ${user.id})`;
+
+					const userActions = document.createElement('div');
+					userActions.classList.add('user-actions');
+
+					// Invite Button (kept from original implementation)
+					const inviteButton = document.createElement('button');
+					inviteButton.textContent = 'Invite';
+					inviteButton.onclick = function () {
+						sendInvite(user.id, socket);
+					};
+
+					// Friend Request Button
+					const friendRequestButton = document.createElement('button');
+					friendRequestButton.textContent = 'Send Friend Request';
+					friendRequestButton.onclick = function () {
+						sendFriendRequest(user.id);
+					};
+
+					userActions.appendChild(inviteButton);
+					userActions.appendChild(friendRequestButton);
+
+					li.appendChild(userInfo);
+					li.appendChild(userActions);
+					userList.appendChild(li);
+				});
 		}
 
 		function sendInvite(inviteeId, socket) {
@@ -102,18 +177,76 @@
 			}));
 		}
 
-		function displayInviteCode(inviteCode) {
-			alert(`Invite code: ${inviteCode}`);
+		function sendFriendRequest(receiverId) {
+			if (!globalSocket) {
+				console.error('WebSocket not connected');
+				return;
+			}
+
+			fetch('http://127.0.0.1:8004/user/friends/request/', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}`
+				},
+				body: JSON.stringify({
+					friend_id: receiverId
+				})
+			})
+			.then(response => response.json())
+			.then(data => {
+				console.log('Friend request sent:', data);
+				alert('Friend request sent successfully!');
+			})
+			.catch(error => {
+				console.error('Error sending friend request:', error);
+				alert('Failed to send friend request');
+			});
+		}
+
+		function handleFriendRequest(data, friendRequestList) {
+			const requestItem = document.createElement('li');
+			requestItem.classList.add('friend-request');
+			
+			const requestText = document.createElement('span');
+			requestText.textContent = `Friend request from User ID: ${data.sender_id}`;
+			
+			const acceptButton = document.createElement('button');
+			acceptButton.textContent = 'Accept';
+			acceptButton.onclick = () => {
+				// Implement friend request acceptance logic
+				console.log('Friend request accepted');
+				requestItem.remove();
+			};
+			
+			const rejectButton = document.createElement('button');
+			rejectButton.textContent = 'Reject';
+			rejectButton.onclick = () => {
+				// Implement friend request rejection logic
+				console.log('Friend request rejected');
+				requestItem.remove();
+			};
+			
+			requestItem.appendChild(requestText);
+			requestItem.appendChild(acceptButton);
+			requestItem.appendChild(rejectButton);
+			
+			friendRequestList.appendChild(requestItem);
+		}
+
+		function displayInviteCode(data) {
+			console.log('Invite code received:', data);
+			alert(`Invite Code: ${data.invite_code}`);
 		}
 
 		window.onload = function () {
 			const accessToken = sessionStorage.getItem('accessToken');
 			const username = sessionStorage.getItem('username');
-			if (accessToken && username) {
-				connectWebSocket(accessToken, username);
+			const userId = sessionStorage.getItem('userId');
+			if (accessToken && username && userId) {
+				connectWebSocket(accessToken, username, userId);
 			}
 		};
 	</script>
 </body>
-
 </html>

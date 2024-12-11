@@ -15,9 +15,9 @@ GET http://127.0.0.1:8001/user/3/matches/
 
 ###
 
-POST http://127.0.0.1:8001/user/friends/request/
+POST http://127.0.0.1:8004/user/friends/request/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyODgxNzAxLCJpYXQiOjE3MzI4NzgxMDEsImp0aSI6IjE0NTY1NjlkYzQwYjRmZTA5ZmI0YjNkNDU2MDc1MDY3IiwidXNlcl9pZCI6NH0.oBIwgRXLybYrZUSFLExHW97MZpA5gNtkfJmXONAMcDw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzODc5MjIwLCJpYXQiOjE3MzM4NzU2MjAsImp0aSI6IjQ4NmUzZGViOTdiYzQxYTZhOTRlMTE3ZmYyNDEyYjU2IiwidXNlcl9pZCI6NH0.dsFuZTs33KLCM1rQU6UnR-k9EKjSNVY_ng7IaPKNZWM
 
 {
   "friend_id": 3

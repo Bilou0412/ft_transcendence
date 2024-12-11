@@ -3,7 +3,7 @@ POST http://127.0.0.1:8000/api/auth/login/
 Content-Type: application/json
 
 {
-    "email": "reset.pass.ponggame@gmail.com",
+    "email": "c@gmail.com",
     "password": "Motdepasse12@@",
     "otp": ""
 }
@@ -13,10 +13,10 @@ POST http://127.0.0.1:8000/api/auth/signup/
 Content-Type: application/json
 
 {
-    "username": "bil",
+    "username": "c",
     "password": "Motdepasse12@@",
     "password2": "Motdepasse12@@",
-    "email": "resame@gmail.com"
+    "email": "c@gmail.com"
 }
 
 ### Refresh Token

@@ -26,7 +26,7 @@ services:
     networks:
       my_network:
         aliases:
-          - usermanagment
+          - usermanagement
     entrypoint: ["/app/docker/entrypoint_dev.sh"]
     depends_on:
       - db-usermanagement

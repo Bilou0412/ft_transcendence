@@ -13,10 +13,10 @@ def FriendRequest(request):
         data = request.data
         receiver_id = data.get('receiver_id')
         sender_id = data.get('sender_id')
-
+        print(f"Friend request data: {data}")
         # Validation de la requête
         if not receiver_id or not sender_id:
-            return Response({'error': 'Inviter ID and Invitee ID are required'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Receiver ID and Sender ID are required'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Vérifier si le receiver est connecté
         connected_user_ids = cache.get('connected_user_ids', set())
@@ -29,10 +29,9 @@ def FriendRequest(request):
 
         # Envoie d'une demande via WebSocket (envoie un message au groupe WebSocket de l'utilisateur invité)
         async_to_sync(channel_layer.group_send)(
-            # Groupe unique pour chaque utilisateur connecté
-            f"user_{receiver_id}",
+            'lobby',  # Groupe global
             {
-                'type': 'friend_request',
+                'type': 'friend_request',  # This type should match the handler in the consumer
                 'receiver_id': receiver_id,
                 'sender_id': sender_id,
             }
