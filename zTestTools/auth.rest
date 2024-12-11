@@ -70,10 +70,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 ###
 POST http://127.0.0.1:8000/api/auth/users/info/
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMTk1NDYwLCJpYXQiOjE3MzIxOTE4NjAsImp0aSI6IjJhNjg0NTk2OGU5MzQ3YzhiZjIwN2FiMjA0NDhjYjFlIiwidXNlcl9pZCI6Mn0.eaa0L0nxVR4fQ86bTFQoFqqH4yPI4s2zlfgI9zK9Ev0
+Authorization: Bearer eyJhbGciiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzOTMzOTQyLCJpYXQiOjE3MzM5MzAzNDIsImp0aSI6IjlmZjlmMjZhOTQxZTQzZTRiYWZiYjI2M2ZjMzJmZmUxIiwidXNlcl9pZCI6NH0.sJ6QXUoSheB8bRabratu4EAZWOy3xL0tLF-5nZtCsSM
 
 {
-    "user_ids": [1]
+    "user_ids": [4,5]
 }
 
 ### 2FA
