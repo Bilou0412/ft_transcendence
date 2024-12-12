@@ -72,8 +72,6 @@ def get_access_token(code):
     """Helper function to get the access token from the 42 API."""
     token_url = 'https://api.intra.42.fr/oauth/token'
     redirect_uri = 'http://127.0.0.1:3000/zTestTools/succes.html'
-    print(redirect_uri)
-    print("ok")
     response = requests.post(token_url, data={
         'grant_type': 'authorization_code',
         'client_id': os.environ.get('CLIENT_ID'),
@@ -83,6 +81,7 @@ def get_access_token(code):
     })
 
     if response.status_code == 200:
+        print(response.json())
         return response.json().get('access_token')
     return None
 
@@ -92,6 +91,7 @@ def get_user_info_from_42(access_token):
     response = requests.get(user_info_url, headers={'Authorization': f'Bearer {access_token}'})
 
     if response.status_code == 200:
+        print(response.json())
         return response.json()
     return None
 
