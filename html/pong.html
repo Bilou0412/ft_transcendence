@@ -7,19 +7,87 @@
 </head>
 
 <body>
-	<div class="title-bar">
-		<div class="title-bar-text">Profile</div>
+	<div class="title-bar" id="titleBarPong">
+		<div class="title-bar-text">Pong</div>
 		<div class="title-bar-controls">
 			<button aria-label="Close" id="close-button" onclick="route(event, '/')"></button>
 		</div>
 	</div>
-	<div>
-		<button id="startButton">Start Game</button>
+	<div class="main-content">
+		<div class="window" id="leftWindow">
+			<div class="title-bar">
+				<div class="title-bar-text">Game settings</div>
+			</div>
+			<div class="GameSettingsBody">
+				<!--  -->
+			</div>
+		</div>
+	
+		<div class="rightWindow">
+			<div class="window" id="pongSettings">
+				<div class="title-bar">
+					<div class="title-bar-text">Pong settings</div>
+				</div>
+				<div class="pongSettBody">
+					<div class="window" id="playerWindow">
+						<div class="title-bar">
+							<div class="title-bar-text">Player 1</div>
+						</div>
+						<div class="playerSett">
+							<!--  -->
+						</div>
+					</div>
+					<fieldset>
+						<div class="field-row">Play style:</div>
+						<div class="field-row">
+							<input id="radio14" type="radio" name="fieldset-example">
+							<label for="radio14" id="labelMode">slow</label>
+						</div>
+						<div class="field-row">
+							<input id="radio15" type="radio" name="fieldset-example">
+							<label for="radio15">relax</label>
+						</div>
+						<div class="field-row">
+							<input id="radio16" type="radio" name="fieldset-example" checked>
+							<label for="radio16">normal</label>
+						</div>
+						<div class="field-row">
+							<input id="radio14" type="radio" name="fieldset-example">
+							<label for="radio14">fast</label>
+						</div>
+						<div class="field-row">
+							<input id="radio15" type="radio" name="fieldset-example">
+							<label for="radio15">super fast</label>
+						</div>
+						<div class="field-row">
+							<input id="radio16" type="radio" name="fieldset-example">
+							<label for="radio16">super ultra omega fast as f*ck</label>
+						</div>
+						<div class="field-row">
+							<input id="radio16" type="radio" name="fieldset-example">
+							<label for="radio16">butterfly</label>
+						</div>
+					</fieldset>
+					<div class="window" id="playerWindow">
+						<div class="title-bar">
+							<div class="title-bar-text">Player 2</div>
+						</div>
+						<div class="playerSett">
+							<!--  -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<select id="gameModeSelect">
+				<option selected>local 1v1</option>
+				<option>local tournament</option>
+				<option>player vs AI</option>
+				<option>remote 1v1</option>
+				<option>remote tournament</option>
+				<option>remote random 1v1</option>
+			</select>
+			<button id="startButton">Start Game</button>
+		</div>
 	</div>
-    <!-- Game scripts -->
-	<script src="../js/router.js"></script>
-    <script>
-		document.getElementById('close-button').addEventListener('click', (event) => route(event));
-	</script>
 </body>
 </html>

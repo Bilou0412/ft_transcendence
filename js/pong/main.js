@@ -24,7 +24,9 @@ export async function quitPong() {
     }
     
     document.getElementById('nav').style.display = 'block';
-    document.getElementById('Taskbar').style.display = 'block';
+    document.getElementById('Taskbar').style.display = 'flex';
+    document.getElementById('startButton').style.display = 'block';
+    document.getElementById('titleBarPong').style.display = 'flex';
 
     //stop event listeners
     window.removeEventListener('keydown', onKeyDown, false);
@@ -123,6 +125,7 @@ export async function initializeGame() {
     document.getElementById('nav').style.display = 'none';
     document.getElementById('startButton').style.display = 'none';
     document.getElementById('Taskbar').style.display = 'none';
+    document.getElementById('titleBarPong').style.display = 'none';
     focusGame();
 
 }
