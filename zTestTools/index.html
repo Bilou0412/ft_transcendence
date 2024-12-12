@@ -124,6 +124,37 @@
             window.location.href = 'https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-6d896cbba0cf9cbd760394daeca2728498dace7f3254b04ac08fe1fc0dcc73f3&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Fauth%2Foauth%2F&response_type=code';
         });
 
+        window.addEventListener('load', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const accessToken = urlParams.get('access');
+            const refreshToken = urlParams.get('refresh');
+            const userId = urlParams.get('user_id');
+            const username = urlParams.get('username');
+            const email = urlParams.get('email');
+
+            if (accessToken && refreshToken && userId && username && email) {
+                sessionStorage.setItem('accessToken', accessToken);
+                sessionStorage.setItem('refreshToken', refreshToken);
+                sessionStorage.setItem('userId', userId);
+                sessionStorage.setItem('username', username);
+                sessionStorage.setItem('email', email);
+                connectWebSocket(accessToken, username, userId);
+                showMainMenu();
+                // Reset the URL to remove query parameters
+                window.history.replaceState({}, document.title, window.location.pathname);
+            } else {
+                const storedAccessToken = sessionStorage.getItem('accessToken');
+                const storedUsername = sessionStorage.getItem('username');
+                const storedUserId = sessionStorage.getItem('userId');
+                if (storedAccessToken && storedUsername && storedUserId) {
+                    connectWebSocket(storedAccessToken, storedUsername, storedUserId);
+                    showMainMenu();
+                } else {
+                    document.getElementById('login-signup').classList.add('active');
+                }
+            }
+        });
+
         document.getElementById('logout-button').addEventListener('click', function () {
             if (globalSocket) {
                 globalSocket.close();

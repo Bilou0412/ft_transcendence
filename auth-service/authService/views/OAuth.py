@@ -3,6 +3,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.shortcuts import redirect
 import requests
 import os
 from ..models import User
@@ -12,7 +13,7 @@ from ..serializers import UserSerializerOAuth
 @permission_classes([AllowAny])
 def OAuth(request):
     """
-    View to create or update a user based on OAuth with 42 API and return JWT tokens.
+    View to create or update a user based on OAuth with 42 API and redirect with JWT tokens.
     """
     code = request.GET.get('code')
     if not code:
@@ -37,36 +38,25 @@ def OAuth(request):
         if user:
             # User exists, create JWT tokens
             tokens = create_tokens_for_user(user)
-            return Response({
-                "access": tokens['access'],
-                "refresh": tokens['refresh'],
-                "user": {
-                    "id": user.id,
-                    "username": user.username,
-                    "email": user.email
-                }
-            }, status=status.HTTP_200_OK)
+            return redirect_with_tokens(tokens, user)
 
         # User doesn't exist, create or update user with the serializer
         serializer = UserSerializerOAuth(data=user_data)
         if serializer.is_valid():
             user = serializer.save(is_active=True)  # Ensure the user is active
             tokens = create_tokens_for_user(user)
-
-            return Response({
-                "access": tokens['access'],
-                "refresh": tokens['refresh'],
-                "user": {
-                    "id": user.id,
-                    "username": user.username,
-                    "email": user.email
-                }
-            }, status=status.HTTP_201_CREATED)
+            return redirect_with_tokens(tokens, user)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     except requests.RequestException as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+def redirect_with_tokens(tokens, user):
+    """Redirect to a specific URL with tokens in query parameters."""
+    redirect_url = 'http://127.0.0.1:3000/zTestTools/index.html'  # Replace with your frontend URL
+    params = f"?access={tokens['access']}&refresh={tokens['refresh']}&user_id={user.id}&username={user.username}&email={user.email}"
+    return redirect(f"{redirect_url}{params}")
 
 def get_access_token(code):
     """Helper function to get the access token from the 42 API."""
