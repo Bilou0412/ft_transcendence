@@ -12,8 +12,9 @@ from .views.EmailUpdateInfo import EmailUpdateInfo
 from .views.UpdateUserInfo import UpdateUserInfo
 from .views.UsersInfo import UsersInfo
 from .views.Mfa import enable_2fa, verify_2fa, disable_2fa
+from .views.SearchUser import SearchUser  # Import the search_user view
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include  # Import include to use with blueprint
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -47,4 +48,7 @@ urlpatterns = [
 
     # API Users Info endpoint
     path('api/auth/users/info/', UsersInfo, name='usersinfo'),
+
+    # API Search User endpoint
+    path('api/auth/search_user/', SearchUser, name='search_user'),  # Add the search user endpoint
 ]
