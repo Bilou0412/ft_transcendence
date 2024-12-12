@@ -10,10 +10,10 @@ from django.core.exceptions import ObjectDoesNotExist
 
 @api_view(['GET'])
 @authorize_user
-def ImageServe(request, username):
+def ImageServe(request, id):
     try:
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(id=id)
         except ObjectDoesNotExist:
             default_path = os.path.join('images', 'default.png')
             if os.path.exists(default_path):

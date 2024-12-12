@@ -121,7 +121,7 @@
         });
 
         document.getElementById('oauth-button').addEventListener('click', function () {
-            window.location.href = 'https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-6d896cbba0cf9cbd760394daeca2728498dace7f3254b04ac08fe1fc0dcc73f3&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Fauth%2Foauth%2F&response_type=code';
+            window.open('https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-6d896cbba0cf9cbd760394daeca2728498dace7f3254b04ac08fe1fc0dcc73f3&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Fapi%2Fauth%2Foauth%2F&response_type=code', '_blank');
         });
 
         document.getElementById('logout-button').addEventListener('click', function () {
@@ -174,9 +174,10 @@
             fetch('http://127.0.0.1:8000/api/auth/users/info/', {
                 method: 'POST',
                 headers: {
+                    'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + accessToken
                 },
-                body: JSON.stringify({ id: sessionStorage.getItem('userId') })
+                body: JSON.stringify({ user_ids: [sessionStorage.getItem('userId')] })
             })
             .then(response => response.json())
             .then(data => {

@@ -1,7 +1,8 @@
 
 # Upload nouvel utilisateur
-POST http://127.0.0.1:8003/api/media/upload/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjk4MDg5LCJpYXQiOjE3MzIyOTQ0ODksImp0aSI6ImY3M2VmMjQ1ZTYzZTRmNTViMzNiOTc2NjJjNjM0ZWVhIiwidXNlcl9pZCI6Mn0.3AtM6btMcZSjAToPlZ0OLQ4gfskoBnmbvP-BTdJy8Fw
+POST http://127.0.0.1:8002/api/media/upload/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0MDE5NjIzLCJpYXQiOjE3MzQwMTYwMjMsImp0aSI6ImJkYzQyZTNhNmQyMjQzYzBiY2JhNGY1NmVkZTQ1MzIyIiwidXNlcl9pZCI6M30.eZW4S72LffXaMfWHyufJqIHdGDuJiHQighdRcdJHkrM
+
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
 
 ------WebKitFormBoundary
@@ -34,8 +35,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiY
 ###
 
 # Get image d un mec avec image
-GET http://127.0.0.1:8001/api/media/profile-images/bi/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxMDc3ODcwLCJpYXQiOjE3MzEwNzQyNzAsImp0aSI6IjdhMGI2YTQ0NTg0NzRiYTI5MmEzMTZlOTliMzNlYWI1IiwidXNlcl9pZCI6M30.lmXXNJsV3L_BV9ef1DR_DoW60T-U4-k9nzSnBtXw3hY
+GET http://127.0.0.1:8002/api/media/profile-images/3/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM0MDIwNDg1LCJpYXQiOjE3MzQwMTY4ODUsImp0aSI6IjkyYjQ4MDE3MzIzZjQwNWViODBhZWZlNmM2MWFhNjBmIiwidXNlcl9pZCI6Mn0.P_NLPkbPvCEjJUeK0PEnzkOC1onCM-m-RKcarOfc1dQ
+
 ###
 
 # Get image d un mec sans image
