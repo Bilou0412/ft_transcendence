@@ -449,6 +449,15 @@
                     .catch(error => console.error('Error fetching friend details:', error));
                 }
             })
+            .catch(error => console.error('Error fetching friend list:', error));
+        }
+
+        function searchGame() {
+            const accessToken = sessionStorage.getItem('accessToken');
+            fetch('http://127.0.0.1:8002/api/search-game/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + accessToken
                 }
             })
