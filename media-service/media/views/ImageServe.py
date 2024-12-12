@@ -4,8 +4,8 @@ from ..decorators import authorize_user
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import FileResponse
-from django.contrib.auth.models import User
-from ..models import UserProfileImage
+# from django.contrib.auth.models import User
+from ..models import UserProfileImage, CustomUser
 from django.core.exceptions import ObjectDoesNotExist
 
 @api_view(['GET'])
@@ -13,7 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 def ImageServe(request, id):
     try:
         try:
-            user = User.objects.get(id=id)
+            user = CustomUser.objects.get(id=id)
         except ObjectDoesNotExist:
             default_path = os.path.join('images', 'default.png')
             if os.path.exists(default_path):

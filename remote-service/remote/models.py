@@ -101,6 +101,7 @@ class Game:
 					'score_player_2': self.score['right'],
 				}
 			)
+			print(userManagerResponse.text)
 		self.score['left'] = self.score['right'] = 0
 
 	async def send_data (self, data):

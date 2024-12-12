@@ -1,17 +1,17 @@
-POST http://127.0.0.1:8001/user/matches/create/
+POST http://127.0.0.1:8004/user/matches/create/
 Content-Type: application/json
 
 {
     "player_1_id": 2,
     "player_2_id": 3,
-    "match_start_time": "2024-11-27T10:00:00Z",
-    "match_end_time": "2024-11-27T12:00:00Z",
+    "match_start_time": "2023-11-27T10:00:00Z",
+    "match_end_time": "2023-11-27T12:00:00Z",
     "score_player_1": 10,
     "score_player_2": 15
 }
 
 ###
-GET http://127.0.0.1:8004/user/3/matches/
+GET http://127.0.0.1:8004/user/2/matches/
 
 ###
 

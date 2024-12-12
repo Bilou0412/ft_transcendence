@@ -41,10 +41,10 @@ down:
 	@echo "$(GREEN)Stopping services...$(NC)"
 	@$(foreach dir, $(SERVICE_DIRS), \
 		(echo "Stopping $(dir)"; cd $(dir) && $(COMPOSE) down) &&) true
-	@if docker ps --format '{{.Names}}' | grep -q "^redis$$"; then \
-        echo "$(GREEN)Stopping Redis service...$(NC)"; \
-        docker stop redis; \
-    fi
+	# @if docker ps --format '{{.Names}}' | grep -q "^redis$$"; then \
+    #     echo "$(GREEN)Stopping Redis service...$(NC)"; \
+    #     docker stop redis; \
+    # fi
 
 logs:
 	@echo "$(GREEN)Opening GNOME Terminal with tabs for all services...$(NC)"
