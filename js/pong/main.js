@@ -130,12 +130,6 @@ export async function initializeGame() {
     settings.updateTime();
     animate();
     startGame();
-    // document.getElementById('nav').style.display = 'none';
-    // document.getElementById('startButton').style.display = 'none';
-    // document.getElementById('Taskbar').style.display = 'none';
-    // document.getElementById('titleBarPong').style.display = 'none';
-    // document.getElementById('leftWindow').style.display = 'none';
-    // document.getElementById('rightWindow').style.display = 'none';
     document.getElementById('Taskbar').style.display = 'none';
     document.getElementById('titleBarPong').style.display = 'none';
     document.getElementById('waitingScreen').style.display = 'none';
@@ -144,7 +138,7 @@ export async function initializeGame() {
 }
 
 
-// ////////////////////////////////////////////////////
+/////////////////////////////////////Page script/////////////////////////////////////
 // Get the game mode selector and the sections
 const gameModeSelect = document.getElementById('gameModeSelect');
 const sections = {
