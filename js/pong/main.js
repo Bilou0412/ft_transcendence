@@ -27,6 +27,8 @@ export async function quitPong() {
     document.getElementById('Taskbar').style.display = 'flex';
     document.getElementById('startButton').style.display = 'block';
     document.getElementById('titleBarPong').style.display = 'flex';
+    document.getElementById('leftWindow').style.display = 'flex';
+    document.getElementById('rightWindow').style.display = 'flex';
 
     //stop event listeners
     window.removeEventListener('keydown', onKeyDown, false);
@@ -85,7 +87,9 @@ function progressLoading() {
     progressBar.value = 0;
     progressBar.style.position = 'absolute';
     progressBar.style.left = '50%';
-    progressBar.style.top = '55%';
+    progressBar.style.top = '50%';
+    progressBar.style.width = '200px';
+    progressBar.style.height = '20px';
     progressBar.style.transform = 'translate(-50%, -50%)';
     progressBar.style.zIndex = '1000';
     document.body.appendChild(progressBar);
@@ -108,7 +112,11 @@ function progressLoading() {
 }
 
 export async function initializeGame() {
-    
+    document.getElementById('waitingScreen').style.display = 'block';
+    document.getElementById('nav').style.display = 'none';
+    document.getElementById('startButton').style.display = 'none';
+    document.getElementById('leftWindow').style.display = 'none';
+    document.getElementById('rightWindow').style.display = 'none';
     progressLoading();
     window.addEventListener('keydown', onKeyDown, false);
     window.addEventListener('keyup', onKeyUp, false);
@@ -122,10 +130,41 @@ export async function initializeGame() {
     settings.updateTime();
     animate();
     startGame();
-    document.getElementById('nav').style.display = 'none';
-    document.getElementById('startButton').style.display = 'none';
+    // document.getElementById('nav').style.display = 'none';
+    // document.getElementById('startButton').style.display = 'none';
+    // document.getElementById('Taskbar').style.display = 'none';
+    // document.getElementById('titleBarPong').style.display = 'none';
+    // document.getElementById('leftWindow').style.display = 'none';
+    // document.getElementById('rightWindow').style.display = 'none';
     document.getElementById('Taskbar').style.display = 'none';
     document.getElementById('titleBarPong').style.display = 'none';
+    document.getElementById('waitingScreen').style.display = 'none';
     focusGame();
 
 }
+
+
+// ////////////////////////////////////////////////////
+// Get the game mode selector and the sections
+const gameModeSelect = document.getElementById('gameModeSelect');
+const sections = {
+	"remote tournament": document.querySelector('.remoteTournament'),
+	"remote 1v1": document.querySelector('.remote1v1'),
+	"player vs ai": document.querySelector('.localPlayerAI'),
+};
+
+// Add an event listener for the game mode selection
+gameModeSelect.addEventListener('change', function () {
+	const selectedMode = gameModeSelect.value.toLowerCase();
+	console.log(selectedMode);
+	// Hide all sections
+	Object.values(sections).forEach(section => {
+		section.style.display = 'none';
+	});
+	console
+
+	// Show the selected section
+	if (sections[selectedMode]) {
+		sections[selectedMode].style.display = 'flex';
+	}
+});
