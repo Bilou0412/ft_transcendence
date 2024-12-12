@@ -1,5 +1,5 @@
-Connect wsmanagement whith usermanagent for send friendrequest.
 create tournament by sending same code to multiple user beetween 4 - 6.
 change destination docker to sgoinfre.
 delete true for email verification
 disallow same user for friends request
+create .env for front sensible data
