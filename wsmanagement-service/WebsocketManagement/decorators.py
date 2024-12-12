@@ -10,12 +10,12 @@ def auth_token(func):
 			if not subprotocols or len(subprotocols) != 1:
 				raise DenyConnection("Invalid subprotocols format")
 			token = subprotocols[0]
+			print(token)
 			if not token.startswith("Bearer_"):
 				raise DenyConnection("Invalid authorization format")
 			tokenVal = token[len("Bearer_"):].strip()
 			if not tokenVal:
 				raise DenyConnection("Authorization token missing")
-
 			async with httpx.AsyncClient(timeout=5) as validateClient:
 				validateResponse = await validateClient.post(
 					'http://auth:8000/api/auth/token/validate/',
