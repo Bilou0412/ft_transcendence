@@ -161,6 +161,7 @@
         let gameStarted = false;
         let scoreLeft = 0;
         let scoreRight = 0;
+        let intervalId = null;
 
         let remoteWs = null;
         let globalSocket = null;
@@ -405,6 +406,9 @@
             		if (message.event === 'start_game') {
             		    gameStarted = true;
             		    console.log('Game started');
+                        if (!intervalId) {
+                            intervalId = setInterval(sendPaddleMovement, 10); // Check and send paddle movement every 10ms
+                        }
             		}
             		if (message.event === 'game_ended') {
             		    gameStarted = false;
@@ -415,6 +419,8 @@
             		    }
             		    resetGame();
             		    console.log('Game ended');
+                        clearInterval(intervalId);
+                        intervalId = null;
             		}
         		};
 
@@ -643,9 +649,9 @@
             if (chatSocket) {
                 chatSocket.close();
             }
-            sessionStorage.removeItem('accessToken');
-            sessionStorage.removeItem('username');
-            sessionStorage.removeItem('userId');
+            // sessionStorage.removeItem('accessToken');
+            // sessionStorage.removeItem('username');
+            // sessionStorage.removeItem('userId');
         });
 
         // Check if the user is already logged in
@@ -686,6 +692,7 @@
                     direction = 'down';
                 }
                 if (direction !== 0) {
+                    // console.log('Sending paddle movement:', direction);
                     remoteWs.send(JSON.stringify({
                         event: 'paddle_moved',
                         data: { direction: direction, role: playerRole }
@@ -694,7 +701,6 @@
             }
         }
 
-        setInterval(sendPaddleMovement, 10); // Check and send paddle movement every 100ms
 
         function resetGame() {
             ball.position.set(0, 0, 0);

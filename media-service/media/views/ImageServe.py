@@ -2,7 +2,7 @@ import os
 from django.conf import settings
 from rest_framework.decorators import api_view
 from ..decorators import authorize_user
-from django.http import FileResponse, JsonResponse
+from django.http import JsonResponse
 from ..models import UserProfileImage, CustomUser
 from django.core.exceptions import ObjectDoesNotExist
 
