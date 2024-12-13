@@ -9,6 +9,7 @@ from .views.SendRequest import SendRequest
 from .views.UserStats import UserStats
 from .views.ListBlocked import ListBlocked
 from .views.UnblockUser import UnblockUser
+from .views.ListRequest import ListRequest
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,6 +25,7 @@ urlpatterns = [
     path('user/friends/request/', SendRequest, name='sendrequest'),
     path('user/friends/update/', UpdateFriendshipStatus, name='acceptrequest'),
     path('user/friends/', ListFriends, name='listfriends'),
+    path('user/friends/listrequests/', ListRequest, name='listrequests'),
 
     # Block
     path('user/block/request/', BlockUser, name='blockuser'),
