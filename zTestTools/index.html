@@ -19,12 +19,12 @@
         #login-signup.active, #main-menu.active {
             display: block;
         }
-        #profile-info, #matches-info, #settings-info, #chat-interface {
+        #profile-info, #matches-info, #settings-info, #chat-interface, #duel-elements, #threejs-container {
         display: none;
         text-align: center;
         margin-top: 20px;
         }
-        #profile-info.active, #matches-info.active, #settings-info.active, #chat-interface.active {
+        #profile-info.active, #matches-info.active, #settings-info.active, #chat-interface.active, #duel-elements.active, #threejs-container.active {
             display: block;
         }
         #profile-image {
@@ -55,6 +55,25 @@
         .chat-input button {
             margin-left: 10px;
         }
+        canvas {
+            display: block;
+        }
+        #scoreboard {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+        }
+        #start-game-button {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
@@ -83,7 +102,7 @@
         <button onclick="showSettings()">Settings</button>
         <button onclick="showChat()">Chat</button>
         <button id="logout-button">Logout</button>
-        <!-- <div id="threejs-container"></div> -->
+        <div id="threejs-container"></div>
         <div id="profile-info">
             <h3>Profile Information</h3>
             <p id="profile-username"></p>
@@ -126,11 +145,65 @@
                 <button onclick="sendChatMessage()">Send</button>
             </div>
         </div>
+        <div id="duel-elements">
+            <div id="scoreboard">
+                <span id="score-left">0</span> - <span id="score-right">0</span>
+            </div>
+            <button id="start-game-button">Start Game</button>
+        </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
+        let ball;
+        let paddle1;
+        let paddle2;
+        let playerRole = null;
+        let gameStarted = false;
+        let scoreLeft = 0;
+        let scoreRight = 0;
+
+        let remoteWs = null;
         let globalSocket = null;
         let chatSocket = null;
+
+        function initThreeJs() {
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('threejs-container').appendChild(renderer.domElement);
+
+        // Create the inside background
+        const backgroundGeometry = new THREE.PlaneGeometry(20, 30);
+        const backgroundMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff }); // Blue color
+        const background = new THREE.Mesh(backgroundGeometry, backgroundMaterial);
+        background.position.z = -1; // Position it behind the game objects
+        scene.add(background);
+
+        const paddleWidth = 0.6, paddleHeight = 7;
+        const geometry = new THREE.BoxGeometry(paddleWidth, paddleHeight, 1);
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        paddle1 = new THREE.Mesh(geometry, material);
+        paddle2 = new THREE.Mesh(geometry, material);
+        scene.add(paddle1);
+        scene.add(paddle2);
+
+        paddle1.position.x = -10;
+        paddle2.position.x = 10;
+
+        const ballGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+        const ballMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        ball = new THREE.Mesh(ballGeometry, ballMaterial);
+        scene.add(ball);
+
+        camera.position.z = 30;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
+    }
 
         document.getElementById('signin-form').addEventListener('submit', async function (event) {
             event.preventDefault();
@@ -230,6 +303,7 @@
             document.getElementById('matches-info').classList.remove('active');
             document.getElementById('settings-info').classList.remove('active');
             document.getElementById('chat-interface').classList.remove('active');
+            document.getElementById('threejs-container').classList.remove('active');
         }
 
         function showChat() {
@@ -237,7 +311,11 @@
             document.getElementById('matches-info').classList.remove('active');
             document.getElementById('settings-info').classList.remove('active');
             document.getElementById('chat-interface').classList.add('active');
+            document.getElementById('duel-elements').classList.remove('active');
+            document.getElementById('threejs-container').classList.remove('active');
         }
+
+
 
         function startChat() {
             const userId = document.getElementById('chat-user-id').value.trim();
@@ -291,20 +369,73 @@
         }
 
         function searchGame() {
+            initThreeJs();
+            document.getElementById('duel-elements').classList.add('active');
+            document.getElementById('threejs-container').classList.add('active');
+            document.getElementById('settings-info').classList.remove('active');
+            document.getElementById('profile-info').classList.remove('active');
+            document.getElementById('matches-info').classList.remove('active');
+            document.getElementById('chat-interface').classList.remove('active');
             const accessToken = sessionStorage.getItem('accessToken');
-            fetch('http://127.0.0.1:8002/api/search-game/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + accessToken
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Game search result:', data);
-            })
-            .catch(error => console.error('Error searching game:', error));
-        }
+            if (accessToken) {
+                remoteWs = new WebSocket('ws://localhost:8003/ws/pong/key/', ['Bearer_' + accessToken]);
+				remoteWs.onopen = function () {
+            		console.log('Remote WebSocket connection established');
+        		};
+
+        		remoteWs.onmessage = function (event) {
+            		const message = JSON.parse(event.data);
+            		console.log('Received message:', message);
+            		if (message.event === 'assign_role') {
+            		    playerRole = message.data;
+            		    console.log('Assigned role:', playerRole);
+            		}
+            		if (message.event === 'game_update') {
+            		    ball.position.x = message.data.ball.x;
+            		    ball.position.y = message.data.ball.y;
+            		    paddle1.position.y = message.data.players.left.pos.y;
+            		    paddle2.position.y = message.data.players.right.pos.y;
+            		    if (scoreLeft !== message.data.players.left.score || scoreRight !== message.data.players.right.score) {
+            		        scoreLeft = message.data.players.left.score;
+            		        scoreRight = message.data.players.right.score;
+            		        document.getElementById('score-left').textContent = scoreLeft;
+            		        document.getElementById('score-right').textContent = scoreRight;
+            		    }
+            		}
+            		if (message.event === 'start_game') {
+            		    gameStarted = true;
+            		    console.log('Game started');
+            		}
+            		if (message.event === 'game_ended') {
+            		    gameStarted = false;
+            		    if (message.data.winner === playerRole) {
+            		        alert('You won!');
+            		    } else if (message.data.winner !== 'unfinished') {
+            		        alert('You lost!');
+            		    }
+            		    resetGame();
+            		    console.log('Game ended');
+            		}
+        		};
+
+				remoteWs.onclose = function () {
+					console.log('WebSocket connection closed');
+				};
+
+					} else {
+						console.error('No auth token available');
+					}
+				}
+            
+        document.getElementById('start-game-button').addEventListener('click', function () {
+            if (remoteWs.readyState === WebSocket.OPEN) {
+                remoteWs.send(JSON.stringify({ event: 'start_game', data: null }));
+                console.log('Sent start_game message to WebSocket server');
+            } else {
+                console.log('WebSocket connection is not open');
+            }
+        });
+
 
         function viewProfile() {
             const accessToken = sessionStorage.getItem('accessToken');
@@ -320,12 +451,14 @@
             })
             .then(response => response.json())
             .then(data => {
-                const user = data[2];
+                const user = data[userId];
                 document.getElementById('profile-username').innerText = `Username: ${user.username}`;
                 document.getElementById('profile-email').innerText = `Email: ${user.email}`;
                 document.getElementById('profile-info').classList.add('active');
                 document.getElementById('matches-info').classList.remove('active');
+                document.getElementById('duel-elements').classList.remove('active');
                 document.getElementById('settings-info').classList.remove('active');
+                document.getElementById('threejs-container').classList.remove('active');
                 fetchProfileImages(user.id, accessToken, ['profile-image']);
                 fetchUserMatches(user.id, accessToken);
             })
@@ -403,32 +536,11 @@
             .catch(error => console.error('Error fetching user matches:', error));
         }
 
-        function initThreeJS() {
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / 400, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer();
-            renderer.setSize(window.innerWidth, 400);
-            document.getElementById('threejs-container').appendChild(renderer.domElement);
-
-            const geometry = new THREE.BoxGeometry();
-            const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-            const cube = new THREE.Mesh(geometry, material);
-            scene.add(cube);
-
-            camera.position.z = 5;
-
-            function animate() {
-                requestAnimationFrame(animate);
-                cube.rotation.x += 0.01;
-                cube.rotation.y += 0.01;
-                renderer.render(scene, camera);
-            }
-            animate();
-        }
-
         function showSettings() {
             document.getElementById('settings-info').classList.add('active');
             document.getElementById('profile-info').classList.remove('active');
+            document.getElementById('threejs-container').classList.remove('active');
+            document.getElementById('duel-elements').classList.remove('active');
             document.getElementById('matches-info').classList.remove('active');
             const accessToken = sessionStorage.getItem('accessToken');
             const userId = sessionStorage.getItem('userId');
@@ -521,6 +633,21 @@
             }
         });
 
+        window.addEventListener('beforeunload', function () {
+            if (remoteWs) {
+                remoteWs.close();
+            }
+            if (globalSocket) {
+                globalSocket.close();
+            }
+            if (chatSocket) {
+                chatSocket.close();
+            }
+            sessionStorage.removeItem('accessToken');
+            sessionStorage.removeItem('username');
+            sessionStorage.removeItem('userId');
+        });
+
         // Check if the user is already logged in
         window.onload = function() {
             const accessToken = sessionStorage.getItem('accessToken');
@@ -533,6 +660,52 @@
                 document.getElementById('login-signup').classList.add('active');
             }
         };
+        let keysPressed = {};
+
+        window.addEventListener('keydown', function (event) {
+            keysPressed[event.key] = true;
+            sendPaddleMovement();
+        });
+
+        window.addEventListener('keyup', function (event) {
+            keysPressed[event.key] = false;
+            sendPaddleMovement();
+        });
+
+        window.addEventListener('blur', function () {
+            keysPressed = {};
+            sendPaddleMovement();
+        });
+
+        function sendPaddleMovement() {
+            if (remoteWs && remoteWs.readyState === WebSocket.OPEN) {
+                let direction = 0;
+                if (keysPressed['w']) {
+                    direction = 'up';
+                } else if (keysPressed['s']) {
+                    direction = 'down';
+                }
+                if (direction !== 0) {
+                    remoteWs.send(JSON.stringify({
+                        event: 'paddle_moved',
+                        data: { direction: direction, role: playerRole }
+                    }));
+                }
+            }
+        }
+
+        setInterval(sendPaddleMovement, 10); // Check and send paddle movement every 100ms
+
+        function resetGame() {
+            ball.position.set(0, 0, 0);
+            ballDirection = { x: 0.1, y: 0.1 };
+            paddle1.position.y = 0;
+            paddle2.position.y = 0;
+            scoreLeft = 0;
+            scoreRight = 0;
+            document.getElementById('score-left').textContent = scoreLeft;
+            document.getElementById('score-right').textContent = scoreRight;
+        }
     </script>
 </body>
 </html>
