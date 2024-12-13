@@ -72,6 +72,10 @@ clean:
 		echo "$(RED)Removing network $(NETWORK)...$(NC)"; \
 		docker network rm $(NETWORK); \
 	fi
+	@if [ -d "media-service/images/users_images/" ]; then \
+    echo "$(RED)Removing media-service/images/users_images/ folder...$(NC)"; \
+    rm -rf media-service/images/users_images/; \
+    fi
 	@echo "$(RED)Pruning unused volumes...$(NC)"
 	@docker volume prune -f
 

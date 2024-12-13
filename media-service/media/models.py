@@ -21,7 +21,7 @@ def unique_filename_username(instance, filename):
 class UserProfileImage(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='profile_image')
     image = models.ImageField(upload_to=unique_filename_username, null=True)
-
+    print(f'uploaded to: {unique_filename_username}')
     def save(self, *args, **kwargs):
         if self.pk:
             old_image = UserProfileImage.objects.get(pk=self.pk).image

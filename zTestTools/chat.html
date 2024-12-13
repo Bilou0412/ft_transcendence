@@ -134,7 +134,7 @@
         }
 
         function connectToLobby() {
-            lobbyWebSocket = new WebSocket('ws://localhost:8002/ws/lobby', ['Bearer_' + authToken]);
+            lobbyWebSocket = new WebSocket('ws://localhost:8005/ws/lobby', ['Bearer_' + authToken]);
 
             lobbyWebSocket.onopen = () => {
                 console.log('Lobby WebSocket connection opened');
